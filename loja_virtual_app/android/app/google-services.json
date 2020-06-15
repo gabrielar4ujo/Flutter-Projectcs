@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "639649931003",
+    "firebase_url": "https://loja-virtual-e8ba9.firebaseio.com",
+    "project_id": "loja-virtual-e8ba9",
+    "storage_bucket": "loja-virtual-e8ba9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639649931003:android:bf1863d74e2dfc67b01a5e",
+        "android_client_info": {
+          "package_name": "com.gmail.jrf.antoniogabriel.loja_virtual_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639649931003-2397tj2j8dpcq2o4iu3dkbqhgua67r2t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.jrf.antoniogabriel.loja_virtual_app",
+            "certificate_hash": "51406d9ac0936f3b494d4ac07f09806ea88b4cb9"
+          }
+        },
+        {
+          "client_id": "639649931003-9nusdo3kju6ma5d6754gl4ge17ga8bbn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrjA444FQGDs3ieihxgEC2wzGB-KQE5Xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639649931003-9nusdo3kju6ma5d6754gl4ge17ga8bbn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

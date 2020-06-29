@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customstore/datas/product.dart';
+import 'package:customstore/models/product.dart';
 import 'package:mobx/mobx.dart';
 
 part 'category_controller.g.dart';
@@ -13,7 +13,8 @@ abstract class _CategoryController with Store{
 
   @observable
   bool isLoading = false;
-  
+
+  @observable
   ObservableList<Product> observableMap = ObservableList();
 
   @observable
@@ -29,7 +30,7 @@ abstract class _CategoryController with Store{
     Firestore.instance.collection("stores").document(uidUser).collection("stock").document(category).snapshots().listen((event) {
       if(event.exists && event.data.containsKey("listProducts")){
         event.data["listProducts"].forEach( (k,v) {
-          return observableMap.add( Product(name: k, price: double.parse(v["price"]), amount: int.parse(v["amount"])) );
+          return observableMap.add( Product(name: k, price: double.parse(v["price"]), amount: int.parse(v["amount"]), categoryId: event.documentID, listPictures: v["pictures"]) );
         });
       }
     });

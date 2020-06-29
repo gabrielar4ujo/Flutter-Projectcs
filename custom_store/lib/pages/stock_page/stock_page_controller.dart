@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customstore/helpers/category_helper.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
@@ -10,21 +11,50 @@ class StockPageController = _StockPageController with _$StockPageController;
 
 abstract class _StockPageController with Store {
 
-  final controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
+  //ControllerLoginPage controllerLoginPage;
+  //CategoryHelper categoryHelper;
+
+  _StockPageController(){
+    //controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
+    //categoryHelper = CategoryHelper(userUID: controllerLoginPage.user.uid);
+  }
+
+  TextEditingController textEditingController = TextEditingController();
+
+  void textFormFieldClear(){
+    textEditingController.clear();
+    _productText = "";
+    print("clear");
+  }
+
+ /* @observable
+  bool isLoading = false;*/
 
   @observable
-  String productText = '';
+  bool _wasEdited = false;
 
   @computed
-  String get getPd => productText;
+  bool get wasEdited => _wasEdited;
 
   @action
-  void setProductText(String s){
-    productText = s;
+  void changeWasEdited(String lastName){
+    _wasEdited = lastName != textEditingController.text;
+  }
+
+  @observable
+  String _productText = '';
+
+  @computed
+  String get productText => _productText;
+
+  @action
+  void setProductText(String currentName, String lastName){
+    _productText = currentName;
+    changeWasEdited(lastName);
   }
 
   @computed
-  bool get productTextValidator => productText.isEmpty;
+  bool get productTextValidator => _productText.isEmpty;
 
 
   String productValidator(){
@@ -32,10 +62,10 @@ abstract class _StockPageController with Store {
     return null;
   }
 
-  void dialogConfirm() async {
+ /* void confirmed() async {
 
     bool categoryExist = false;
-    String categoryName = productText;
+    String categoryName = _productText;
 
     await Firestore.instance
         .collection("stores")
@@ -51,13 +81,29 @@ abstract class _StockPageController with Store {
 
       if (!categoryExist) {
         print("dont exist");
-        await Firestore.instance
-            .collection("stores")
-            .document(controllerLoginPage.user.uid)
-            .collection("stock").document().setData({
-          "categoryName": categoryName
-        });
+        //insert(categoryName);
       }
     });
   }
+
+  Future<bool> update( String documentID) async{
+    bool sucess;
+    isLoading = true;
+    await categoryHelper.update(documentID, _productText).then((value){
+      sucess = value;
+      isLoading = false;
+    });
+    return sucess;
+  }
+
+  Future<bool> insert () async{
+    bool success;
+    isLoading = true;
+    await categoryHelper.insert(_productText).then((value){
+      success = value;
+      isLoading = false;
+    });
+    return success;
+  }*/
+
 }

@@ -1,10 +1,16 @@
-import 'package:customstore/datas/product.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:customstore/pages/home_page/home_page_controller.dart';
 import 'package:customstore/pages/home_page/widgets/custom_box.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:customstore/pages/login_page/login_page.dart';
 import 'package:customstore/pages/stock_page/stock_page.dart';
+import 'package:customstore/utils/global_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,16 +26,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomePageController homePageController = HomePageController();
+  HomePageController homePageController;
+
+  GlobalScaffold globalScaffold;
 
   String year = (DateTime.now().year).toString();
-  final controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
-
+  ControllerLoginPage controllerLoginPage;
   ReactionDisposer _disposer;
+
+  bool statusConnection = false;
+  String connetionStatus = "Unknown";
+  Connectivity conectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
+    globalScaffold = GetIt.I.get<GlobalScaffold>();
+    homePageController = HomePageController();
+
+    conectivity = Connectivity();
+    subscription = conectivity.onConnectivityChanged.listen((ConnectivityResult result)async{
+      bool hasConnection;
+      try {
+        await Firestore.instance.runTransaction((Transaction tx) {}).timeout(Duration(seconds: 5));
+        hasConnection = true;
+      } on PlatformException catch(_) { // May be thrown on Airplane mode
+        hasConnection = false;
+      } on TimeoutException catch(_) {
+        hasConnection = false;
+      }
+      String message = hasConnection ? "Você está conectado!" : "Problema de conexão!";
+      if(statusConnection || !hasConnection) {
+        statusConnection = true;
+        globalScaffold.showSnackBar(SnackBar(content: Text(message),));
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     _disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged){
       if(!isLogged){
         print("logado");
@@ -56,13 +95,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Product p = Product();
-    p.price = 10.0;
-    p.amount = 2;
-    p.name = "Calçola";
 
-    p.salesAmount = 2;
-    p.vendedor = "iza";
+    print("criei de nobo");
 
     final double _screenHeight = MediaQuery.of(context).size.height;
     final double _screenWidth = MediaQuery.of(context).size.width;
@@ -71,6 +105,7 @@ class _HomePageState extends State<HomePage> {
         new InfinityPageController(initialPage: DateTime.now().month - 1);
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         elevation: 0,
         title: Text(
@@ -125,6 +160,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SlidingSheet(
+            closeOnBackButtonPressed: false,
+            closeOnBackdropTap: false,
+            isBackdropInteractable: false,
             duration: Duration(milliseconds: 400),
             controller: homePageController.sheetController,
             scrollSpec:
@@ -134,13 +172,13 @@ class _HomePageState extends State<HomePage> {
             cornerRadius: 30,
             snapSpec: SnapSpec(
                 snap: true,
-                initialSnap: .4,
-                snappings: [.2, .4],
+                initialSnap: .45,
+                snappings: [.2, .45],
                 positioning: SnapPositioning.relativeToAvailableSpace),
             builder: (context, state) {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                height: _screenHeight * 0.38,
+                height: _screenHeight * 0.35,
                 child: Center(
                   child: GridView.count(
                     padding: EdgeInsets.zero,
@@ -215,7 +253,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     // TODO: implement dispose
+    print("dispose");
     super.dispose();
     _disposer();
+    subscription.cancel();
   }
+
 }

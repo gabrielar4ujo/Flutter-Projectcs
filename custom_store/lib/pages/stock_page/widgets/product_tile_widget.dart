@@ -1,11 +1,11 @@
-import 'package:customstore/datas/product.dart';
+import 'package:customstore/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductTileWidget extends StatelessWidget {
 
-  final Product element;
+  final Product product;
 
-  const ProductTileWidget({Key key, @required this.element}) : super(key: key);
+  const ProductTileWidget({Key key, @required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +23,13 @@ class ProductTileWidget extends StatelessWidget {
             ),
           ),
           title:  Text(
-            element.name,
+            product.name,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.start,
           ),
           trailing: Text(
-            "R\$${element.price.toStringAsFixed(2)}",
+            "R\$${product.price.toStringAsFixed(2)}",
             maxLines: 2,
             //textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
@@ -41,7 +41,7 @@ class ProductTileWidget extends StatelessWidget {
           children: <Widget>[
             Flexible(
               child: Text(
-                "Em estoque: ${element.amount.toString()}",
+                "Em estoque: ${product.amount.toString()}",
                 maxLines: 2,
                 //textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,
@@ -49,7 +49,7 @@ class ProductTileWidget extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                "Gasto: ${element.price.toStringAsFixed(2)}",
+                "Gasto: ${product.price.toStringAsFixed(2)}",
                 maxLines: 2,
                 //textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,

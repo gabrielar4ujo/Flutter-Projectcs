@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               Card(
                 elevation: 10,
                 shadowColor: Colors.black,
-                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),

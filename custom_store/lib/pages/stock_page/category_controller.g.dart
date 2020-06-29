@@ -24,6 +24,21 @@ mixin _$CategoryController on _CategoryController, Store {
     });
   }
 
+  final _$observableMapAtom = Atom(name: '_CategoryController.observableMap');
+
+  @override
+  ObservableList<Product> get observableMap {
+    _$observableMapAtom.reportRead();
+    return super.observableMap;
+  }
+
+  @override
+  set observableMap(ObservableList<Product> value) {
+    _$observableMapAtom.reportWrite(value, super.observableMap, () {
+      super.observableMap = value;
+    });
+  }
+
   final _$isExpandedAtom = Atom(name: '_CategoryController.isExpanded');
 
   @override
@@ -57,6 +72,7 @@ mixin _$CategoryController on _CategoryController, Store {
   String toString() {
     return '''
 isLoading: ${isLoading},
+observableMap: ${observableMap},
 isExpanded: ${isExpanded}
     ''';
   }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
 part 'controller_login_page.g.dart';
@@ -8,6 +7,20 @@ part 'controller_login_page.g.dart';
 class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
 abstract class _ControllerLoginPage with Store{
+
+  void _loadData() {
+    print("ControllerLoginPage: Criando Snapshot");
+    _categorySnapshot = Firestore.instance
+        .collection("stores")
+        .document(user.uid)
+        .collection("stock")
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getCategorySnapshot () {
+    if(_categorySnapshot == null) _loadData();
+    return _categorySnapshot;
+  }
 
   Future<Null> _loadCurrentUser () async {
     _isLoading = true;
@@ -83,5 +96,9 @@ abstract class _ControllerLoginPage with Store{
   @computed
   bool get isLogged => _isLogged;
 
-  _ControllerLoginPage(){ _loadCurrentUser(); }
+  Stream<QuerySnapshot> _categorySnapshot;
+
+  _ControllerLoginPage(){
+    _loadCurrentUser();
+  }
 }

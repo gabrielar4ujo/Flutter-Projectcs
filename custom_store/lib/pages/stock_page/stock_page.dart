@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customstore/helpers/product_helper.dart';
+import 'package:customstore/models/product.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
-import 'package:customstore/pages/login_page/widgets/custom_text_field_widget.dart';
 import 'package:customstore/pages/product_page/product_page.dart';
 import 'package:customstore/pages/stock_page/category_controller.dart';
-import 'package:customstore/pages/stock_page/stock_page_controller.dart';
+import 'package:customstore/pages/stock_page/widgets/add_product_widget.dart';
+import 'package:customstore/pages/stock_page/widgets/bottom_text_field_widget.dart';
+import 'package:customstore/pages/stock_page/widgets/category_content.dart';
+import 'package:customstore/pages/stock_page/widgets/custom_bottom_sheet_widget.dart';
 import 'package:customstore/pages/stock_page/widgets/product_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -15,148 +19,155 @@ class StockPage extends StatefulWidget {
 }
 
 class _StockPageState extends State<StockPage> {
-  ControllerLoginPage controllerLoginPage;
-  StockPageController stockPageController;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  ControllerLoginPage controllerLoginPage;
+  ProductHelper productHelper;
 
   @override
   void initState() {
     super.initState();
-    stockPageController = StockPageController();
     controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
+    productHelper = ProductHelper();
+  }
+
+  void showSnackbar({bool result, String type}) async{
+    print("Type: $type");
+    await Future.delayed(Duration(milliseconds: 500));
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      duration: Duration(seconds: result ? 1 : 3),
+      content: Text(type == "INSERT" ?
+      result
+          ? "Categoria ADICIONADA com sucesso!"
+          : "Problema de conexão! Dado ADICIONADO apenas localmente!"
+          :
+      type == "UPDATE" ?
+      result
+          ? "Categoria RENOMEADA com sucesso!"
+          : "Problema de conexão! Dado RENOMEADO apenas localmente!" :
+      result
+          ? "Categoria DELETADA com sucesso!"
+          : "Problema de conexão! Dado DELETADO apenas localmente!"
+      ),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.deepPurpleAccent,
       appBar: AppBar(
         title: Text("Estoque"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    //title: Text("Digite o nome da categoria"),
-                    content: Observer(
-                        builder: (context) => CustomTextFieldWidget(
-                              obscure: false,
-                              enabled: true,
-                              labelText: "Categoria",
-                              function: stockPageController.setProductText,
-                              eyeFunction: null,
-                              error: stockPageController.productValidator(),
-                              color: Colors.black,
-                            )),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                          stockPageController.productText = '';
-                        },
-                        child: Text("Cancelar"),
-                      ),
-                      Observer(
-                        builder: (context) => FlatButton(
-                          onPressed: stockPageController.productText.isNotEmpty ? (){
-                            stockPageController.dialogConfirm();
-                            Navigator.pop(context);
-                            stockPageController.productText = '';
-                          } : null,
-                          child: Text("Adicionar"),
-                        ),
-                      )
-                    ],
-                  );
-                },
-              );
+            onPressed: () async{
+              var bottomSheetController = showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return BottomTextFieldWidget();
+                  });
+              await bottomSheetController.then((listValue) async {
+                print("bottomSHeet: $listValue");
+                if (listValue != null)
+                  showSnackbar(result: listValue[0], type: listValue[1]);
+              });
             },
           )
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection("stores").document(controllerLoginPage.user.uid).collection("stock").snapshots(),
+        stream: controllerLoginPage.getCategorySnapshot(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if(!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
+          if (!snapshot.hasData || snapshot.hasError)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          else if (snapshot.data.documents.length == 0 ) {
+            return Center(child: Text("Adicione alguma categoria!", style: TextStyle(color: Colors.white, fontSize: 20),),);
+          }
           else {
             return Container(
               margin: EdgeInsets.all(12),
               child: ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
-                  DocumentSnapshot doc = snapshot.data.documents[index];
-                  CategoryController categoryController = CategoryController(category: doc.documentID, uidUser: controllerLoginPage.user.uid);
+                  DocumentSnapshot categorySnapshot = snapshot.data.documents[index];
+                  CategoryController categoryController = CategoryController(
+                      category: categorySnapshot.documentID,
+                      uidUser: controllerLoginPage.user.uid);
                   print("Ver dados: ${categoryController.observableMap}");
+                  Map<String, dynamic> list = categorySnapshot.data["listProducts"] ?? Map();
+                  //if(list == null) list = Map();
                   return Observer(
                     builder: (context) {
-
                       print("isloading ${categoryController.isLoading}");
-                      if(categoryController.isLoading) return Container();
+                      if (categoryController.isLoading) return Container();
 
-                      print("lenght ${categoryController.observableMap.length}");
+                      print(
+                          "lenght ${categoryController.observableMap.length}");
 
                       return GestureDetector(
-                        onLongPress: (){
+                        onLongPress: () {
                           print("onLongPress expasion tile");
+                          var bottomSheetController = showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return CustomBottomSheetWidget(
+                                lastName: snapshot
+                                    .data.documents[index].data["categoryName"],
+                                documentID:
+                                   categorySnapshot.documentID,
+                                userUID: controllerLoginPage.user.uid,
+                              );
+                            },
+                          );
+                          bottomSheetController.then((listValue) {
+                            if (listValue != null)
+                              showSnackbar(
+                                  result: listValue[0], type: listValue[1]);
+                          });
                         },
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(5)
-                          ),
+                              borderRadius: BorderRadius.circular(5)),
                           margin: EdgeInsets.only(bottom: 12),
                           child: ExpansionTile(
                             onExpansionChanged: categoryController.onExpanded,
-                            title: Text(snapshot.data.documents[index].data["categoryName"], style: TextStyle(color: Colors.black),),
+                            title: Text(
+                              categorySnapshot.data["categoryName"],
+                              style: TextStyle(color: Colors.black),
+                            ),
                             trailing: Observer(
                               builder: (context) => Icon(
-                                categoryController.isExpanded ? Icons.expand_less : Icons.expand_more,
+                                categoryController.isExpanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
                               ),
                             ),
-                            children: categoryController.observableMap.map((element) {
-                              //print();
-                              return GestureDetector(
-                                onTap: (){
-                                  print("onTap Produto: ${element.name}");
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage()));
-                                  },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey, width:.5),
-                                    borderRadius: BorderRadius.circular(5)
-                                  ),
-                                  margin: EdgeInsets.all(8),
-                                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 10),
-                                  child: ProductTileWidget(element: element,)
-                                ),
+                            children: categoryController.observableMap.map(
+                                (product) {
+                              return Container(
+                                child: CategoryContentWidget(userUID: controllerLoginPage.user.uid,snapshot: categorySnapshot,allProductsName: list, product: product,)
                               );
-                            }
-                            ).toList()..add( GestureDetector(
-                              onTap: (){print("onTap Adicionar");},
-                              child: Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    IconButton(icon: Icon(Icons.add, color: Colors.deepPurpleAccent,), onPressed: () {  },),
-                                    Text("Adicionar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),)
-                                  ],
-                                ),
+                            }).toList()
+                              ..add(
+                                Container(child: AddProductWidget(allProductsName: list, snapshot: categorySnapshot, userUID: controllerLoginPage.user.uid,))
                               ),
-                            )),
                           ),
                         ),
                       );
                     },
                   );
                 },
-
               ),
             );
           }
-      },
-
+        },
       ),
     );
   }

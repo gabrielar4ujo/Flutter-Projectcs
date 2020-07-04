@@ -58,6 +58,13 @@ mixin _$ProductPageController on _ProductPageController, Store {
           Computed<bool>(() => super.invalidPriceValidator,
               name: '_ProductPageController.invalidPriceValidator'))
       .value;
+  Computed<bool> _$invalidSpentValidatorComputed;
+
+  @override
+  bool get invalidSpentValidator => (_$invalidSpentValidatorComputed ??=
+          Computed<bool>(() => super.invalidSpentValidator,
+              name: '_ProductPageController.invalidSpentValidator'))
+      .value;
   Computed<int> _$amountComputed;
 
   @override
@@ -78,6 +85,28 @@ mixin _$ProductPageController on _ProductPageController, Store {
       (_$stateIconComputed ??= Computed<bool>(() => super.stateIcon,
               name: '_ProductPageController.stateIcon'))
           .value;
+  Computed<bool> _$isLockedComputed;
+
+  @override
+  bool get isLocked =>
+      (_$isLockedComputed ??= Computed<bool>(() => super.isLocked,
+              name: '_ProductPageController.isLocked'))
+          .value;
+
+  final _$isLoadingAtom = Atom(name: '_ProductPageController.isLoading');
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
 
   final _$_nameTextAtom = Atom(name: '_ProductPageController._nameText');
 
@@ -154,6 +183,21 @@ mixin _$ProductPageController on _ProductPageController, Store {
     });
   }
 
+  final _$_lockAtom = Atom(name: '_ProductPageController._lock');
+
+  @override
+  bool get _lock {
+    _$_lockAtom.reportRead();
+    return super._lock;
+  }
+
+  @override
+  set _lock(bool value) {
+    _$_lockAtom.reportWrite(value, super._lock, () {
+      super._lock = value;
+    });
+  }
+
   final _$_ProductPageControllerActionController =
       ActionController(name: '_ProductPageController');
 
@@ -202,8 +246,20 @@ mixin _$ProductPageController on _ProductPageController, Store {
   }
 
   @override
+  void setLock(bool state) {
+    final _$actionInfo = _$_ProductPageControllerActionController.startAction(
+        name: '_ProductPageController.setLock');
+    try {
+      return super.setLock(state);
+    } finally {
+      _$_ProductPageControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
+isLoading: ${isLoading},
 nameText: ${nameText},
 priceText: ${priceText},
 spentText: ${spentText},
@@ -211,9 +267,11 @@ duplicatedName: ${duplicatedName},
 nameValidator: ${nameValidator},
 emptyPriceValidator: ${emptyPriceValidator},
 invalidPriceValidator: ${invalidPriceValidator},
+invalidSpentValidator: ${invalidSpentValidator},
 amount: ${amount},
 pictureList: ${pictureList},
-stateIcon: ${stateIcon}
+stateIcon: ${stateIcon},
+isLocked: ${isLocked}
     ''';
   }
 }

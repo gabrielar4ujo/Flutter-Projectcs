@@ -2,7 +2,6 @@ import 'package:customstore/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductTileWidget extends StatelessWidget {
-
   final Product product;
 
   const ProductTileWidget({Key key, @required this.product}) : super(key: key);
@@ -13,16 +12,26 @@ class ProductTileWidget extends StatelessWidget {
       children: <Widget>[
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: Image.asset("assets/cabide.png",
+          leading:
+
+              product.listPictures.isEmpty ? Image.asset("assets/cabide.png",
               fit: BoxFit.cover,
               color: Colors.deepPurpleAccent,
-              width: 35,
-              height: 35,
-            ),
-          ),
-          title:  Text(
+              width: 40,
+              height: 40,
+            ):
+              ClipOval(
+                child: FadeInImage(
+                  placeholder: AssetImage("assets/loading.gif"),
+                  image: NetworkImage(product.listPictures.first),
+                  fit: BoxFit.cover,
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+
+
+          title: Text(
             product.name,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
@@ -35,7 +44,9 @@ class ProductTileWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        SizedBox(height: 4,),
+        SizedBox(
+          height: 4,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -49,7 +60,7 @@ class ProductTileWidget extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                "Gasto: ${product.price.toStringAsFixed(2)}",
+                "Gasto: ${product.spent.toStringAsFixed(2)}",
                 maxLines: 2,
                 //textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,

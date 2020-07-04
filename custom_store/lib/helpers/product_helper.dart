@@ -11,8 +11,6 @@ class ProductHelper implements CategoryHelperI{
 
   String userUID;
   final timeOut = 3;
-  ControllerLoginPage _controllerLoginPage;
-
 
   ProductHelper(){
     this.userUID = GetIt.I.get<ControllerLoginPage>().user.uid;
@@ -24,7 +22,7 @@ class ProductHelper implements CategoryHelperI{
   }
 
   @override
-  Future<bool> insert(String documentID, {Map productData}) async{
+  Future<bool> insert(String documentID, {@required Map productData}) async{
     bool success = false;
 
     await Firestore.instance
@@ -42,9 +40,14 @@ class ProductHelper implements CategoryHelperI{
   }
 
   @override
-  Future<bool> update(String documentID, String data) {
-
+  Future<bool> update(String documentID, data) async{
+    return await insert(documentID, productData: data);
   }
+
+/*  @override
+  Future<bool> update({String documentID,@required var productData})async {
+    return insert(documentID, productData: data);
+  }*/
 
  /* Future<List> savePictures({List pictures}) async{
     List urlList = List();
@@ -79,14 +82,19 @@ class ProductHelper implements CategoryHelperI{
         .millisecondsSinceEpoch
         .toString()).putFile(pictures);
 
-    StorageTaskSnapshot taskSnapshot = await task.onComplete;
-    url = await taskSnapshot.ref.getDownloadURL();
+    StorageTaskSnapshot taskSnapshot = await task.onComplete.timeout(Duration(seconds: 10), onTimeout: (){
+      print("Foto timeout");
+      task.cancel();
+      return null;
+    });
+    if( taskSnapshot != null) url = await taskSnapshot.ref.getDownloadURL();
+
     print("URL $url");
 
     return url;
   }
 
-  Future deletePictures(String url){
-    FirebaseStorage.instance.ref().getStorage().getReferenceFromUrl(url).then((value) => print(value.delete()));
+  Future deletePictures(String url) async{
+    await FirebaseStorage.instance.ref().getStorage().getReferenceFromUrl(url).then((value) => value.delete());
   }
 }

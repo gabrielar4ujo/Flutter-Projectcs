@@ -30,7 +30,7 @@ abstract class _CategoryController with Store{
     Firestore.instance.collection("stores").document(uidUser).collection("stock").document(category).snapshots().listen((event) {
       if(event.exists && event.data.containsKey("listProducts")){
         event.data["listProducts"].forEach( (k,v) {
-          return observableMap.add( Product(name: k, price: double.parse(v["price"]), amount: int.parse(v["amount"]), categoryId: event.documentID, listPictures: v["pictures"]) );
+          return observableMap.add( Product(name: k, price: double.parse(v["price"]), amount: int.parse(v["amount"]), categoryId: event.documentID, listPictures: v["pictures"], spent: double.parse(v["spent"])));
         });
       }
     });

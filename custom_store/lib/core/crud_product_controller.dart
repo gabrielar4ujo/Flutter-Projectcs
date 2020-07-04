@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:customstore/helpers/product_helper.dart';
+import 'package:customstore/models/product.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
 part 'crud_product_controller.g.dart';
@@ -18,20 +20,20 @@ abstract class _CrudProductController with Store {
   @observable
   bool isLoading = false;
 
-  Future<bool> update({String documentID, String categoryName}) async{
+  Future<bool> update({String documentID, Map productData}) async{
     bool success;
     isLoading = true;
-    await _productHelper.update(documentID, categoryName).then((value){
+    await _productHelper.update(documentID, productData).then((value){
       success = value;
       isLoading = false;
     });
     return success;
   }
 
-  Future<bool> insert ({String categoryName}) async{
+  Future<bool> insert ({@required String categoryName,@required Map productData}) async{
     bool success;
     isLoading = true;
-    await _productHelper.insert(categoryName).then((value){
+    await _productHelper.insert(categoryName, productData: productData).then((value){
       success = value;
       isLoading = false;
     });
@@ -67,6 +69,10 @@ abstract class _CrudProductController with Store {
       isLoading = false;
     });
     return result;
+  }
+
+  Future deletePictures(String url) async{
+    await _productHelper.deletePictures(url);
   }
 
 }

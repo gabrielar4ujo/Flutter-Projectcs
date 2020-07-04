@@ -62,14 +62,14 @@ class _StockPageState extends State<StockPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () async{
+            onPressed: (){
               var bottomSheetController = showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
                     return BottomTextFieldWidget();
                   });
-              await bottomSheetController.then((listValue) async {
+              bottomSheetController.then((listValue){
                 print("bottomSHeet: $listValue");
                 if (listValue != null)
                   showSnackbar(result: listValue[0], type: listValue[1]);
@@ -99,8 +99,8 @@ class _StockPageState extends State<StockPage> {
                       category: categorySnapshot.documentID,
                       uidUser: controllerLoginPage.user.uid);
                   print("Ver dados: ${categoryController.observableMap}");
-                  Map<String, dynamic> list = categorySnapshot.data["listProducts"] ?? Map();
-                  //if(list == null) list = Map();
+                  Map<String, dynamic> allProductsList = categorySnapshot.data["listProducts"] ?? Map();
+
                   return Observer(
                     builder: (context) {
                       print("isloading ${categoryController.isLoading}");
@@ -117,6 +117,7 @@ class _StockPageState extends State<StockPage> {
                             context: context,
                             builder: (context) {
                               return CustomBottomSheetWidget(
+                                allProductsList: allProductsList,
                                 lastName: snapshot
                                     .data.documents[index].data["categoryName"],
                                 documentID:
@@ -152,11 +153,11 @@ class _StockPageState extends State<StockPage> {
                             children: categoryController.observableMap.map(
                                 (product) {
                               return Container(
-                                child: CategoryContentWidget(userUID: controllerLoginPage.user.uid,snapshot: categorySnapshot,allProductsName: list, product: product,)
+                                child: CategoryContentWidget(userUID: controllerLoginPage.user.uid,documentID: categorySnapshot.documentID, allProductsName: allProductsList, product: product,)
                               );
                             }).toList()
                               ..add(
-                                Container(child: AddProductWidget(allProductsName: list, snapshot: categorySnapshot, userUID: controllerLoginPage.user.uid,))
+                                Container(child: AddProductWidget(allProductsName: allProductsList, userUID: controllerLoginPage.user.uid,documentID: categorySnapshot.documentID,))
                               ),
                           ),
                         ),

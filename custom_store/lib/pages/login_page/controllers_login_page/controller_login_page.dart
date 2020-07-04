@@ -6,34 +6,69 @@ part 'controller_login_page.g.dart';
 
 class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
-abstract class _ControllerLoginPage with Store{
-
+abstract class _ControllerLoginPage with Store {
   void _loadData() {
+
     print("ControllerLoginPage: Criando Snapshot");
-    _categorySnapshot = Firestore.instance
-        .collection("stores")
-        .document(user.uid)
-        .collection("stock")
-        .snapshots();
+
+    try {
+      _categorySnapshot = Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("stock")
+          .orderBy("time")
+          .snapshots();
+    }
+    catch(e){
+
+    }
   }
 
-  Stream<QuerySnapshot> getCategorySnapshot () {
-    if(_categorySnapshot == null) _loadData();
+  void _loadDataSalesman(){
+
+    print("ControllerLoginPage: Criando SalesmanSnapshot");
+
+    try {
+      _salesmanListSnapshot = Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("salesman")
+          .orderBy("time", descending: true)
+          .snapshots();
+    }
+    catch(e){
+
+    }
+  }
+
+  Stream<QuerySnapshot> getCategorySnapshot() {
+    if (_categorySnapshot == null) _loadData();
     return _categorySnapshot;
   }
 
-  Future<Null> _loadCurrentUser () async {
+  Stream<QuerySnapshot> getSalesmanListSnapshot(){
+    if (_salesmanListSnapshot == null) _loadDataSalesman();
+    return _salesmanListSnapshot;
+
+  }
+
+  Future<Null> _loadCurrentUser() async {
     _isLoading = true;
     if (user == null) user = await auth.currentUser();
     if (user != null) {
       _isLogged = true;
       if (salesMap.length == 0) {
-        QuerySnapshot docUser = await Firestore.instance.collection("stores")
+        QuerySnapshot docUser = await Firestore.instance
+            .collection("stores")
             .document(user.uid)
-        .collection("vendas")
+            .collection("vendas")
             .getDocuments();
 
-        await Firestore.instance.collection("users").document(user.uid).get().then((value) => userName = value.data["name"]);
+        await Firestore.instance
+            .collection("users")
+            .document(user.uid)
+            .get()
+            .then((value) => userName = value.data["name"]);
         print("user!=null");
 
         docUser.documents.forEach((element) {
@@ -42,34 +77,33 @@ abstract class _ControllerLoginPage with Store{
         });
         print(this.salesMap);
       }
-    }
-    else{
+    } else {
       _isLogged = false;
     }
     _isLoading = false;
   }
 
-    @action
-  Future<Null> login({String email, String pass}) async{
+  @action
+  Future<Null> login({String email, String pass}) async {
     print("email $email");
     _isLoading = true;
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass).then((value) {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: pass)
+        .then((value) {
       _loadCurrentUser();
-    }).catchError((e){
+    }).catchError((e) {
       print("error");
     });
     _isLoading = false;
     print("continua");
-
   }
 
   @action
-  void logout(){
+  void logout() {
     auth.signOut();
     user = null;
     _isLogged = false;
   }
-
 
   @observable
   bool _isLoading = false;
@@ -98,7 +132,10 @@ abstract class _ControllerLoginPage with Store{
 
   Stream<QuerySnapshot> _categorySnapshot;
 
-  _ControllerLoginPage(){
+  Stream<QuerySnapshot> _salesmanListSnapshot;
+
+  _ControllerLoginPage() {
     _loadCurrentUser();
+    //_loadDataSalesman();
   }
 }

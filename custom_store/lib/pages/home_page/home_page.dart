@@ -7,6 +7,7 @@ import 'package:customstore/pages/home_page/home_page_controller.dart';
 import 'package:customstore/pages/home_page/widgets/custom_box.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:customstore/pages/login_page/login_page.dart';
+import 'package:customstore/pages/salesman_page/salesman_page.dart';
 import 'package:customstore/pages/stock_page/stock_page.dart';
 import 'package:customstore/utils/global_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -165,6 +166,7 @@ class _HomePageState extends State<HomePage> {
             isBackdropInteractable: false,
             duration: Duration(milliseconds: 400),
             controller: homePageController.sheetController,
+
             scrollSpec:
                 const ScrollSpec(physics: NeverScrollableScrollPhysics()),
             //required
@@ -173,12 +175,11 @@ class _HomePageState extends State<HomePage> {
             snapSpec: SnapSpec(
                 snap: true,
                 initialSnap: .45,
-                snappings: [.2, .45],
-                positioning: SnapPositioning.relativeToAvailableSpace),
+                snappings: [.20, .45],),
             builder: (context, state) {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                height: _screenHeight * 0.35,
+                height: _screenHeight * 0.40,
                 child: Center(
                   child: GridView.count(
                     padding: EdgeInsets.zero,
@@ -206,7 +207,9 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         () {},
                       ),
-                      CustomInkwell("Adicionar Vendedor", Icons.person, () {}),
+                      CustomInkwell("Adicionar Vendedor", Icons.person, () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SalesmanPage()));
+                      }),
                     ],
                   ),
                 ),

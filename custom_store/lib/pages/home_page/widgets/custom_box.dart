@@ -42,7 +42,7 @@ class CustomBox extends StatelessWidget {
                   topLeft: Radius.circular(3), topRight: Radius.circular(3))),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           margin:
-              const EdgeInsets.only(left: 20, right: 20, top: 35, bottom: 0),
+              const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

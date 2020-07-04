@@ -16,13 +16,14 @@ class Product extends ProductSold{
     return {
       "price" : this.price.toString(),
       "amount" : this.amount.toString(),
-      "pictures" : this.listPictures
+      "pictures" : this.listPictures,
+      "spent" : this.spent.toString()
     };
   }
 
   @override
   String toString() {
-    return "Name: $name\nPrice: $price\nAmount: $amount\nPictures: $listPictures";
+    return "Name: $name\nPrice: $price\nAmount: $amount\nSpent: $spent\nPictures: $listPictures";
   }
 
 

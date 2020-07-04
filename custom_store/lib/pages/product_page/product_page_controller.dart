@@ -19,12 +19,15 @@ abstract class _ProductPageController with Store {
     if(product != null){
       _nameText = product.name;
       _priceText = product.price.toStringAsFixed(2);
-      _spentText = product.price.toStringAsFixed(2);
+      _spentText = product.spent.toStringAsFixed(2);
       _amount = product.amount;
       _pictureList.addAll(product.listPictures);
       allProductsName.remove(product.name);
     }
   }
+
+  @observable
+  bool isLoading = false;
 
   @observable
   String _nameText = "";
@@ -55,6 +58,9 @@ abstract class _ProductPageController with Store {
 
   @computed
   bool get invalidPriceValidator => double.tryParse(priceText) == null;
+
+  @computed
+  bool get invalidSpentValidator => double.tryParse(_spentText) == null;
 
   @action
   void changeName (String text) {
@@ -90,6 +96,10 @@ abstract class _ProductPageController with Store {
     return null;
   }
 
+  String onErrorSpentText(){
+    return invalidSpentValidator ? "Valor inválido!" : null;
+  }
+
   @observable
   int _amount = 1;
 
@@ -114,21 +124,28 @@ abstract class _ProductPageController with Store {
   }
 
   Future openCamera () async{
+
+    isLoading = true;
+
     final picker = ImagePicker();
     File imgFile;
 
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 60);
 
-    if(pickedFile == null) return;
+    if(pickedFile == null) {
+      isLoading = false;
+    }
 
     imgFile = File(pickedFile.path);
-    print(imgFile);
 
     _pictureList.insert(0,imgFile);
+
+    isLoading = false;
+
   }
 
   Product getProduct(){
-    return Product(name: _nameText, price: double.parse(_priceText), amount: _amount, listPictures: finalList);
+    return Product(name: _nameText, price: double.parse(_priceText), amount: _amount, listPictures: finalList, spent: double.parse(_spentText));
   }
 
   List getNewPictures (){
@@ -179,5 +196,19 @@ abstract class _ProductPageController with Store {
 
   List finalList = [];
   List removedPicturesUrl = List();
+
+  @observable
+  bool _lock = false;
+
+  @computed
+  bool get isLocked => _lock;
+
+  @action
+  void setLock( bool state){
+    _setLock(state);
+  }
+
+  void _setLock(bool state) {_lock = state;}
+
 
 }

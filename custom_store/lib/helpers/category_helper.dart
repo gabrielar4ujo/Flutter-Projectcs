@@ -33,7 +33,8 @@ class CategoryHelper implements CategoryHelperI{
         .collection("stores")
         .document(userUID)
         .collection("stock").document().setData({
-      "categoryName": categoryName
+      "categoryName": categoryName,
+      "time" : FieldValue.serverTimestamp(),
     }).whenComplete(() =>  success = true ).catchError((exception){
     success = false;
     }).timeout(Duration(seconds: timeOut), onTimeout: (){
@@ -44,7 +45,7 @@ class CategoryHelper implements CategoryHelperI{
   }
 
   @override
-  Future<bool> update(String documentID, String newCategoryName) async{
+  Future<bool> update(String documentID, newCategoryName) async{
 
     bool sucess = false;
 

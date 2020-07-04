@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:customstore/core/crud_product_controller.dart';
 import 'package:customstore/helpers/product_helper.dart';
 import 'package:customstore/models/product.dart';
+import 'package:customstore/pages/product_page/finalize_product_controller.dart';
 import 'package:customstore/pages/product_page/image_controller.dart';
 import 'package:customstore/pages/product_page/product_page_controller.dart';
+import 'package:customstore/pages/product_page/widgets/custom_progress_bar_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -22,12 +24,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
 
-  ProductHelper _productHelper;
-
   CrudProductController _crudProductController;
-
-  double valueProgressIndicator = 0.0;
-  bool showProgressBar = false;
 
   final Product product;
   final String categoryID;
@@ -41,7 +38,6 @@ class _ProductPageState extends State<ProductPage> {
   void initState() {
     super.initState();
     _crudProductController = CrudProductController();
-    _productHelper = ProductHelper();
   }
 
   @override
@@ -51,47 +47,62 @@ class _ProductPageState extends State<ProductPage> {
 
     return Scaffold(
       appBar: AppBar(
-        bottom: showProgressBar ? _createProgressBar() : null,
         title: Text(title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete),
-            disabledColor: Colors.grey[500],
-            onPressed: !(product == null) ? (){
+            disabledColor:  Colors.white30,
+            onPressed: !(product == null) && !_productPageController.isLoading? () async{
+              for (dynamic picture in _productPageController.pictureList){
+                if(picture is File) await picture.delete();
+                else await _crudProductController.deletePictures(picture);
+              }
+              Navigator.pop(context, Product());
             } : null,
           ),
           Observer(
             builder: (context) => IconButton(
               icon: Icon(Icons.check),
-              disabledColor: Colors.grey[500],
-              onPressed: _productPageController.stateIcon ? () async{
+              disabledColor: Colors.white30,
+              onPressed: _productPageController.stateIcon && !_productPageController.isLoading ? () async{
+
                 for (String picture in _productPageController.removedPicturesUrl){
-                  await _productHelper.deletePictures(picture);
+                  await _crudProductController.deletePictures(picture);
                 }
 
                 List newPictures = _productPageController.getNewPictures();
-                int lenght = newPictures.length;
+                if(newPictures.length > 0){
+                  FinalizeProductController finalizeProduct = FinalizeProductController(length: newPictures.length);
 
-                if(lenght > 0){
-                /*  setState(() {
-                    showProgressBar = true;
-                  });*/
-                  int count = 0;
+                  showDialog(barrierDismissible: false,context: context, builder: (context) => AlertDialog(
+                    content: Observer(builder: (context) =>
+                        WillPopScope(
+                          onWillPop: ()=> Future.value(false),
+                          child: CustomProgressBarWidgets(lenght: finalizeProduct.length,
+                            value: finalizeProduct.count,
+                            text: finalizeProduct.operation,
+                          ),
+                        )),
+                  ));
+
                   for (File picture in newPictures){
-                    print("+ 1 FILE");
-                    await _crudProductController.savePictures(pictures: picture).then((value) => _productPageController.addFinalListPicture(value));
-                    count++;
-                 /*   setState(() {
-                      valueProgressIndicator = count/lenght;
-                    });*/
+                    await _crudProductController.savePictures(pictures: picture).then((value) {
+                      if (value != null) {
+                        _productPageController.addFinalListPicture(value);
+                        finalizeProduct.setOperetion("Salvando Imagens...");
+                      }
+                      else finalizeProduct.setOperetion("Error!\n"
+                          "Problema ao adicionar imagem: ${finalizeProduct.count + 1}");
+
+                    });
+                    finalizeProduct.increment();
                   }
-                  _productPageController.finalizePictures();
+
+                  await Future.delayed(Duration(seconds: 2));
+                  Navigator.pop(context);
                 }
 
-/*
-                await _crudProductController.savePictures(pictures: _productPageController.getNewPictures()).then((value) {
-                  _productPageController.finalizePictures(value);
-                });*/
+                _productPageController.finalizePictures();
 
                 Navigator.pop(context, _productPageController.getProduct());
               } : null,
@@ -131,7 +142,7 @@ class _ProductPageState extends State<ProductPage> {
                }).toList()..add(
                  GestureDetector(
                      child: Container(color: Colors.black.withOpacity(.4), margin: EdgeInsets.symmetric(horizontal: 2),height: 120, width: 95, child: Center(child: Icon(Icons.photo_camera, size: 30, color: Colors.white,),),)
-                 , onTap: _productPageController.openCamera,
+                 , onTap:  !_productPageController.isLoading ? _productPageController.openCamera : null,
                  )
                ),
              ),
@@ -145,7 +156,7 @@ class _ProductPageState extends State<ProductPage> {
                   flex: 4,
                   child: TextFormField(
                     initialValue: _productPageController.nameText,
-                    textCapitalization: TextCapitalization.words,
+                    textCapitalization: TextCapitalization.sentences,
                     onChanged: _productPageController.changeName,
                     decoration: InputDecoration(
                       errorText: _productPageController.onErrorProductText(),
@@ -196,6 +207,7 @@ class _ProductPageState extends State<ProductPage> {
                     keyboardType: TextInputType.numberWithOptions(decimal: true),
                     onChanged: _productPageController.changeSpent,
                     decoration: InputDecoration(
+                      errorText: _productPageController.onErrorSpentText(),
                         labelText: "Gasto"
                     ),
                   ),
@@ -209,10 +221,4 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  PreferredSize _createProgressBar(){
-    return PreferredSize(preferredSize: Size(double.infinity, 4.0),
-      child: LinearProgressIndicator(
-        value: valueProgressIndicator,
-      ),);
-  }
 }

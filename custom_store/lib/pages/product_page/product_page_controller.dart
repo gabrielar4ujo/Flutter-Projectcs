@@ -2,7 +2,9 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:customstore/models/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 
@@ -15,6 +17,8 @@ abstract class _ProductPageController with Store {
   String categoryID;
   List allProductsName;
 
+  final List LISTSIZES = ["P","G","M","GG","XG","U"];
+
   _ProductPageController({Product product, this.categoryID, this.allProductsName}){
     if(product != null){
       _nameText = product.name;
@@ -23,6 +27,16 @@ abstract class _ProductPageController with Store {
       _amount = product.amount;
       _pictureList.addAll(product.listPictures);
       allProductsName.remove(product.name);
+
+      for (String size in LISTSIZES){
+        if(product.features.containsKey(size)){
+          observableFeatures[size] = product.features[size];
+        }
+        else{
+          observableFeatures[size] = {};
+        }
+      }
+      //observableFeatures.addAll(product.features);
     }
   }
 
@@ -157,17 +171,6 @@ abstract class _ProductPageController with Store {
     return newPictures;
   }
 
-/*  void finalizePictures (List e){
-    finalList = e;
-    _pictureList.forEach((element) {
-      if (!(element is File)) {
-        finalList.add(element);
-        print("addiconaei");
-      }
-    });
-    print("finalizePictures $finalList");
-  }*/
-
   void addFinalListPicture(String e)  { finalList.add(e);}
 
   void finalizePictures (){
@@ -194,7 +197,7 @@ abstract class _ProductPageController with Store {
   }
 
 
-  List finalList = [];
+  List finalList = List();
   List removedPicturesUrl = List();
 
   @observable
@@ -210,5 +213,29 @@ abstract class _ProductPageController with Store {
 
   void _setLock(bool state) {_lock = state;}
 
+  @observable
+  ObservableMap observableFeatures = ObservableMap();
+
+  @action
+  void setListColorProductPage({String size, String colorName, String amount}){
+
+    if(observableFeatures.containsKey(size)) observableFeatures[size][colorName] = {"amount" : amount};
+    else observableFeatures[size] = {colorName : {"amount" : amount}};
+    observableFeatures = observableFeatures;
+    print("setListColorProductPage");
+    print(observableFeatures);
+
+  }
+
+  List getListColorProductPage (String size){
+    List listColorProductPage = List();
+    if(!observableFeatures.containsKey(size)) return listColorProductPage;
+    this.observableFeatures[size].forEach((key, value) {
+      listColorProductPage.add([StringUtils.capitalize(key),value["amount"]]);
+    });
+    print("GETLISTPRODUCTPAGE");
+    print(listColorProductPage);
+    return listColorProductPage;
+  }
 
 }

@@ -6,7 +6,7 @@ part of 'controller_login_page.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ControllerLoginPage on _ControllerLoginPage, Store {
   Computed<bool> _$isLoadingComputed;
@@ -102,7 +102,7 @@ mixin _$ControllerLoginPage on _ControllerLoginPage, Store {
   final _$loginAsyncAction = AsyncAction('_ControllerLoginPage.login');
 
   @override
-  Future<Null> login({String email, String pass}) {
+  Future<dynamic> login({String email, String pass}) {
     return _$loginAsyncAction.run(() => super.login(email: email, pass: pass));
   }
 

@@ -84,18 +84,20 @@ abstract class _ControllerLoginPage with Store {
   }
 
   @action
-  Future<Null> login({String email, String pass}) async {
+  Future<dynamic> login({String email, String pass}) async {
+    dynamic success = false;
     print("email $email");
     _isLoading = true;
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((value) {
       _loadCurrentUser();
-    }).catchError((e) {
-      print("error");
+    }).catchError((error) {
+      success = error;
     });
     _isLoading = false;
-    print("continua");
+    //print(success.code);
+    return success ?? false;
   }
 
   @action

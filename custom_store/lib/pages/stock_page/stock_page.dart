@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/helpers/product_helper.dart';
-import 'package:customstore/models/product.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
-import 'package:customstore/pages/product_page/product_page.dart';
 import 'package:customstore/pages/stock_page/category_controller.dart';
 import 'package:customstore/pages/stock_page/widgets/add_product_widget.dart';
 import 'package:customstore/pages/stock_page/widgets/bottom_text_field_widget.dart';
 import 'package:customstore/pages/stock_page/widgets/category_content.dart';
 import 'package:customstore/pages/stock_page/widgets/custom_bottom_sheet_widget.dart';
-import 'package:customstore/pages/stock_page/widgets/product_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';

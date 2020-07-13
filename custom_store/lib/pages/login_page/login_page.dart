@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   final controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
-  final controller = LoginPageWidgetsController();
+  final _widgetsController = LoginPageWidgetsController();
 
   ReactionDisposer disposer;
 
@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _widgetsController.scaffoldKey,
       backgroundColor: Colors.deepPurpleAccent,
       body: Container(
         padding: EdgeInsets.only(top: 35),
@@ -54,16 +55,16 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
 
-                      Observer(builder: (context) => CustomTextFieldWidget(labelText: "Email", function: controller.setEmailText, error: controller.validatorEmail(),enabled: !controllerLoginPage.isLoading,)),
+                      Observer(builder: (context) => CustomTextFieldWidget(labelText: "Email", function: _widgetsController.setEmailText, error: _widgetsController.validatorEmail(),enabled: !controllerLoginPage.isLoading,)),
                       SizedBox(height: 10,),
-                      Observer(builder: (context) => CustomTextFieldWidget(labelText: "Senha", function: controller.setPassText, error: controller.validatorPass(),obscure: controller.obscure, eyeFunction: controller.changeObscure,enabled: !controllerLoginPage.isLoading,)),
+                      Observer(builder: (context) => CustomTextFieldWidget(labelText: "Senha", function: _widgetsController.setPassText, error: _widgetsController.validatorPass(),obscure: _widgetsController.obscure, eyeFunction: _widgetsController.changeObscure,enabled: !controllerLoginPage.isLoading,)),
                       SizedBox(height: 10,),
 
                       Observer(
                         builder: (context) => RaisedButton(
                           color: Colors.deepPurpleAccent,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                          onPressed: controller.loginPressed,
+                          onPressed: _widgetsController.loginPressed,
                           padding: EdgeInsets.symmetric(vertical: 15),
                           child: controllerLoginPage.isLoading ? Container(
                             height: 23,

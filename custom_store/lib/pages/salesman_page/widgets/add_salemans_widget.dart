@@ -54,7 +54,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                         : [
                             WhitelistingTextInputFormatter(RegExp("[a-zA-Z ]")),
                           ],
-                    enabled: !widget.salesmanController.isLoading,
+                    enabled: !(widget.salesmanController.isLoading  || widget.crudSalesmanController.isLoading),
                     focusNode: widget.salesmanController.focusNode,
                     controller:
                         widget.salesmanController.nameTextEditingController,
@@ -76,7 +76,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                 flex: 2,
                 child: Observer(
                   builder: (context) => TextFormField(
-                    enabled: !widget.salesmanController.isLoading,
+                    enabled: !(widget.salesmanController.isLoading  || widget.crudSalesmanController.isLoading),
                     controller: widget
                         .salesmanController.comissionTextEditingController,
                     style: textStyle,

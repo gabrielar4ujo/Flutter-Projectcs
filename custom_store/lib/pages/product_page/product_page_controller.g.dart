@@ -6,7 +6,7 @@ part of 'product_page_controller.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ProductPageController on _ProductPageController, Store {
   Computed<String> _$nameTextComputed;
@@ -198,6 +198,22 @@ mixin _$ProductPageController on _ProductPageController, Store {
     });
   }
 
+  final _$observableFeaturesAtom =
+      Atom(name: '_ProductPageController.observableFeatures');
+
+  @override
+  ObservableMap<dynamic, dynamic> get observableFeatures {
+    _$observableFeaturesAtom.reportRead();
+    return super.observableFeatures;
+  }
+
+  @override
+  set observableFeatures(ObservableMap<dynamic, dynamic> value) {
+    _$observableFeaturesAtom.reportWrite(value, super.observableFeatures, () {
+      super.observableFeatures = value;
+    });
+  }
+
   final _$_ProductPageControllerActionController =
       ActionController(name: '_ProductPageController');
 
@@ -257,9 +273,22 @@ mixin _$ProductPageController on _ProductPageController, Store {
   }
 
   @override
+  void setListColorProductPage({String size, String colorName, String amount}) {
+    final _$actionInfo = _$_ProductPageControllerActionController.startAction(
+        name: '_ProductPageController.setListColorProductPage');
+    try {
+      return super.setListColorProductPage(
+          size: size, colorName: colorName, amount: amount);
+    } finally {
+      _$_ProductPageControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isLoading: ${isLoading},
+observableFeatures: ${observableFeatures},
 nameText: ${nameText},
 priceText: ${priceText},
 spentText: ${spentText},

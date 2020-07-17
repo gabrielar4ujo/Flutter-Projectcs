@@ -11,10 +11,11 @@ class ColorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4),
       margin: EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
-          color: getColor(colorName), borderRadius: BorderRadius.circular(5),
-              border: colorName.toLowerCase() == "branco" ? Border.all(width: 0) : null,
+        color: getColor(colorName), borderRadius: BorderRadius.circular(5),
+        border: colorName.toLowerCase() == "branco" ? Border.all(width: 0) : null,
       ),
       height: 60,
       width: 50,
@@ -26,12 +27,15 @@ class ColorTile extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-                color: textColor, fontWeight: FontWeight.bold, fontSize: 12,),
+              color: textColor, fontWeight: FontWeight.bold, fontSize: 12,),
           ),
           Padding(
             padding: EdgeInsets.only(top: 6),
             child: Text(
               "Qnt: $amount",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+       textAlign: TextAlign.center,
               style: TextStyle(color: textColor, fontSize: 11),
             ),
           ),
@@ -72,6 +76,9 @@ class ColorTile extends StatelessWidget {
         break;
       case "cinza":
         color = Colors.grey;
+        break;
+      case "rosa":
+        color = Colors.pink;
         break;
       default:
         color = Colors.grey[400];

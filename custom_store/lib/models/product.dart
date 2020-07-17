@@ -1,5 +1,6 @@
 
 import 'package:basic_utils/basic_utils.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'product_sold.dart';
 
@@ -34,6 +35,16 @@ class Product extends ProductSold{
     print("GETLISTPRODUCTPAGE");
     print(listColorProductPage);
     return listColorProductPage;
+  }
+
+  void setAmount({@required Map<String,dynamic> featuresMap}){
+    amount = 0;
+    featuresMap.forEach((key, value) {
+      value.forEach((color,amount){
+        this.amount += int.parse(amount["amount"]);
+      });
+    });
+    print(amount);
   }
 
   @override

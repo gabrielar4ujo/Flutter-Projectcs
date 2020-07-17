@@ -251,17 +251,6 @@ mixin _$ProductPageController on _ProductPageController, Store {
   }
 
   @override
-  void incrementOrDecrement(int number) {
-    final _$actionInfo = _$_ProductPageControllerActionController.startAction(
-        name: '_ProductPageController.incrementOrDecrement');
-    try {
-      return super.incrementOrDecrement(number);
-    } finally {
-      _$_ProductPageControllerActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void setLock(bool state) {
     final _$actionInfo = _$_ProductPageControllerActionController.startAction(
         name: '_ProductPageController.setLock');
@@ -273,12 +262,27 @@ mixin _$ProductPageController on _ProductPageController, Store {
   }
 
   @override
-  void setListColorProductPage({String size, String colorName, String amount}) {
+  void setListColorProductPage(
+      {String size, String colorName, String amount, String lastColorName}) {
     final _$actionInfo = _$_ProductPageControllerActionController.startAction(
         name: '_ProductPageController.setListColorProductPage');
     try {
       return super.setListColorProductPage(
-          size: size, colorName: colorName, amount: amount);
+          size: size,
+          colorName: colorName,
+          amount: amount,
+          lastColorName: lastColorName);
+    } finally {
+      _$_ProductPageControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeColorFromList({String color, String size}) {
+    final _$actionInfo = _$_ProductPageControllerActionController.startAction(
+        name: '_ProductPageController.removeColorFromList');
+    try {
+      return super.removeColorFromList(color: color, size: size);
     } finally {
       _$_ProductPageControllerActionController.endAction(_$actionInfo);
     }

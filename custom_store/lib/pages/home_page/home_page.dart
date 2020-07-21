@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -10,6 +9,7 @@ import 'package:customstore/pages/login_page/login_page.dart';
 import 'package:customstore/pages/salesman_page/salesman_page.dart';
 import 'package:customstore/pages/stock_page/stock_page.dart';
 import 'package:customstore/utils/global_scaffold.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -17,16 +17,16 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:infinity_page_view/infinity_page_view.dart';
 import 'package:mobx/mobx.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 
 import 'widgets/custom_inkwell.dart';
+import 'widgets/fade_container.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget{
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   HomePageController homePageController;
 
   GlobalScaffold globalScaffold;
@@ -40,6 +40,10 @@ class _HomePageState extends State<HomePage> {
   Connectivity conectivity;
   StreamSubscription<ConnectivityResult> subscription;
 
+  Animation<double> fadeAnimation;
+  AnimationController _animationController;
+
+
   @override
   void initState() {
     super.initState();
@@ -47,21 +51,40 @@ class _HomePageState extends State<HomePage> {
     globalScaffold = GetIt.I.get<GlobalScaffold>();
     homePageController = HomePageController();
 
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+
+    fadeAnimation = Tween<double>(
+        begin: 1.0,end: 0.0
+    ).animate(CurvedAnimation(
+        curve: Curves.easeInQuint,
+        parent: _animationController
+    ));
+
+    _animationController.forward();
+
     conectivity = Connectivity();
-    subscription = conectivity.onConnectivityChanged.listen((ConnectivityResult result)async{
+    subscription = conectivity.onConnectivityChanged
+        .listen((ConnectivityResult result) async {
       bool hasConnection;
       try {
-        await Firestore.instance.runTransaction((Transaction tx) {}).timeout(Duration(seconds: 5));
+        await Firestore.instance
+            .runTransaction((Transaction tx) {})
+            .timeout(Duration(seconds: 5));
         hasConnection = true;
-      } on PlatformException catch(_) { // May be thrown on Airplane mode
+      } on PlatformException catch (_) {
+        // May be thrown on Airplane mode
         hasConnection = false;
-      } on TimeoutException catch(_) {
+      } on TimeoutException catch (_) {
         hasConnection = false;
       }
-      String message = hasConnection ? "Você está conectado!" : "Problema de conexão!";
-      if(statusConnection || !hasConnection) {
+      String message =
+          hasConnection ? "Você está conectado!" : "Problema de conexão!";
+      if (statusConnection || !hasConnection) {
         statusConnection = true;
-        globalScaffold.showSnackBar(SnackBar(content: Text(message),));
+        globalScaffold.showSnackBar(SnackBar(
+          content: Text(message),
+        ));
       }
     });
   }
@@ -70,10 +93,11 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged){
-      if(!isLogged){
+    _disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged) {
+      if (!isLogged) {
         print("logado");
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginPage()));
       }
     });
   }
@@ -94,20 +118,121 @@ class _HomePageState extends State<HomePage> {
     "Dezembro"
   ];
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildAnimation(BuildContext context, Widget child){
 
-    print("criei de nobo");
+    InfinityPageController infinityPageController =
+    new InfinityPageController(initialPage: DateTime.now().month - 1);
 
     final double _screenHeight = MediaQuery.of(context).size.height;
     final double _screenWidth = MediaQuery.of(context).size.width;
 
-    InfinityPageController infinityPageController =
-        new InfinityPageController(initialPage: DateTime.now().month - 1);
+    return Stack(
+      children: <Widget>[
+
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
+            child: Text(
+              "Moda BA",
+              style: GoogleFonts.openSansCondensed(
+                color: Colors.white,
+                fontSize: 30,
+              ),
+            ),
+          ),
+        ),
+
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
+            child:      IconButton(
+              color: Colors.white,
+              iconSize: 25,
+              padding: EdgeInsets.only(right: 10),
+              icon: Icon(Icons.exit_to_app),
+              onPressed: controllerLoginPage.logout,
+            )
+          ),
+        ),
+
+        Container(
+          margin: EdgeInsets.only(top: 50 + MediaQuery.of(context).padding.top),
+          height: _screenHeight,
+          width: _screenWidth,
+          child: Observer(
+            builder: (context) {
+              if (controllerLoginPage.isLoading)
+                return Container(
+                    padding: EdgeInsets.only(top: 100),
+                    width: MediaQuery.of(context).size.width,
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: CircularProgressIndicator()));
+
+              pages = createWidgets();
+
+              return InfinityPageView(
+                  controller: infinityPageController,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return pages[index];
+                  });
+            },
+          ),
+        ),
+        Positioned(
+          bottom: 16,
+          left: 0,
+          right: 0,
+          child: Container(
+            //padding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
+            height: _screenWidth * .285 ,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                CustomInkwell(
+                  "Financeiro",
+                  Icons.attach_money,
+                      () {},
+                ),
+                CustomInkwell(
+                    "Adicionar Venda", Icons.shopping_cart, () {}),
+                CustomInkwell(
+                  "Estoque",
+                  Icons.shop,
+                      () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => StockPage()));
+                  },
+                ),
+                CustomInkwell(
+                  "Produto mais vendido",
+                  Icons.star,
+                      () {},
+                ),
+                CustomInkwell("Adicionar Vendedor", Icons.person, () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SalesmanPage()));
+                }),
+              ],
+            ),
+          ),
+        ),
+        FadeContainer(
+          fadeAnimation: fadeAnimation,
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
+     /* appBar: AppBar(
         elevation: 0,
         title: Text(
           "Moda BA",
@@ -117,107 +242,21 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
-        actions: <Widget>[ IconButton(iconSize: 25,icon: Icon(Icons.exit_to_app), onPressed: controllerLoginPage.logout,)],
-      ),
-      backgroundColor: Colors.deepPurple[500],
-      body: Stack(
-        children: <Widget>[
-          /*Container(
-            padding: EdgeInsets.only(top: 20),
-            height: _screenHeight * .15,
-            width: _screenHeight,
-            child: Center(
-              child: Text(
-                "Moda BA",
-                style: GoogleFonts.openSansCondensed(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
-              ),
-            ),
-          ),*/
-          Container(
-            height: _screenHeight,
-            width: _screenWidth,
-            child: Observer(
-              builder: (context) {
-                if (controllerLoginPage.isLoading)
-                  return Container(
-                      padding: EdgeInsets.only(top: 100),
-                      width: MediaQuery.of(context).size.width,
-                      child: Align(
-                          alignment: Alignment.topCenter,
-                          child: CircularProgressIndicator()));
-
-                pages = createWidgets();
-
-                return InfinityPageView(
-                    controller: infinityPageController,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return pages[index];
-                    });
-              },
-            ),
-          ),
-          SlidingSheet(
-            closeOnBackButtonPressed: false,
-            closeOnBackdropTap: false,
-            isBackdropInteractable: false,
-            duration: Duration(milliseconds: 400),
-            controller: homePageController.sheetController,
-
-            scrollSpec:
-                const ScrollSpec(physics: NeverScrollableScrollPhysics()),
-            //required
-            elevation: 10,
-            cornerRadius: 30,
-            snapSpec: SnapSpec(
-                snap: true,
-                initialSnap: .45,
-                snappings: [.20, .45],),
-            builder: (context, state) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                height: _screenHeight * 0.40,
-                child: Center(
-                  child: GridView.count(
-                    padding: EdgeInsets.zero,
-                    //required
-                    crossAxisCount: 3,
-                    shrinkWrap: true,
-                    //Faz com que se possa centralizar o grid view
-                    children: <Widget>[
-                      CustomInkwell(
-                        "Financeiro",
-                        Icons.attach_money,
-                        () {},
-                      ),
-                      CustomInkwell(
-                        "Estoque",
-                        Icons.shop,
-                        () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => StockPage()));
-                        },
-                      ),
-                      CustomInkwell(
-                          "Adicionar Venda", Icons.shopping_cart, () {}),
-                      CustomInkwell(
-                        "Produto mais vendido",
-                        Icons.star,
-                        () {},
-                      ),
-                      CustomInkwell("Adicionar Vendedor", Icons.person, () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SalesmanPage()));
-                      }),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+        actions: <Widget>[
+          IconButton(
+            iconSize: 25,
+            padding: EdgeInsets.only(right: 10),
+            icon: Icon(Icons.exit_to_app),
+            onPressed: controllerLoginPage.logout,
+          )
         ],
-      ),
+      ),*/
+      backgroundColor: Colors.deepPurple[500],
+      body: Container(
+        child: AnimatedBuilder(
+          builder: _buildAnimation, animation: _animationController,
+        ),
+      )
     );
   }
 
@@ -246,9 +285,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: homePageController.changeObscureSaleState,
                 lastPurchase: lastPurchaseSalde,
                 sale: saldo,
-                f: homePageController.expasionTile,
                 isExpasion: homePageController.isExpasion,
-            changeYear: homePageController.yearChanged,
+                changeYear: homePageController.yearChanged,
               ));
     }).toList();
   }
@@ -260,6 +298,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
     _disposer();
     subscription.cancel();
+    _animationController.dispose();
   }
-
 }

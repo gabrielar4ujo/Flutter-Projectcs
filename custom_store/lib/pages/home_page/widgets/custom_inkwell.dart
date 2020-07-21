@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomInkwell extends StatelessWidget {
-
   final Function _functionPage;
   final String _namePage;
   final IconData _iconPage;
@@ -13,16 +13,28 @@ class CustomInkwell extends StatelessWidget {
     return InkWell(
       onTap: _functionPage,
       child: Container(
+        margin: EdgeInsets.only(left: _namePage == "Financeiro" ? 20 : 4, right: _namePage == "Adicionar Vendedor" ? 20 : 4),
+        width:  MediaQuery.of(context).size.width * .27,
+        padding: EdgeInsets.symmetric(horizontal:4),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[100], width: 1)
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(3),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[800].withOpacity(0.4),
+                  blurRadius: 8.0, // soften the shadow
+                  spreadRadius: 2.0, //exten// d
+                 )
+            ]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(_iconPage),
-            const SizedBox(height: 15,),
-            Text(_namePage, textAlign: TextAlign.center),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(_namePage, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,),
           ],
         ),
       ),

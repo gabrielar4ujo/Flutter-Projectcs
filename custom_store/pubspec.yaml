@@ -26,7 +26,6 @@ dependencies:
   mobx:
   flutter_mobx:
   infinity_page_view: ^1.0.0
-  sliding_sheet: 0.3.5
   get_it: ^3.1.0
   cloud_firestore: ^0.13.7
   firebase_auth: ^0.16.1

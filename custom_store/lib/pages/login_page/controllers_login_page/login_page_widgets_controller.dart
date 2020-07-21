@@ -62,13 +62,16 @@ abstract class _LoginPageWidgetsController with Store {
   @computed
   Function get loginPressed {
     return (isFormEmailValid && isFormPassValid)
-        ? () {
-            //print(emailText);
-            controllerLoginPage
+        ? () async{
+      bool r;
+            await controllerLoginPage
                 .login(email: emailText, pass: passText)
                 .then((value) {
-              if (!(value is bool)) showSnackBar(value.code);
+                  r = value is bool;
+              if (!(r)) showSnackBar(value.code);
             });
+            print("DEU CERTO O LOGIN: $r");
+            return r;
           }
         : null;
   }

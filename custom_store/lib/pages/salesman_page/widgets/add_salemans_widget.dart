@@ -17,10 +17,13 @@ class AddSalesmanWidget extends StatefulWidget {
 }
 
 class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
-  UnderlineInputBorder underLineBorder =
+  UnderlineInputBorder _underLineBorder =
       UnderlineInputBorder(borderSide: BorderSide(color: Colors.white));
 
-  TextStyle textStyle =
+  UnderlineInputBorder _underlineInputBorderError = UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.deepOrange[600]));
+
+  TextStyle _textStyle =
       TextStyle(color: Colors.white, decorationColor: Colors.white);
 
   @override
@@ -41,7 +44,8 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                   )),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 12.0, top: 2, bottom: 2, right: 6),
+          padding:
+              const EdgeInsets.only(left: 12.0, top: 2, bottom: 2, right: 6),
           child: Row(
             children: <Widget>[
               Flexible(
@@ -54,11 +58,12 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                         : [
                             WhitelistingTextInputFormatter(RegExp("[a-zA-Z ]")),
                           ],
-                    enabled: !(widget.salesmanController.isLoading  || widget.crudSalesmanController.isLoading),
+                    enabled: !(widget.salesmanController.isLoading ||
+                        widget.crudSalesmanController.isLoading),
                     focusNode: widget.salesmanController.focusNode,
                     controller:
                         widget.salesmanController.nameTextEditingController,
-                    style: textStyle,
+                    style: _textStyle,
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.words,
                     onChanged: widget.salesmanController.changeName,
@@ -67,19 +72,20 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                         onError: widget.salesmanController.onErrorName),
                   ),
                 ),
-                flex: 4,
+                flex: 3,
               ),
-              Spacer(
-                flex: 1,
+              SizedBox(
+                width: 35,
               ),
               Flexible(
                 flex: 2,
                 child: Observer(
                   builder: (context) => TextFormField(
-                    enabled: !(widget.salesmanController.isLoading  || widget.crudSalesmanController.isLoading),
+                    enabled: !(widget.salesmanController.isLoading ||
+                        widget.crudSalesmanController.isLoading),
                     controller: widget
                         .salesmanController.comissionTextEditingController,
-                    style: textStyle,
+                    style: _textStyle,
                     onChanged: widget.salesmanController.changeComission,
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
@@ -89,104 +95,110 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                   ),
                 ),
               ),
-              Flexible(
-                child: Observer(
-                  builder: (context) => widget.crudSalesmanController.isLoading
-                      ? Container(
-                          child: Center(child: CircularProgressIndicator()),
-                          height: 20,
-                          width: 20,
-                          margin: EdgeInsets.only(left: 10),
-                        )
-                      : ClipOval(
-                          child: Container(
-                            height: 42,
-                            width: 42,
-                            color: Colors.deepPurple,
-                            child: IconButton(
-                              alignment: Alignment.bottomCenter,
-                              icon: Icon(
-                                widget.salesmanController.isEditing
-                                    ? Icons.check
-                                    : Icons.add,
-                                color: Colors.white,
-                              ),
-                              onPressed: widget.salesmanController.isEditing
-                                  ? () async {
-                                      print("Editing");
-                                      Salesman salesman = Salesman(
-                                          comission: double.parse(widget
-                                              .salesmanController
-                                              .comissionText),
-                                          name: widget
-                                              .salesmanController.nameText);
-                                      await widget.crudSalesmanController
-                                          .update(
-                                              salesman: salesman,
-                                              documentID: widget
-                                                  .salesmanController
-                                                  .editedDocumentId)
-                                          .then((value) {
-                                        widget.salesmanController.resetFields();
-                                        widget.salesmanController.isEditing =
-                                            false;
-
-                                        String message;
-                                        if (value) {
-                                          message =
-                                              "Vendedor ATUALIZADO com sucesso!";
-                                        } else
-                                          message =
-                                              "Problema de conexão! Vendedor ATUALIZADO localmente!";
-
-                                        widget.salesmanController.scaffoldKey
-                                            .currentState
-                                            .showSnackBar(widget
+              Expanded(
+                child: Center(
+                  child: Observer(
+                    builder: (context) => widget
+                            .crudSalesmanController.isLoading
+                        ? Container(
+                            child: Center(child: CircularProgressIndicator()),
+                            height: 20,
+                            width: 20,
+                            margin: EdgeInsets.only(left: 10),
+                          )
+                        : ClipOval(
+                            child: Container(
+                              height: 42,
+                              width: 42,
+                              color: Colors.deepPurple,
+                              child: IconButton(
+                                alignment: Alignment.bottomCenter,
+                                icon: Icon(
+                                  widget.salesmanController.isEditing
+                                      ? Icons.check
+                                      : Icons.add,
+                                  color: Colors.white,
+                                ),
+                                onPressed: widget.salesmanController.isEditing
+                                    ? () async {
+                                        print("Editing");
+                                        Salesman salesman = Salesman(
+                                            comission: double.parse(widget
                                                 .salesmanController
-                                                .getSnackBar(message: message));
-                                      });
-                                    }
-                                  : !widget.crudSalesmanController.isLoading &&
-                                          (!widget.salesmanController
-                                                  .nameValidator &&
-                                              !widget.salesmanController
-                                                  .comissionValidator)
-                                      ? () async {
-                                          print("Adding");
-                                          await widget.crudSalesmanController
-                                              .insert(
-                                                  categoryName: widget
-                                                      .salesmanController
-                                                      .nameText,
-                                                  comission: widget
-                                                      .salesmanController
-                                                      .comissionText)
-                                              .then((value) {
-                                            FocusScope.of(context).unfocus();
-                                            widget.salesmanController
-                                                .resetFields();
-                                            String message;
-                                            if (value) {
-                                              message =
-                                                  "Vendedor ADICIONADO com sucesso!";
-                                            } else
-                                              message =
-                                                  "Problema de conexão! Vendedor ADICIONADO localmente!";
-
-                                            widget.salesmanController
-                                                .scaffoldKey.currentState
-                                                .showSnackBar(widget
+                                                .comissionText),
+                                            name: widget
+                                                .salesmanController.nameText);
+                                        await widget.crudSalesmanController
+                                            .update(
+                                                salesman: salesman,
+                                                documentID: widget
                                                     .salesmanController
-                                                    .getSnackBar(
-                                                        message: message));
-                                          });
-                                        }
-                                      : null,
+                                                    .editedDocumentId)
+                                            .then((value) {
+                                          widget.salesmanController
+                                              .resetFields();
+                                          widget.salesmanController.isEditing =
+                                              false;
+
+                                          String message;
+                                          if (value) {
+                                            message =
+                                                "Vendedor ATUALIZADO com sucesso!";
+                                          } else
+                                            message =
+                                                "Problema de conexão! Vendedor ATUALIZADO localmente!";
+
+                                          widget.salesmanController.scaffoldKey
+                                              .currentState
+                                              .showSnackBar(widget
+                                                  .salesmanController
+                                                  .getSnackBar(
+                                                      message: message));
+                                        });
+                                      }
+                                    : !widget.crudSalesmanController
+                                                .isLoading &&
+                                            (!widget.salesmanController
+                                                    .nameValidator &&
+                                                !widget.salesmanController
+                                                    .comissionValidator)
+                                        ? () async {
+                                            print("Adding");
+                                            await widget.crudSalesmanController
+                                                .insert(
+                                                    categoryName: widget
+                                                        .salesmanController
+                                                        .nameText,
+                                                    comission: widget
+                                                        .salesmanController
+                                                        .comissionText)
+                                                .then((value) {
+                                              FocusScope.of(context).unfocus();
+                                              widget.salesmanController
+                                                  .resetFields();
+                                              String message;
+                                              if (value) {
+                                                message =
+                                                    "Vendedor ADICIONADO com sucesso!";
+                                              } else
+                                                message =
+                                                    "Problema de conexão! Vendedor ADICIONADO localmente!";
+
+                                              widget.salesmanController
+                                                  .scaffoldKey.currentState
+                                                  .showSnackBar(widget
+                                                      .salesmanController
+                                                      .getSnackBar(
+                                                          message: message));
+                                            });
+                                          }
+                                        : null,
+                              ),
                             ),
                           ),
-                        ),
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -197,10 +209,13 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
   InputDecoration _getInputDecoration(
       {@required String text, @required Function onError}) {
     return InputDecoration(
+        errorBorder: _underlineInputBorderError,
+        focusedErrorBorder: _underlineInputBorderError,
         errorText: onError(),
-        enabledBorder: underLineBorder,
-        focusedBorder: underLineBorder,
-        border: underLineBorder,
+        errorStyle: TextStyle(color: Colors.deepOrange[500]),
+        enabledBorder: _underLineBorder,
+        focusedBorder: _underLineBorder,
+        border: _underLineBorder,
         labelStyle: TextStyle(color: Colors.white, fontSize: 15),
         labelText: text);
   }

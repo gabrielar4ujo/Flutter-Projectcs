@@ -7,7 +7,6 @@ class CustomBox extends StatelessWidget {
   final bool obscure;
   final String sale;
   final String lastPurchase;
-  final Function f;
   final isExpasion;
   final Function changeYear;
 
@@ -18,12 +17,12 @@ class CustomBox extends StatelessWidget {
       this.onTap,
       this.obscure,
       this.sale,
-      this.lastPurchase, this.f, this.isExpasion, this.changeYear})
+      this.lastPurchase, this.isExpasion, this.changeYear})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final textSize = MediaQuery.of(context).size.height * .031;
+    double textSize = 18.0;
     print(obscure);
     print("isExpasoon $isExpasion");
     return Column(
@@ -78,7 +77,7 @@ class CustomBox extends StatelessWidget {
                   !obscure ? "R\$ $sale" : "R\$ *******",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: MediaQuery.of(context).size.height * .032),
+                      fontSize: textSize),
                 ),
                 trailing: !obscure
                     ? const Icon(Icons.visibility)
@@ -91,7 +90,6 @@ class CustomBox extends StatelessWidget {
           //padding: EdgeInsets.only(left: 0),
           child: ExpansionTile(
             initiallyExpanded: isExpasion,
-            onExpansionChanged: f,
             title: Text(
               "Ultima venda feita no valor de R\$ $lastPurchase",
               maxLines: 1,

@@ -90,17 +90,6 @@ mixin _$HomePageController on _HomePageController, Store {
   }
 
   @override
-  void expasionTile(bool expasion) {
-    final _$actionInfo = _$_HomePageControllerActionController.startAction(
-        name: '_HomePageController.expasionTile');
-    try {
-      return super.expasionTile(expasion);
-    } finally {
-      _$_HomePageControllerActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void changeObscureSaleState() {
     final _$actionInfo = _$_HomePageControllerActionController.startAction(
         name: '_HomePageController.changeObscureSaleState');

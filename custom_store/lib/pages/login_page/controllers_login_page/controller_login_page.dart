@@ -9,7 +9,7 @@ class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 abstract class _ControllerLoginPage with Store {
   void _loadData() {
 
-    print("ControllerLoginPage: Criando Snapshot");
+    print("ControllerLoginPage: Criando StockSnapshot");
 
     try {
       _categorySnapshot = Firestore.instance
@@ -42,7 +42,10 @@ abstract class _ControllerLoginPage with Store {
   }
 
   Stream<QuerySnapshot> getCategorySnapshot() {
-    if (_categorySnapshot == null) _loadData();
+    if (_categorySnapshot == null) {
+      print("LOadData");
+      _loadData();
+    }
     return _categorySnapshot;
   }
 
@@ -52,11 +55,19 @@ abstract class _ControllerLoginPage with Store {
 
   }
 
-  Future<Null> _loadCurrentUser() async {
+  @action
+  Future<Null> setIsLogged () async{
+    if(user == null) {
+      print("Loading User");
+      user = await auth.currentUser();
+    }
+    _isLogged = user != null;
+  }
+
+  Future<Null> loadCurrentUser() async {
     _isLoading = true;
-    if (user == null) user = await auth.currentUser();
-    if (user != null) {
-      _isLogged = true;
+
+    if (isLogged) {
       if (salesMap.length == 0) {
         QuerySnapshot docUser = await Firestore.instance
             .collection("stores")
@@ -77,8 +88,6 @@ abstract class _ControllerLoginPage with Store {
         });
         print(this.salesMap);
       }
-    } else {
-      _isLogged = false;
     }
     _isLoading = false;
   }
@@ -86,17 +95,15 @@ abstract class _ControllerLoginPage with Store {
   @action
   Future<dynamic> login({String email, String pass}) async {
     dynamic success = false;
-    print("email $email");
     _isLoading = true;
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((value) {
-      _loadCurrentUser();
+      setIsLogged();
     }).catchError((error) {
       success = error;
     });
     _isLoading = false;
-    //print(success.code);
     return success ?? false;
   }
 
@@ -105,6 +112,10 @@ abstract class _ControllerLoginPage with Store {
     auth.signOut();
     user = null;
     _isLogged = false;
+    dataMap = ObservableMap();
+    salesMap = ObservableList();
+   /* _categorySnapshot = null;
+    _salesmanListSnapshot = null;*/
   }
 
   @observable
@@ -137,7 +148,8 @@ abstract class _ControllerLoginPage with Store {
   Stream<QuerySnapshot> _salesmanListSnapshot;
 
   _ControllerLoginPage() {
-    _loadCurrentUser();
+    setIsLogged();
+    //_loadCurrentUser();
     //_loadDataSalesman();
   }
 }

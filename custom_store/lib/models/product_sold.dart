@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customstore/models/salesman.dart';
 
 class ProductSold{
 
-  String vendedor;
-  int salesAmount;
-  String year;
-  String day;
-  String month;
+  String clientName;
+  Salesman salesman;
   Timestamp timestamp;
-  String type;
-
+  String categoryName;
+  String selectedSize = "P";
+  String selectedColor;
+  String selectedAmount;
 }

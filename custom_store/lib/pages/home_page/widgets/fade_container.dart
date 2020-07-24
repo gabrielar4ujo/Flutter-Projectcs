@@ -11,7 +11,7 @@ class FadeContainer extends StatelessWidget {
     return Hero(
       tag: "LoginToHome",
       child: IgnorePointer(
-        ignoring: true,
+        ignoring: fadeAnimation.value == 0.0,
         child: Opacity(
           opacity: fadeAnimation.value,
           child: Container(

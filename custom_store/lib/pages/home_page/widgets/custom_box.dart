@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomBox extends StatelessWidget {
   final String month;
@@ -22,9 +23,9 @@ class CustomBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     double textSize = 18.0;
-    print(obscure);
-    print("isExpasoon $isExpasion");
+
     return Column(
       children: <Widget>[
         Container(
@@ -42,7 +43,36 @@ class CustomBox extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           margin:
               const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 0),
-          child: Column(
+          child: month == null ?
+          Shimmer.fromColors(
+            baseColor: Colors.grey[100],
+            highlightColor: Colors.grey[700],
+            period: Duration(seconds: 2),
+            direction: ShimmerDirection.ltr,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: <Widget>[
+                   Container(height: 25,width: 120,color: Colors.black,),
+                   Container(height: 25,width: 60,color: Colors.black,),
+                 ],
+               ),
+                SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(height: 25,width: 90,color: Colors.black,),
+                    Container(height: 25,width: 25,color: Colors.black,),
+                  ],
+                ),
+                SizedBox(height: 30,),
+              ],
+            ),
+          )
+          :
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListTile(
@@ -63,12 +93,6 @@ class CustomBox extends StatelessWidget {
                   )).toList(),
                   onChanged: changeYear,
                 ),
-
-                /* Text(
-                  year,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: textSize),
-                ),*/
               ),
               ListTile(
                 onTap: onTap,
@@ -87,8 +111,31 @@ class CustomBox extends StatelessWidget {
           ),
         ),
         Container(
-          //padding: EdgeInsets.only(left: 0),
-          child: ExpansionTile(
+          child:
+          month == null ?
+          Shimmer.fromColors(
+            baseColor: Colors.grey[100],
+            highlightColor: Colors.grey[700],
+            period: Duration(seconds: 2),
+            direction: ShimmerDirection.ltr,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(height: 25,width: 120,color: Colors.black, margin: EdgeInsets.symmetric(vertical: 12),),
+                      Container(height: 25,width: 25,color: Colors.black,),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+              :
+          ExpansionTile(
             initiallyExpanded: isExpasion,
             title: Text(
               "Ultima venda feita no valor de R\$ $lastPurchase",

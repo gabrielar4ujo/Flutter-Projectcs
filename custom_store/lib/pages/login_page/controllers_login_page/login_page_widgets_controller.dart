@@ -23,7 +23,7 @@ abstract class _LoginPageWidgetsController with Store {
   @computed
   bool get isFormEmailValid => RegExp(
           r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-      .hasMatch(emailText);
+      .hasMatch(emailText) || emailText.length == 0;
 
   @computed
   bool get isFormPassValid => passText.length > 5;
@@ -37,7 +37,7 @@ abstract class _LoginPageWidgetsController with Store {
   void setPassText(String text) => passText = text;
 
   String validatorEmail() {
-    if (!isFormEmailValid && emailText.length > 0) return "Email inválido!";
+    if (!isFormEmailValid ) return "Email inválido!";
     return null;
   }
 

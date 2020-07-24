@@ -16,8 +16,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  final controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
-  final _widgetsController = LoginPageWidgetsController();
+  ControllerLoginPage controllerLoginPage;
+  LoginPageWidgetsController _widgetsController;
 
   ReactionDisposer disposer;
 
@@ -26,6 +26,9 @@ class _LoginPageState extends State<LoginPage>
   @override
   void initState() {
     super.initState();
+    controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
+    _widgetsController = LoginPageWidgetsController();
+    print(controllerLoginPage.salesMap);
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animationController.addStatusListener((status) {
@@ -115,6 +118,7 @@ class _LoginPageState extends State<LoginPage>
                           isLoading: controllerLoginPage.isLoading,
                           loginPressed: _widgetsController.loginPressed,
                           animationController: _animationController,
+                      emailValid: _widgetsController.isFormEmailValid,
                       screenHeight: MediaQuery.of(context).size.height + 200,
                         ))
               ],

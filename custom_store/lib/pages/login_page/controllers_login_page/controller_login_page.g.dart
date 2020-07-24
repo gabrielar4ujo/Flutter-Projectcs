@@ -99,6 +99,14 @@ mixin _$ControllerLoginPage on _ControllerLoginPage, Store {
     });
   }
 
+  final _$setIsLoggedAsyncAction =
+      AsyncAction('_ControllerLoginPage.setIsLogged');
+
+  @override
+  Future<Null> setIsLogged() {
+    return _$setIsLoggedAsyncAction.run(() => super.setIsLogged());
+  }
+
   final _$loginAsyncAction = AsyncAction('_ControllerLoginPage.login');
 
   @override

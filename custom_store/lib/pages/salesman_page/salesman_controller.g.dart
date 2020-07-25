@@ -23,6 +23,44 @@ mixin _$SalesmanController on _SalesmanController, Store {
           Computed<bool>(() => super.comissionValidator,
               name: '_SalesmanController.comissionValidator'))
       .value;
+  Computed<bool> _$enableButtonComputed;
+
+  @override
+  bool get enableButton =>
+      (_$enableButtonComputed ??= Computed<bool>(() => super.enableButton,
+              name: '_SalesmanController.enableButton'))
+          .value;
+
+  final _$showErrorNameAtom = Atom(name: '_SalesmanController.showErrorName');
+
+  @override
+  bool get showErrorName {
+    _$showErrorNameAtom.reportRead();
+    return super.showErrorName;
+  }
+
+  @override
+  set showErrorName(bool value) {
+    _$showErrorNameAtom.reportWrite(value, super.showErrorName, () {
+      super.showErrorName = value;
+    });
+  }
+
+  final _$showErrorComissionAtom =
+      Atom(name: '_SalesmanController.showErrorComission');
+
+  @override
+  bool get showErrorComission {
+    _$showErrorComissionAtom.reportRead();
+    return super.showErrorComission;
+  }
+
+  @override
+  set showErrorComission(bool value) {
+    _$showErrorComissionAtom.reportWrite(value, super.showErrorComission, () {
+      super.showErrorComission = value;
+    });
+  }
 
   final _$isLoadingAtom = Atom(name: '_SalesmanController.isLoading');
 
@@ -135,12 +173,15 @@ mixin _$SalesmanController on _SalesmanController, Store {
   @override
   String toString() {
     return '''
+showErrorName: ${showErrorName},
+showErrorComission: ${showErrorComission},
 isLoading: ${isLoading},
 isEditing: ${isEditing},
 nameText: ${nameText},
 comissionText: ${comissionText},
 nameValidator: ${nameValidator},
-comissionValidator: ${comissionValidator}
+comissionValidator: ${comissionValidator},
+enableButton: ${enableButton}
     ''';
   }
 }

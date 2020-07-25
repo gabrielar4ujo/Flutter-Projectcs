@@ -36,9 +36,9 @@ class _ProductPageState extends State<ProductPage> {
 
   _ProductPageState({this.allProductsName, this.product, this.categoryID})
       : _productPageController = ProductPageController(
-      categoryID: categoryID,
-      product: product,
-      allProductsName: allProductsName);
+            categoryID: categoryID,
+            product: product,
+            allProductsName: allProductsName);
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     String title = widget.product != null ? "Editar Produto" : "Criar Produto";
 
-  /*  print("PRODUCT");
+    /*  print("PRODUCT");
     print(product.features["GG"]);*/
 
     return Scaffold(
@@ -62,15 +62,15 @@ class _ProductPageState extends State<ProductPage> {
               disabledColor: Colors.white30,
               onPressed: !(product == null) && !_productPageController.isLoading
                   ? () async {
-                for (dynamic picture
-                in _productPageController.pictureList) {
-                  if (picture is File)
-                    await picture.delete();
-                  else
-                    await _crudProductController.deletePictures(picture);
-                }
-                Navigator.pop(context, Product());
-              }
+                      for (dynamic picture
+                          in _productPageController.pictureList) {
+                        if (picture is File)
+                          await picture.delete();
+                        else
+                          await _crudProductController.deletePictures(picture);
+                      }
+                      Navigator.pop(context, Product());
+                    }
                   : null,
             ),
             Observer(
@@ -78,61 +78,61 @@ class _ProductPageState extends State<ProductPage> {
                 icon: Icon(Icons.check),
                 disabledColor: Colors.white30,
                 onPressed: _productPageController.stateIcon &&
-                    !_productPageController.isLoading
+                        !_productPageController.isLoading
                     ? () async {
-                  for (String picture
-                  in _productPageController.removedPicturesUrl) {
-                    await _crudProductController.deletePictures(picture);
-                  }
+                        for (String picture
+                            in _productPageController.removedPicturesUrl) {
+                          await _crudProductController.deletePictures(picture);
+                        }
 
-                  List newPictures =
-                  _productPageController.getNewPictures();
-                  if (newPictures.length > 0) {
-                    FinalizeProductController finalizeProduct =
-                    FinalizeProductController(
-                        length: newPictures.length);
+                        List newPictures =
+                            _productPageController.getNewPictures();
+                        if (newPictures.length > 0) {
+                          FinalizeProductController finalizeProduct =
+                              FinalizeProductController(
+                                  length: newPictures.length);
 
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: Observer(
-                              builder: (context) => WillPopScope(
-                                onWillPop: () =>
-                                    Future.value(false),
-                                child: CustomProgressBarWidgets(
-                                  lenght: finalizeProduct.length,
-                                  value: finalizeProduct.count,
-                                  text: finalizeProduct.operation,
-                                ),
-                              )),
-                        ));
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    content: Observer(
+                                        builder: (context) => WillPopScope(
+                                              onWillPop: () =>
+                                                  Future.value(false),
+                                              child: CustomProgressBarWidgets(
+                                                lenght: finalizeProduct.length,
+                                                value: finalizeProduct.count,
+                                                text: finalizeProduct.operation,
+                                              ),
+                                            )),
+                                  ));
 
-                    for (File picture in newPictures) {
-                      await _crudProductController
-                          .savePictures(pictures: picture)
-                          .then((value) {
-                        if (value != null) {
-                          _productPageController
-                              .addFinalListPicture(value);
-                          finalizeProduct
-                              .setOperetion("Salvando Imagens...");
-                        } else
-                          finalizeProduct.setOperetion("Error!\n"
-                              "Problema ao adicionar imagem: ${finalizeProduct.count + 1}");
-                      });
-                      finalizeProduct.increment();
-                    }
+                          for (File picture in newPictures) {
+                            await _crudProductController
+                                .savePictures(pictures: picture)
+                                .then((value) {
+                              if (value != null) {
+                                _productPageController
+                                    .addFinalListPicture(value);
+                                finalizeProduct
+                                    .setOperetion("Salvando Imagens...");
+                              } else
+                                finalizeProduct.setOperetion("Error!\n"
+                                    "Problema ao adicionar imagem: ${finalizeProduct.count + 1}");
+                            });
+                            finalizeProduct.increment();
+                          }
 
-                    await Future.delayed(Duration(seconds: 2));
-                    Navigator.pop(context);
-                  }
+                          await Future.delayed(Duration(seconds: 2));
+                          Navigator.pop(context);
+                        }
 
-                  _productPageController.finalizePictures();
+                        _productPageController.finalizePictures();
 
-                  Navigator.pop(
-                      context, _productPageController.getProduct());
-                }
+                        Navigator.pop(
+                            context, _productPageController.getProduct());
+                      }
                     : null,
               ),
             )
@@ -169,21 +169,21 @@ class _ProductPageState extends State<ProductPage> {
                                 margin: EdgeInsets.symmetric(horizontal: 2)),
                             _imageController.imageClick
                                 ? Container(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  print("Remove Image Clicked");
-                                  _productPageController
-                                      .removePictureFromList(e);
-                                },
-                              ),
-                              alignment: Alignment.topRight,
-                              height: 120,
-                              width: 95,
-                            )
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.clear,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        print("Remove Image Clicked");
+                                        _productPageController
+                                            .removePictureFromList(e);
+                                      },
+                                    ),
+                                    alignment: Alignment.topRight,
+                                    height: 120,
+                                    width: 95,
+                                  )
                                 : Container(),
                           ],
                         ),
@@ -223,8 +223,9 @@ class _ProductPageState extends State<ProductPage> {
                       onChanged: _productPageController.changeName,
                       decoration: InputDecoration(
                           errorText:
-                          _productPageController.onErrorProductText(),
-                          labelText: "Nome do produto*"),
+                              _productPageController.onErrorProductText(),
+                          labelText: "Nome do produto*",
+                          helperText: ""),
                     ),
                   ),
                 ],
@@ -237,25 +238,29 @@ class _ProductPageState extends State<ProductPage> {
                     child: TextFormField(
                       initialValue: _productPageController.priceText,
                       keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                          TextInputType.numberWithOptions(decimal: true),
                       onChanged: _productPageController.changePrice,
                       decoration: InputDecoration(
                           errorText: _productPageController.onErrorPriceText(),
-                          labelText: "Preço*"),
+                          labelText: "Preço*",
+                          helperText: ""),
                     ),
                     flex: 1,
                   ),
-                  SizedBox(width: 50,),
+                  SizedBox(
+                    width: 50,
+                  ),
                   Flexible(
                     flex: 1,
                     child: TextFormField(
                       initialValue: _productPageController.spentText,
                       keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                          TextInputType.numberWithOptions(decimal: true),
                       onChanged: _productPageController.changeSpent,
                       decoration: InputDecoration(
                           errorText: _productPageController.onErrorSpentText(),
-                          labelText: "Gasto"),
+                          labelText: "Gasto",
+                          helperText: ""),
                     ),
                   )
                 ],
@@ -264,53 +269,59 @@ class _ProductPageState extends State<ProductPage> {
             SizedBox(
               height: 15,
             ),
-            Text("Total em estoque (antes de qualquer alteração): ${product == null ? "0" : product.amount}", style: TextStyle(color: Colors.grey[500], fontSize: 11),),
+            Text(
+              "Total em estoque (antes de qualquer alteração): ${product == null ? "0" : product.amount}",
+              style: TextStyle(color: Colors.grey[500], fontSize: 11),
+            ),
             SizedBox(
               height: 15,
             ),
             Observer(
                 builder: (context) => CustomExpasionTile(
-                    size: "P",
-                    function: _productPageController.setListColorProductPage,
-                    removedFunction: _productPageController.removeColorFromList,
-                    featuresMap:
-                    _productPageController.observableFeatures["P"],)),
+                      size: "P",
+                      function: _productPageController.setListColorProductPage,
+                      removedFunction:
+                          _productPageController.removeColorFromList,
+                      featuresMap:
+                          _productPageController.observableFeatures["P"],
+                    )),
             Observer(
                 builder: (context) => CustomExpasionTile(
                     size: "M",
                     function: _productPageController.setListColorProductPage,
                     removedFunction: _productPageController.removeColorFromList,
                     featuresMap:
-                    _productPageController.observableFeatures["M"])),
+                        _productPageController.observableFeatures["M"])),
             Observer(
                 builder: (context) => CustomExpasionTile(
                     size: "G",
                     function: _productPageController.setListColorProductPage,
                     removedFunction: _productPageController.removeColorFromList,
                     featuresMap:
-                    _productPageController.observableFeatures["G"])),
+                        _productPageController.observableFeatures["G"])),
             Observer(
                 builder: (context) => CustomExpasionTile(
-                  size: "GG",
-                  function: _productPageController.setListColorProductPage,
-                  removedFunction: _productPageController.removeColorFromList,
-                  featuresMap:
-                  _productPageController.observableFeatures["GG"],)),
+                      size: "GG",
+                      function: _productPageController.setListColorProductPage,
+                      removedFunction:
+                          _productPageController.removeColorFromList,
+                      featuresMap:
+                          _productPageController.observableFeatures["GG"],
+                    )),
             Observer(
                 builder: (context) => CustomExpasionTile(
                     size: "XG",
                     function: _productPageController.setListColorProductPage,
                     removedFunction: _productPageController.removeColorFromList,
                     featuresMap:
-                    _productPageController.observableFeatures["XG"])),
+                        _productPageController.observableFeatures["XG"])),
             Observer(
                 builder: (context) => CustomExpasionTile(
                     size: "U",
                     function: _productPageController.setListColorProductPage,
                     removedFunction: _productPageController.removeColorFromList,
                     featuresMap:
-                    _productPageController.observableFeatures["U"])),
-
+                        _productPageController.observableFeatures["U"])),
           ],
         ));
   }

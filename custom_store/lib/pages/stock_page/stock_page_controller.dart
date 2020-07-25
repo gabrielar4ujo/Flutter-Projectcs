@@ -1,8 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customstore/helpers/category_helper.dart';
-import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 part 'stock_page_controller.g.dart';
@@ -10,24 +6,23 @@ part 'stock_page_controller.g.dart';
 class StockPageController = _StockPageController with _$StockPageController;
 
 abstract class _StockPageController with Store {
-
   //ControllerLoginPage controllerLoginPage;
   //CategoryHelper categoryHelper;
 
-  _StockPageController(){
+  _StockPageController() {
     //controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     //categoryHelper = CategoryHelper(userUID: controllerLoginPage.user.uid);
   }
 
   TextEditingController textEditingController = TextEditingController();
 
-  void textFormFieldClear(){
+  void textFormFieldClear() {
     textEditingController.clear();
     _productText = "";
     print("clear");
   }
 
- /* @observable
+  /* @observable
   bool isLoading = false;*/
 
   @observable
@@ -37,7 +32,7 @@ abstract class _StockPageController with Store {
   bool get wasEdited => _wasEdited;
 
   @action
-  void changeWasEdited(String lastName){
+  void changeWasEdited(String lastName) {
     _wasEdited = lastName != textEditingController.text;
   }
 
@@ -48,7 +43,7 @@ abstract class _StockPageController with Store {
   String get productText => _productText;
 
   @action
-  void setProductText(String currentName, String lastName){
+  void setProductText(String currentName, String lastName) {
     _productText = currentName;
     changeWasEdited(lastName);
   }
@@ -56,13 +51,12 @@ abstract class _StockPageController with Store {
   @computed
   bool get productTextValidator => _productText.isEmpty;
 
-
-  String productValidator(){
-    if(productTextValidator) return "Nome inválido";
+  String productValidator() {
+    if (productTextValidator) return "Nome inválido";
     return null;
   }
 
- /* void confirmed() async {
+  /* void confirmed() async {
 
     bool categoryExist = false;
     String categoryName = _productText;

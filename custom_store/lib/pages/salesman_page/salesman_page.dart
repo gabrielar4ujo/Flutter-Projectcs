@@ -17,7 +17,6 @@ class _SalesmanPageState extends State<SalesmanPage> {
   @override
   void initState() {
     super.initState();
-    print("SalesManPage InitState");
     _crudSalesmanController = CrudSalesmanController();
     _salesmanController = SalesmanController();
   }
@@ -51,15 +50,15 @@ class _SalesmanPageState extends State<SalesmanPage> {
             salesmanController: _salesmanController,
           ),
           SizedBox(
-            height: 40,
+            height: 10,
           ),
           Expanded(
             child: Stack(
               fit: StackFit.expand,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(top: 50),
-                  width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(top: 50),
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -72,7 +71,15 @@ class _SalesmanPageState extends State<SalesmanPage> {
                         salesmanController: _salesmanController,
                       ),
                     )),
-                Positioned(top:10 ,left: 0,right: 0,child: Icon(Icons.person, size: 35,color: Colors.deepPurpleAccent,)),
+                Positioned(
+                    top: 10,
+                    left: 0,
+                    right: 0,
+                    child: Icon(
+                      Icons.person,
+                      size: 35,
+                      color: Colors.deepPurpleAccent,
+                    )),
               ],
             ),
           )

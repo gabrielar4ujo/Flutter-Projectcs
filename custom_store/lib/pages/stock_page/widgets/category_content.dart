@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_product_controller.dart';
 import 'package:customstore/models/product.dart';
 import 'package:customstore/pages/product_page/product_page.dart';
@@ -11,12 +10,14 @@ class CategoryContentWidget extends StatelessWidget {
   final Map<String, dynamic> allProductsName;
   final String userUID;
   final String documentID;
-  CrudProductController _crudProductController;
+  final CrudProductController _crudProductController;
 
   CategoryContentWidget(
-      {this.product, this.allProductsName, this.userUID, @required this.documentID}) {
-    _crudProductController = CrudProductController();
-  }
+      {this.product,
+      this.allProductsName,
+      this.userUID,
+      @required this.documentID})
+      : _crudProductController = CrudProductController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +35,10 @@ class CategoryContentWidget extends StatelessWidget {
           if (productEdited.name != product.name)
             allProductsName.remove(product.name);
 
-          if(productEdited.name != null) allProductsName[productEdited.name] = productEdited.toJson();
-          _crudProductController.update(documentID: documentID, productData: allProductsName);
-
+          if (productEdited.name != null)
+            allProductsName[productEdited.name] = productEdited.toJson();
+          _crudProductController.update(
+              documentID: documentID, productData: allProductsName);
         }
       },
       child: Container(

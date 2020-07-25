@@ -8,7 +8,6 @@ class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
 abstract class _ControllerLoginPage with Store {
   void _loadData() {
-
     print("ControllerLoginPage: Criando StockSnapshot");
 
     try {
@@ -18,14 +17,10 @@ abstract class _ControllerLoginPage with Store {
           .collection("stock")
           .orderBy("time")
           .snapshots();
-    }
-    catch(e){
-
-    }
+    } catch (e) {}
   }
 
-  void _loadDataSalesman(){
-
+  void _loadDataSalesman() {
     print("ControllerLoginPage: Criando SalesmanSnapshot");
 
     try {
@@ -35,10 +30,7 @@ abstract class _ControllerLoginPage with Store {
           .collection("salesman")
           .orderBy("time", descending: true)
           .snapshots();
-    }
-    catch(e){
-
-    }
+    } catch (e) {}
   }
 
   Stream<QuerySnapshot> getCategorySnapshot() {
@@ -49,15 +41,14 @@ abstract class _ControllerLoginPage with Store {
     return _categorySnapshot;
   }
 
-  Stream<QuerySnapshot> getSalesmanListSnapshot(){
+  Stream<QuerySnapshot> getSalesmanListSnapshot() {
     if (_salesmanListSnapshot == null) _loadDataSalesman();
     return _salesmanListSnapshot;
-
   }
 
   @action
-  Future<Null> setIsLogged () async{
-    if(user == null) {
+  Future<Null> setIsLogged() async {
+    if (user == null) {
       print("Loading User");
       user = await auth.currentUser();
     }
@@ -114,7 +105,7 @@ abstract class _ControllerLoginPage with Store {
     _isLogged = false;
     dataMap = ObservableMap();
     salesMap = ObservableList();
-   /* _categorySnapshot = null;
+    /* _categorySnapshot = null;
     _salesmanListSnapshot = null;*/
   }
 
@@ -152,4 +143,6 @@ abstract class _ControllerLoginPage with Store {
     //_loadCurrentUser();
     //_loadDataSalesman();
   }
+
+  int timeOut = 5;
 }

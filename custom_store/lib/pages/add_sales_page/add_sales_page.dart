@@ -10,13 +10,17 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-class AddSalesPage extends StatelessWidget {
+import '../../models/salesman.dart';
 
+class AddSalesPage extends StatelessWidget {
   final ControllerLoginPage _controllerLoginPage;
   final AddSalesController _addSalesController;
   final CrudSalesController _salesHelper;
 
-  AddSalesPage() : _controllerLoginPage = GetIt.I.get<ControllerLoginPage>(),  _addSalesController = AddSalesController(), _salesHelper = CrudSalesController();
+  AddSalesPage()
+      : _controllerLoginPage = GetIt.I.get<ControllerLoginPage>(),
+        _addSalesController = AddSalesController(),
+        _salesHelper = CrudSalesController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +34,17 @@ class AddSalesPage extends StatelessWidget {
               icon: Icon(Icons.check),
               iconSize: 30,
               disabledColor: Colors.grey[700],
-              onPressed: _addSalesController.enableButton && !_salesHelper.isLoading ? () async {
-                Product p = _addSalesController.getFinalProduct();
-                await _salesHelper.insert(categoryName: p.categoryId ,productData: p).then((value) {
-                  Navigator.of(context).pop(value);
-                });
-              } : null,
+              onPressed: _addSalesController.enableButton &&
+                      !_salesHelper.isLoading
+                  ? () async {
+                      Product p = _addSalesController.getFinalProduct();
+                      await _salesHelper
+                          .insert(categoryName: p.categoryId, productData: p)
+                          .then((value) {
+                        Navigator.of(context).pop(value);
+                      });
+                    }
+                  : null,
             ),
           )
         ],
@@ -63,11 +72,15 @@ class AddSalesPage extends StatelessWidget {
 
               List<Salesman> salesmanList = List();
 
-              salesmanSnapshot.data.documents.forEach((element) {
-                salesmanList.add(Salesman(
-                    name: element["name"],
-                    comission: double.parse(element["comission"])));
-              });
+              if (salesmanSnapshot.data.documents.isNotEmpty)
+                salesmanSnapshot.data.documents.forEach((element) {
+                  salesmanList.add(Salesman(
+                      name: element["name"],
+                      comission: double.parse(element["comission"])));
+                });
+              else {
+                salesmanList.add(Salesman());
+              }
 
               print(salesmanList);
 
@@ -84,7 +97,10 @@ class AddSalesPage extends StatelessWidget {
                     return Center(
                       child: Text(
                         "Seu estoque está vazio!",
-                        style: TextStyle(color: Colors.deepPurple, fontSize: 20,),
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 20,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     );
@@ -118,12 +134,25 @@ class AddSalesPage extends StatelessWidget {
                     });
                   });
 
-                  _addSalesController.initAddSalesController(productMap, salesmanList);
+                  _addSalesController.initAddSalesController(
+                      productMap, salesmanList);
 
                   return Observer(
                       builder: (context) => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              _addSalesController
+                                          .salesmanController.salesmanName ==
+                                      null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        "Atenção: Não há vendedores, caso prossiga, será adicionado a venda sem referência a qualquer vendedor!",
+                                        style: TextStyle(
+                                            color: Colors.red, fontSize: 12),
+                                      ),
+                                    )
+                                  : Container(),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -131,26 +160,29 @@ class AddSalesPage extends StatelessWidget {
                                   Flexible(
                                     flex: 1,
                                     child: DropdownButtonFormField(
-                                      disabledHint: Text(_addSalesController.product.categoryName),
+                                        disabledHint: Text(_addSalesController
+                                            .product.categoryName),
                                         decoration: InputDecoration(
                                           labelText: 'Categoria*',
                                         ),
                                         value: _addSalesController
                                             .product.categoryName,
-                                        items: _salesHelper.isLoading ? null : _addSalesController
-                                            .productMap.keys
-                                            .map((categoryName) =>
-                                                DropdownMenuItem<String>(
-                                                  value: categoryName,
-                                                  child: Text(
-                                                    categoryName,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                ))
-                                            .toList(),
+                                        items: _salesHelper.isLoading
+                                            ? null
+                                            : _addSalesController
+                                                .productMap.keys
+                                                .map((categoryName) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: categoryName,
+                                                      child: Text(
+                                                        categoryName,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ))
+                                                .toList(),
                                         onChanged: _addSalesController
                                             .setCategoryName),
                                   ),
@@ -160,33 +192,38 @@ class AddSalesPage extends StatelessWidget {
                                   Flexible(
                                     flex: 1,
                                     child: DropdownButtonFormField(
-                                        disabledHint: Text(_addSalesController.product?.productName ?? ""),
+                                        disabledHint: Text(_addSalesController
+                                                .product?.productName ??
+                                            ""),
                                         decoration: InputDecoration(
                                           labelText: 'Produto*',
                                         ),
                                         value: _addSalesController
                                                 .product.productName ??
                                             "Vazio",
-                                        items: _salesHelper.isLoading ? null : (_addSalesController
-                                                        .product.productName ==
-                                                    null
-                                                ? [Product(name: "Vazio")]
-                                                : _addSalesController
-                                                        .productMap[
-                                                    _addSalesController
-                                                        .product.categoryName])
-                                            .map((prod) =>
-                                                DropdownMenuItem<String>(
-                                                  value: prod.name,
-                                                  child: Text(
-                                                    prod.name,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                ))
-                                            .toList(),
+                                        items: _salesHelper.isLoading
+                                            ? null
+                                            : (_addSalesController.product
+                                                            .productName ==
+                                                        null
+                                                    ? [Product(name: "Vazio")]
+                                                    : _addSalesController
+                                                            .productMap[
+                                                        _addSalesController
+                                                            .product
+                                                            .categoryName])
+                                                .map((prod) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: prod.name,
+                                                      child: Text(
+                                                        prod.name,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ))
+                                                .toList(),
                                         onChanged:
                                             _addSalesController.setProductName),
                                   ),
@@ -197,15 +234,19 @@ class AddSalesPage extends StatelessWidget {
                                   Container(
                                     width: 74,
                                     child: DropdownButtonFormField(
-                                        disabledHint: Text(_addSalesController.product?.size ?? ""),
+                                        disabledHint: Text(
+                                            _addSalesController.product?.size ??
+                                                ""),
                                         decoration: InputDecoration(
                                           labelText: 'Tamanho*',
                                         ),
                                         value:
                                             _addSalesController.product.size ??
                                                 "Vazio",
-                                        items:
-                                        _salesHelper.isLoading ? null : (_addSalesController.product.size ==
+                                        items: _salesHelper.isLoading
+                                            ? null
+                                            : (_addSalesController
+                                                            .product.size ==
                                                         null
                                                     ? ["Vazio"]
                                                     : [
@@ -236,27 +277,31 @@ class AddSalesPage extends StatelessWidget {
                                   Flexible(
                                     flex: 2,
                                     child: DropdownButtonFormField(
-                                        disabledHint: Text(_addSalesController.product?.color ?? ""),
+                                        disabledHint: Text(_addSalesController
+                                                .product?.color ??
+                                            ""),
                                         decoration: InputDecoration(
                                           labelText: 'Cor*',
                                         ),
                                         value:
                                             _addSalesController.product.color ??
                                                 "Vazio",
-                                        items: _salesHelper.isLoading ? null : _addSalesController
-                                            .getListColors()
-                                            .map((size) =>
-                                                DropdownMenuItem<String>(
-                                                  value: size,
-                                                  child: Text(
-                                                    size,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                ))
-                                            .toList(),
+                                        items: _salesHelper.isLoading
+                                            ? null
+                                            : _addSalesController
+                                                .getListColors()
+                                                .map((size) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: size,
+                                                      child: Text(
+                                                        size,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ))
+                                                .toList(),
                                         onChanged:
                                             _addSalesController.setColor),
                                   ),
@@ -266,25 +311,34 @@ class AddSalesPage extends StatelessWidget {
                                   Flexible(
                                     flex: 2,
                                     child: DropdownButtonFormField(
-                                        disabledHint: Text(_addSalesController.salesmanController?.salesmanName ?? ""),
+                                        disabledHint: Text(_addSalesController
+                                                .salesmanController
+                                                ?.salesmanName ??
+                                            ""),
                                         decoration: InputDecoration(
                                           labelText: 'Vendedor*',
                                         ),
                                         value: _addSalesController
-                                            .salesmanController.salesmanName,
-                                        items: _salesHelper.isLoading ? null : _addSalesController.listSalesman
-                                            .map((salesman) =>
-                                                DropdownMenuItem<String>(
-                                                  value: salesman.name,
-                                                  child: Text(
-                                                    salesman.name,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                ))
-                                            .toList(),
+                                                .salesmanController
+                                                .salesmanName ??
+                                            "Vazio",
+                                        items: _salesHelper.isLoading
+                                            ? null
+                                            : _addSalesController.listSalesman
+                                                .map((salesman) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: salesman.name ??
+                                                          "Vazio",
+                                                      child: Text(
+                                                        salesman.name ??
+                                                            "Vazio",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ))
+                                                .toList(),
                                         onChanged:
                                             _addSalesController.setSalesman),
                                   ),
@@ -297,14 +351,17 @@ class AddSalesPage extends StatelessWidget {
                                   Flexible(
                                     flex: 4,
                                     child: TextFormField(
-                                      textCapitalization: TextCapitalization.words,
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       controller: _addSalesController
                                           .clientNameTextEditingController,
                                       onChanged:
                                           _addSalesController.setClientName,
                                       enabled: _addSalesController
-                                          .product.amountIsNotNull && !_salesHelper.isLoading,
+                                              .product.amountIsNotNull &&
+                                          !_salesHelper.isLoading,
                                       decoration: InputDecoration(
+                                          helperText: "",
                                           labelText: "Nome do Cliente*",
                                           hintText: "Ex: Maria",
                                           errorText: _addSalesController
@@ -318,7 +375,8 @@ class AddSalesPage extends StatelessWidget {
                                     flex: 2,
                                     child: TextFormField(
                                       enabled: _addSalesController
-                                          .product.amountIsNotNull && !_salesHelper.isLoading,
+                                              .product.amountIsNotNull &&
+                                          !_salesHelper.isLoading,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
                                               decimal: false),
@@ -331,6 +389,7 @@ class AddSalesPage extends StatelessWidget {
                                       onChanged:
                                           _addSalesController.setSelectedAmount,
                                       decoration: InputDecoration(
+                                        helperText: "",
                                         errorText:
                                             _addSalesController.amountError(),
                                         labelText: "Quantidade*",

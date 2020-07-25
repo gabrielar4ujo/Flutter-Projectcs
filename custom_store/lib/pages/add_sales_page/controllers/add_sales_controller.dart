@@ -193,7 +193,6 @@ abstract class _AddSalesController with Store {
   @computed
   bool get enableButton => !(clientNameValidator || amountValidator);
 
-
   Product getFinalProduct() {
     Product product = Product();
 
@@ -207,8 +206,8 @@ abstract class _AddSalesController with Store {
     product.clientName = clientName;
 
     product.salesman = (Salesman(
-        comission: _salesmanController.salesmanComission,
-        name: _salesmanController.salesmanName));
+        comission: _salesmanController.salesmanComission ?? 0.0,
+        name: _salesmanController.salesmanName ?? "Sem vendedor"));
 
     print(product.categoryId);
     print(product.categoryName);

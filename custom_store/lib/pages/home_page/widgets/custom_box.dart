@@ -8,7 +8,7 @@ class CustomBox extends StatelessWidget {
   final bool obscure;
   final String sale;
   final String lastPurchase;
-  final isExpasion;
+  final bool isExpasion;
   final Function changeYear;
 
   const CustomBox(

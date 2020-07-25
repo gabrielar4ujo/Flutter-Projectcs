@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -21,9 +20,10 @@ abstract class _LoginPageWidgetsController with Store {
   String passText = '';
 
   @computed
-  bool get isFormEmailValid => RegExp(
-          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-      .hasMatch(emailText) || emailText.length == 0;
+  bool get isFormEmailValid =>
+      RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+          .hasMatch(emailText) ||
+      emailText.length == 0;
 
   @computed
   bool get isFormPassValid => passText.length > 5;
@@ -37,7 +37,7 @@ abstract class _LoginPageWidgetsController with Store {
   void setPassText(String text) => passText = text;
 
   String validatorEmail() {
-    if (!isFormEmailValid ) return "Email inválido!";
+    if (!isFormEmailValid) return "Email inválido!";
     return null;
   }
 
@@ -52,9 +52,9 @@ abstract class _LoginPageWidgetsController with Store {
   @computed
   bool get obscure => _obscure;
 
-  Function eyesClick() {
-    changeObscure();
-  }
+  // Function eyesClick() {
+  //   changeObscure();
+  // }
 
   @action
   void changeObscure() => _obscure = !_obscure;
@@ -62,12 +62,12 @@ abstract class _LoginPageWidgetsController with Store {
   @computed
   Function get loginPressed {
     return (isFormEmailValid && isFormPassValid)
-        ? () async{
-      bool r;
+        ? () async {
+            bool r;
             await controllerLoginPage
                 .login(email: emailText, pass: passText)
                 .then((value) {
-                  r = value is bool;
+              r = value is bool;
               if (!(r)) showSnackBar(value.code);
             });
             print("DEU CERTO O LOGIN: $r");

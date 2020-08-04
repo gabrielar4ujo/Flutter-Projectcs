@@ -13,7 +13,7 @@ class CustomInkwell extends StatelessWidget {
     return InkWell(
       onTap: _functionPage,
       child: Container(
-        margin: EdgeInsets.only(left: _namePage == "Financeiro" ? 20 : 4, right: _namePage == "Adicionar Vendedor" ? 20 : 4),
+        margin: EdgeInsets.only(left: _namePage == "Financeiro" ? 20 : 4, right: _namePage == "Produto mais vendido" ? 20 : 4),
         width:  MediaQuery.of(context).size.width * .27,
         padding: EdgeInsets.symmetric(horizontal:4),
         decoration: BoxDecoration(

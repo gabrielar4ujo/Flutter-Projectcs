@@ -6,10 +6,10 @@ import 'package:customstore/pages/home_page/home_page_controller.dart';
 import 'package:customstore/pages/home_page/widgets/custom_box.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:customstore/pages/login_page/login_page.dart';
+import 'package:customstore/pages/sale_page/sale_page.dart';
 import 'package:customstore/pages/salesman_page/salesman_page.dart';
 import 'package:customstore/pages/stock_page/stock_page.dart';
 import 'package:customstore/utils/global_scaffold.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -33,14 +33,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   String year = (DateTime.now().year).toString();
   ControllerLoginPage controllerLoginPage;
-  ReactionDisposer _disposer;
-
+ /* ReactionDisposer _disposer;
+*/
   bool statusConnection = false;
   String connetionStatus = "Unknown";
   Connectivity conectivity;
   StreamSubscription<ConnectivityResult> subscription;
 
   Animation<double> fadeAnimation;
+  Animation<double> paddingAnimation;
   AnimationController _animationController;
 
 
@@ -52,16 +53,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     homePageController = HomePageController();
 
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 2500));
 
     fadeAnimation = Tween<double>(
         begin: 1.0,end: 0.0
     ).animate(CurvedAnimation(
-        curve: Curves.easeInQuint,
+        curve: Interval(0.0, 0.50, curve: Curves.easeInQuint),
         parent: _animationController
     ));
 
-    _animationController.forward();
+    paddingAnimation = Tween<double>(
+        begin: 250 , end: 0.0
+    ).animate(CurvedAnimation(
+        curve: Interval(0.40, 1.0, curve: Curves.elasticOut),
+        parent: _animationController
+    ));
+
+    _animationController.forward().whenCompleteOrCancel(() =>  controllerLoginPage.loadCurrentUser());
 
     conectivity = Connectivity();
     subscription = conectivity.onConnectivityChanged
@@ -89,18 +97,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     });
   }
 
-  @override
+  /*@override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged) {
       if (!isLogged) {
-        print("logado");
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginPage()));
       }
     });
-  }
+  }*/
 
   List<Widget> pages = List();
   List<String> list = [
@@ -120,11 +127,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   Widget _buildAnimation(BuildContext context, Widget child){
 
-    InfinityPageController infinityPageController =
-    new InfinityPageController(initialPage: DateTime.now().month - 1);
-
-    final double _screenHeight = MediaQuery.of(context).size.height;
-    final double _screenWidth = MediaQuery.of(context).size.width;
 
     return Stack(
       children: <Widget>[
@@ -152,24 +154,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               iconSize: 25,
               padding: EdgeInsets.only(right: 10),
               icon: Icon(Icons.exit_to_app),
-              onPressed: controllerLoginPage.logout,
+              onPressed: (){
+                controllerLoginPage.logout();
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
             )
           ),
         ),
-
         Container(
           margin: EdgeInsets.only(top: 50 + MediaQuery.of(context).padding.top),
           height: _screenHeight,
           width: _screenWidth,
           child: Observer(
             builder: (context) {
-              if (controllerLoginPage.isLoading)
-                return Container(
-                    padding: EdgeInsets.only(top: 100),
-                    width: MediaQuery.of(context).size.width,
-                    child: Align(
-                        alignment: Alignment.topCenter,
-                        child: CircularProgressIndicator()));
+              if (controllerLoginPage.isLoading ||
+                  !(_animationController.status == AnimationStatus.completed))
+                return CustomBox();
 
               pages = createWidgets();
 
@@ -184,10 +185,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
         Positioned(
           bottom: 16,
-          left: 0,
+          left: paddingAnimation.value,
           right: 0,
           child: Container(
-            //padding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
             height: _screenWidth * .285 ,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -198,7 +198,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       () {},
                 ),
                 CustomInkwell(
-                    "Adicionar Venda", Icons.shopping_cart, () {}),
+                    "Adicionar Venda", Icons.shopping_cart, () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SalePage()));
+                }),
                 CustomInkwell(
                   "Estoque",
                   Icons.shop,
@@ -207,15 +209,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         builder: (context) => StockPage()));
                   },
                 ),
+                CustomInkwell("Adicionar Vendedor", Icons.person, () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SalesmanPage()));
+                }),
                 CustomInkwell(
                   "Produto mais vendido",
                   Icons.star,
                       () {},
                 ),
-                CustomInkwell("Adicionar Vendedor", Icons.person, () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SalesmanPage()));
-                }),
               ],
             ),
           ),
@@ -227,30 +229,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
+  double _screenHeight;
+  double _screenWidth;
+  InfinityPageController infinityPageController;
   @override
   Widget build(BuildContext context) {
 
+     _screenHeight = MediaQuery.of(context).size.height;
+     _screenWidth = MediaQuery.of(context).size.width;
+
+     infinityPageController = InfinityPageController(initialPage: DateTime.now().month - 1);
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-     /* appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          "Moda BA",
-          style: GoogleFonts.openSansCondensed(
-            color: Colors.white,
-            fontSize: 30,
-          ),
-        ),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            iconSize: 25,
-            padding: EdgeInsets.only(right: 10),
-            icon: Icon(Icons.exit_to_app),
-            onPressed: controllerLoginPage.logout,
-          )
-        ],
-      ),*/
       backgroundColor: Colors.deepPurple[500],
       body: Container(
         child: AnimatedBuilder(
@@ -276,7 +267,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             : model.lastPurchaseMap[year][index].price.toStringAsFixed(2);
       }
 */
-      print("oi");
+
       return Observer(
           builder: (context) => CustomBox(
                 year: homePageController.year,
@@ -294,10 +285,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void dispose() {
     // TODO: implement dispose
-    print("dispose");
     super.dispose();
-    _disposer();
+    //_disposer();
     subscription.cancel();
     _animationController.dispose();
+    //GetIt.I.resetLazySingleton(instance: controllerLoginPage, instanceName: "controllerLoginPage");
   }
 }

@@ -6,11 +6,12 @@ class ButtonSignIn extends StatelessWidget {
   final bool isLoading;
   final AnimationController animationController;
   final double screenHeight;
+  final bool emailValid;
 
   final Animation<double> buttomSqueeze;
   final Animation<double> buttomZoomOut;
 
-  ButtonSignIn({this.loginPressed, this.isLoading, this.animationController, this.screenHeight})
+  ButtonSignIn({this.loginPressed, this.isLoading, this.animationController, this.screenHeight, this.emailValid})
       : buttomSqueeze = Tween(begin: 80.0, end: 50.0).animate(CurvedAnimation(
             parent: animationController, curve: Interval(0.0, 0.150))),
         buttomZoomOut = Tween(begin: 50.0, end:screenHeight).animate(
@@ -22,7 +23,7 @@ class ButtonSignIn extends StatelessWidget {
     bool loginCompleted = false;
 
     return Padding(
-        padding: EdgeInsets.only(top: buttomZoomOut.value > (screenHeight / 3) ? 0 : 350),
+        padding: EdgeInsets.only(top: buttomZoomOut.value > (screenHeight / 3) ? 0 : emailValid ? 350 : 372),
         child:
             GestureDetector(
           onTap: !isActivity || !isLoading

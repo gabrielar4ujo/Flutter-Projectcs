@@ -88,7 +88,7 @@ abstract class _SalesmanController with Store {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   SnackBar getSnackBar ({String message, SnackBarAction snackBarAction}){
-    return SnackBar(duration: Duration(seconds: 2),content: Text(message),action: snackBarAction ?? null /*SnackBarAction(label: "DESFAZER", textColor: Colors.red, onPressed: () {  },)*/,backgroundColor: Colors.black,);
+    return SnackBar(duration: Duration(seconds: 2),content: Text(message),action: snackBarAction ?? null ,backgroundColor: Colors.deepPurple,);
   }
 
 }

@@ -1,14 +1,12 @@
-import 'package:customstore/core/crud_salesman_controller.dart';
 import 'package:customstore/models/salesman.dart';
-import 'package:customstore/pages/salesman_page/salesman_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class AddSalesmanWidget extends StatefulWidget {
-  final CrudSalesmanController crudSalesmanController;
-  final SalesmanController salesmanController;
+  final crudSalesmanController;
+  final salesmanController;
 
   AddSalesmanWidget({this.crudSalesmanController, this.salesmanController});
 

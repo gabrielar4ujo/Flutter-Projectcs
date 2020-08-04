@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:customstore/helpers/product_helper.dart';
-import 'package:customstore/models/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
@@ -11,11 +10,11 @@ class CrudProductController = _CrudProductController with _$CrudProductControlle
 
 abstract class _CrudProductController with Store {
 
-  ProductHelper _productHelper;
+  final ProductHelper _productHelper;
 
-  _CrudProductController(){
+  _CrudProductController() :
     _productHelper = ProductHelper();
-  }
+
 
   @observable
   bool isLoading = false;

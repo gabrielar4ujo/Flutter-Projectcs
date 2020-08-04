@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
     return Container(
       color: Colors.white,
       alignment: Alignment.center,
-      child: CircularProgressIndicator(),
+      child: Icon(Icons.store, size: 150, color: Colors.deepPurple,),
     );
   }
 

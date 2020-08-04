@@ -6,19 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../../models/salesman.dart';
+
 class SalesmanContentTile extends StatefulWidget {
   final DocumentSnapshot salesmanSnapshot;
   final CrudSalesmanController crudSalesmanController;
   final SalesmanController salesmanController;
 
-  Salesman salesman = Salesman();
+  final Salesman salesman;
 
   SalesmanContentTile(
       {this.salesmanSnapshot,
       this.crudSalesmanController,
-      this.salesmanController}) {
-    salesman = salesman.fromMap(salesmanSnapshot);
-  }
+      this.salesmanController})
+      : salesman = Salesman().fromMap(salesmanSnapshot);
 
   @override
   _SalesmanContentTileState createState() => _SalesmanContentTileState();

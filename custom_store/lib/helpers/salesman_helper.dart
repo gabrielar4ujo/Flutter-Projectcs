@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 
 class SalesmanHelper implements CategoryHelperI {
   String userUID;
-  final timeOut = 3;
 
   SalesmanHelper() {
     this.userUID = GetIt.I.get<ControllerLoginPage>().user.uid;
@@ -23,7 +22,7 @@ class SalesmanHelper implements CategoryHelperI {
         .delete()
         .whenComplete(() => success = true)
         .catchError((e) => success = false)
-        .timeout(Duration(seconds: timeOut), onTimeout: () {
+        .timeout(Duration(seconds:  GetIt.I.get<ControllerLoginPage>().timeOut), onTimeout: () {
       success = false;
       return;
     });
@@ -47,7 +46,7 @@ class SalesmanHelper implements CategoryHelperI {
         })
         .whenComplete(() => success = true)
         .catchError((e) => success = false)
-        .timeout(Duration(seconds: timeOut), onTimeout: () {
+        .timeout(Duration(seconds:  GetIt.I.get<ControllerLoginPage>().timeOut), onTimeout: () {
           success = false;
           return;
         });
@@ -67,7 +66,7 @@ class SalesmanHelper implements CategoryHelperI {
         .updateData({"name": data.name, "comission": data.comission.toStringAsFixed(2)})
         .whenComplete(() => success = true)
         .catchError((e) => success = false)
-        .timeout(Duration(seconds: timeOut), onTimeout: () {
+        .timeout(Duration(seconds:  GetIt.I.get<ControllerLoginPage>().timeOut), onTimeout: () {
           success = false;
           return;
         });

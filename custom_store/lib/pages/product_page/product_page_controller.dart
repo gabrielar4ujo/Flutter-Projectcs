@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:customstore/models/product.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,7 +15,7 @@ abstract class _ProductPageController with Store {
   String categoryID;
   List allProductsName;
 
-  final List LISTSIZES = ["P", "G", "M", "GG", "XG", "U"];
+  final List listSizes = ["P", "G", "M", "GG", "XG", "U"];
 
   _ProductPageController(
       {Product product, this.categoryID, this.allProductsName}) {
@@ -30,7 +29,7 @@ abstract class _ProductPageController with Store {
       //observableFeatures.addAll(product.features);
     }
 
-    for (String size in LISTSIZES) {
+    for (String size in listSizes) {
       if (product != null &&
           product.features != null &&
           product.features.containsKey(size)) {
@@ -98,6 +97,7 @@ abstract class _ProductPageController with Store {
     print(nameText);
     if (nameValidator) return "Campo obrigatório!";
     if (duplicatedName) return "Já existe um produto com esse nome!";
+    return null;
   }
 
   String onErrorPriceText() {
@@ -161,7 +161,7 @@ abstract class _ProductPageController with Store {
   }
 
   Product getProduct() {
-    Product finalProduct =  Product(
+    Product finalProduct = Product(
         name: _nameText,
         price: double.parse(_priceText),
         amount: _amount,
@@ -229,8 +229,9 @@ abstract class _ProductPageController with Store {
   ObservableMap observableFeatures = ObservableMap();
 
   @action
-  void setListColorProductPage({String size, String colorName, String amount, String lastColorName}) {
-    if( lastColorName != null && lastColorName != colorName){
+  void setListColorProductPage(
+      {String size, String colorName, String amount, String lastColorName}) {
+    if (lastColorName != null && lastColorName != colorName) {
       removeColorFromList(color: lastColorName, size: size);
     }
     observableFeatures[size][colorName] = {"amount": amount};
@@ -241,7 +242,7 @@ abstract class _ProductPageController with Store {
   }
 
   @action
-  void removeColorFromList({String color, String size}){
+  void removeColorFromList({String color, String size}) {
     observableFeatures[size].remove(color);
     observableFeatures = observableFeatures;
     /*observableFeatures.forEach((key, value) {
@@ -262,8 +263,8 @@ abstract class _ProductPageController with Store {
     return listColorProductPage;
   }
 
-  Map<String,dynamic> getFeaturesMap() {
-    Map<String,dynamic> m = Map<String,dynamic>();
+  Map<String, dynamic> getFeaturesMap() {
+    Map<String, dynamic> m = Map<String, dynamic>();
     observableFeatures.forEach((key, value) {
       m[key] = value;
     });

@@ -66,7 +66,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                     textCapitalization: TextCapitalization.words,
                     onChanged: widget.salesmanController.changeName,
                     decoration: _getInputDecoration(
-                        text: "Nome",
+                        text: "Nome*",
                         onError: widget.salesmanController.onErrorName),
                   ),
                 ),
@@ -88,7 +88,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     decoration: _getInputDecoration(
-                        text: "Comissão",
+                        text: "Comissão*",
                         onError: widget.salesmanController.onErrorComission),
                   ),
                 ),
@@ -118,7 +118,10 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                   color: Colors.white,
                                 ),
                                 onPressed: widget.salesmanController.isEditing
-                                    ? () async {
+                                    ?  !widget.crudSalesmanController
+                                                .isLoading &&
+                                            (widget.salesmanController
+                                                .enableButton) ? () async {
                                         print("Editing");
                                         Salesman salesman = Salesman(
                                             comission: double.parse(widget
@@ -153,13 +156,11 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                                   .getSnackBar(
                                                       message: message));
                                         });
-                                      }
+                                      } : null
                                     : !widget.crudSalesmanController
                                                 .isLoading &&
-                                            (!widget.salesmanController
-                                                    .nameValidator &&
-                                                !widget.salesmanController
-                                                    .comissionValidator)
+                                            (widget.salesmanController
+                                                .enableButton)
                                         ? () async {
                                             print("Adding");
                                             await widget.crudSalesmanController
@@ -215,6 +216,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
         focusedBorder: _underLineBorder,
         border: _underLineBorder,
         labelStyle: TextStyle(color: Colors.white, fontSize: 15),
-        labelText: text);
+        labelText: text,
+        helperText: "");
   }
 }

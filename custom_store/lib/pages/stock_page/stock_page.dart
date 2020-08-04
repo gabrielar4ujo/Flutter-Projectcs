@@ -28,24 +28,23 @@ class _StockPageState extends State<StockPage> {
     productHelper = ProductHelper();
   }
 
-  void showSnackbar({bool result, String type}) async{
+  void showSnackbar({bool result, String type}) async {
     print("Type: $type");
     await Future.delayed(Duration(milliseconds: 500));
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       duration: Duration(seconds: result ? 1 : 3),
-      content: Text(type == "INSERT" ?
-      result
-          ? "Categoria ADICIONADA com sucesso!"
-          : "Problema de conexão! Dado ADICIONADO apenas localmente!"
-          :
-      type == "UPDATE" ?
-      result
-          ? "Categoria RENOMEADA com sucesso!"
-          : "Problema de conexão! Dado RENOMEADO apenas localmente!" :
-      result
-          ? "Categoria DELETADA com sucesso!"
-          : "Problema de conexão! Dado DELETADO apenas localmente!"
-      ),
+      backgroundColor: Colors.deepPurple,
+      content: Text(type == "INSERT"
+          ? result
+              ? "Categoria ADICIONADA com sucesso!"
+              : "Problema de conexão! Dado ADICIONADO apenas localmente!"
+          : type == "UPDATE"
+              ? result
+                  ? "Categoria RENOMEADA com sucesso!"
+                  : "Problema de conexão! Dado RENOMEADO apenas localmente!"
+              : result
+                  ? "Categoria DELETADA com sucesso!"
+                  : "Problema de conexão! Dado DELETADO apenas localmente!"),
     ));
   }
 
@@ -59,14 +58,14 @@ class _StockPageState extends State<StockPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: (){
+            onPressed: () {
               var bottomSheetController = showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
                     return BottomTextFieldWidget();
                   });
-              bottomSheetController.then((listValue){
+              bottomSheetController.then((listValue) {
                 print("bottomSHeet: $listValue");
                 if (listValue != null)
                   showSnackbar(result: listValue[0], type: listValue[1]);
@@ -82,21 +81,27 @@ class _StockPageState extends State<StockPage> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          else if (snapshot.data.documents.length == 0 ) {
-            return Center(child: Text("Adicione alguma categoria!", style: TextStyle(color: Colors.white, fontSize: 20),),);
-          }
-          else {
+          else if (snapshot.data.documents.length == 0) {
+            return Center(
+              child: Text(
+                "Adicione alguma categoria!",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            );
+          } else {
             return Container(
               margin: EdgeInsets.all(12),
               child: ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
-                  DocumentSnapshot categorySnapshot = snapshot.data.documents[index];
+                  DocumentSnapshot categorySnapshot =
+                      snapshot.data.documents[index];
                   CategoryController categoryController = CategoryController(
                       category: categorySnapshot.documentID,
                       uidUser: controllerLoginPage.user.uid);
                   print("Ver dados: ${categoryController.observableMap}");
-                  Map<String, dynamic> allProductsList = categorySnapshot.data["listProducts"] ?? Map();
+                  Map<String, dynamic> allProductsList =
+                      categorySnapshot.data["listProducts"] ?? Map();
 
                   return Observer(
                     builder: (context) {
@@ -117,8 +122,7 @@ class _StockPageState extends State<StockPage> {
                                 allProductsList: allProductsList,
                                 lastName: snapshot
                                     .data.documents[index].data["categoryName"],
-                                documentID:
-                                   categorySnapshot.documentID,
+                                documentID: categorySnapshot.documentID,
                                 userUID: controllerLoginPage.user.uid,
                               );
                             },
@@ -147,15 +151,22 @@ class _StockPageState extends State<StockPage> {
                                     : Icons.expand_more,
                               ),
                             ),
-                            children: categoryController.observableMap.map(
-                                (product) {
+                            children:
+                                categoryController.observableMap.map((product) {
                               return Container(
-                                child: CategoryContentWidget(userUID: controllerLoginPage.user.uid,documentID: categorySnapshot.documentID, allProductsName: allProductsList, product: product,)
-                              );
+                                  child: CategoryContentWidget(
+                                userUID: controllerLoginPage.user.uid,
+                                documentID: categorySnapshot.documentID,
+                                allProductsName: allProductsList,
+                                product: product,
+                              ));
                             }).toList()
-                              ..add(
-                                Container(child: AddProductWidget(allProductsName: allProductsList, userUID: controllerLoginPage.user.uid,documentID: categorySnapshot.documentID,))
-                              ),
+                                  ..add(Container(
+                                      child: AddProductWidget(
+                                    allProductsName: allProductsList,
+                                    userUID: controllerLoginPage.user.uid,
+                                    documentID: categorySnapshot.documentID,
+                                  ))),
                           ),
                         ),
                       );

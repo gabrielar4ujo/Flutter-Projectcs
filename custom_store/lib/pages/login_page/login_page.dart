@@ -90,6 +90,7 @@ class _LoginPageState extends State<LoginPage>
                                       error:
                                           _widgetsController.validatorEmail(),
                                       enabled: !controllerLoginPage.isLoading,
+                                      dislowSpace: true,
                                     )),
                             SizedBox(
                               height: 10,
@@ -118,8 +119,14 @@ class _LoginPageState extends State<LoginPage>
                           isLoading: controllerLoginPage.isLoading,
                           loginPressed: _widgetsController.loginPressed,
                           animationController: _animationController,
+<<<<<<< HEAD
                       emailValid: _widgetsController.isFormEmailValid,
                       screenHeight: MediaQuery.of(context).size.height + 200,
+=======
+                          emailValid: _widgetsController.isFormEmailValid,
+                          screenHeight:
+                              MediaQuery.of(context).size.height + 200,
+>>>>>>> origin
                         ))
               ],
             ),
@@ -129,7 +136,6 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     disposer();
     _animationController.dispose();

@@ -6,14 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {
-
   runApp(MyApp());
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final getIt = GetIt.instance;
 
   getIt.registerLazySingleton<ControllerLoginPage>(() => ControllerLoginPage());
   getIt.registerSingleton(GlobalScaffold());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: (context,child) => Scaffold(
+      builder: (context, child) => Scaffold(
         body: child,
         key: GetIt.I.get<GlobalScaffold>().scaffoldKey,
       ),

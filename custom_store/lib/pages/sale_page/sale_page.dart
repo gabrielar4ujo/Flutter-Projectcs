@@ -9,12 +9,18 @@ class SalePage extends StatefulWidget {
 }
 
 class _SalePageState extends State<SalePage> {
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin
   ControllerLoginPage _controllerLoginPage;
 
   @override
   void initState() {
+<<<<<<< HEAD
     // TODO: implement initState
+=======
+>>>>>>> origin
     super.initState();
     _controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     print(_controllerLoginPage.getCategorySnapshot());
@@ -30,7 +36,12 @@ class _SalePageState extends State<SalePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurple,
         onPressed: () {
+<<<<<<< HEAD
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddSalesPage()));
+=======
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddSalesPage()));
+>>>>>>> origin
         },
         child: Icon(Icons.add),
       ),

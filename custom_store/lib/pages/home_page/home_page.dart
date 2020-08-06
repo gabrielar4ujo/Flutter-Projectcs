@@ -31,12 +31,6 @@ class _HomePageState extends State<HomePage>
 
   String year = (DateTime.now().year).toString();
   ControllerLoginPage controllerLoginPage;
-<<<<<<< HEAD
- /* ReactionDisposer _disposer;
-*/
-=======
-
->>>>>>> origin
   bool statusConnection = false;
   String connetionStatus = "Unknown";
   Connectivity conectivity;
@@ -53,31 +47,11 @@ class _HomePageState extends State<HomePage>
     globalScaffold = GetIt.I.get<GlobalScaffold>();
     homePageController = HomePageController();
 
-<<<<<<< HEAD
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 2500));
-
-    fadeAnimation = Tween<double>(
-        begin: 1.0,end: 0.0
-    ).animate(CurvedAnimation(
-        curve: Interval(0.0, 0.50, curve: Curves.easeInQuint),
-        parent: _animationController
-    ));
-
-    paddingAnimation = Tween<double>(
-        begin: 250 , end: 0.0
-    ).animate(CurvedAnimation(
-        curve: Interval(0.40, 1.0, curve: Curves.elasticOut),
-        parent: _animationController
-    ));
-
-    _animationController.forward().whenCompleteOrCancel(() =>  controllerLoginPage.loadCurrentUser());
-=======
     _animationController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2500));
+        vsync: this, duration: Duration(milliseconds: 3500));
 
     fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-        curve: Interval(0.0, 0.50, curve: Curves.easeInQuint),
+        curve: Interval(0.0, 0.45, curve: Curves.easeInQuint),
         parent: _animationController));
 
     paddingAnimation = Tween<double>(begin: 250, end: 0.0).animate(
@@ -88,7 +62,6 @@ class _HomePageState extends State<HomePage>
     _animationController
         .forward()
         .whenCompleteOrCancel(() => controllerLoginPage.loadCurrentUser());
->>>>>>> origin
 
     conectivity = Connectivity();
     subscription =
@@ -112,18 +85,6 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  /*@override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged) {
-      if (!isLogged) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => LoginPage()));
-      }
-    });
-  }*/
-
   List<Widget> pages = List();
   List<String> list = [
     "Janeiro",
@@ -140,13 +101,7 @@ class _HomePageState extends State<HomePage>
     "Dezembro"
   ];
 
-<<<<<<< HEAD
-  Widget _buildAnimation(BuildContext context, Widget child){
-
-
-=======
   Widget _buildAnimation(BuildContext context, Widget child) {
->>>>>>> origin
     return Stack(
       children: <Widget>[
         Align(
@@ -166,21 +121,6 @@ class _HomePageState extends State<HomePage>
         Align(
           alignment: Alignment.topRight,
           child: Padding(
-<<<<<<< HEAD
-            padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
-            child:      IconButton(
-              color: Colors.white,
-              iconSize: 25,
-              padding: EdgeInsets.only(right: 10),
-              icon: Icon(Icons.exit_to_app),
-              onPressed: (){
-                controllerLoginPage.logout();
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => LoginPage()));
-              },
-            )
-          ),
-=======
               padding:
                   EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
               child: IconButton(
@@ -194,7 +134,6 @@ class _HomePageState extends State<HomePage>
                       MaterialPageRoute(builder: (context) => LoginPage()));
                 },
               )),
->>>>>>> origin
         ),
         Container(
           margin: EdgeInsets.only(top: 50 + MediaQuery.of(context).padding.top),
@@ -221,41 +160,10 @@ class _HomePageState extends State<HomePage>
           bottom: 16,
           left: paddingAnimation.value,
           right: 0,
-<<<<<<< HEAD
-          child: Container(
-            height: _screenWidth * .285 ,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                CustomInkwell(
-                  "Financeiro",
-                  Icons.attach_money,
-                      () {},
-                ),
-                CustomInkwell(
-                    "Adicionar Venda", Icons.shopping_cart, () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SalePage()));
-                }),
-                CustomInkwell(
-                  "Estoque",
-                  Icons.shop,
-                      () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => StockPage()));
-                  },
-                ),
-                CustomInkwell("Adicionar Vendedor", Icons.person, () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SalesmanPage()));
-                }),
-                CustomInkwell(
-                  "Produto mais vendido",
-                  Icons.star,
-=======
           child: Observer(builder: (_) {
             return IgnorePointer(
-              ignoring:
-                  !(!controllerLoginPage.isLoading && _animationController.status == AnimationStatus.completed),
+              ignoring: !(!controllerLoginPage.isLoading &&
+                  _animationController.status == AnimationStatus.completed),
               child: Container(
                 height: _screenWidth * .285,
                 child: ListView(
@@ -285,20 +193,13 @@ class _HomePageState extends State<HomePage>
                     CustomInkwell(
                       "Produto mais vendido",
                       Icons.star,
->>>>>>> origin
                       () {},
                     ),
                   ],
                 ),
-<<<<<<< HEAD
-              ],
-            ),
-          ),
-=======
               ),
             );
           }),
->>>>>>> origin
         ),
         FadeContainer(
           fadeAnimation: fadeAnimation,
@@ -318,22 +219,13 @@ class _HomePageState extends State<HomePage>
     infinityPageController =
         InfinityPageController(initialPage: DateTime.now().month - 1);
 
-     _screenHeight = MediaQuery.of(context).size.height;
-     _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    _screenWidth = MediaQuery.of(context).size.width;
 
-     infinityPageController = InfinityPageController(initialPage: DateTime.now().month - 1);
+    infinityPageController =
+        InfinityPageController(initialPage: DateTime.now().month - 1);
 
     return Scaffold(
-<<<<<<< HEAD
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.deepPurple[500],
-      body: Container(
-        child: AnimatedBuilder(
-          builder: _buildAnimation, animation: _animationController,
-        ),
-      )
-    );
-=======
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.deepPurple[500],
         body: Container(
@@ -342,7 +234,6 @@ class _HomePageState extends State<HomePage>
             animation: _animationController,
           ),
         ));
->>>>>>> origin
   }
 
   List<Widget> createWidgets() {
@@ -378,10 +269,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
-<<<<<<< HEAD
-    // TODO: implement dispose
-=======
->>>>>>> origin
     super.dispose();
     //_disposer();
     subscription.cancel();

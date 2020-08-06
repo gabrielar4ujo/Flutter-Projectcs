@@ -3,6 +3,7 @@ import 'package:customstore/models/salesman.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../models/product.dart';
 import 'product_controller.dart';
 import 'saleman_controller.dart';
 
@@ -26,6 +27,8 @@ abstract class _AddSalesController with Store {
       _productController.changeProductSale(productMap[firstProduct].first);
       _salesmanController.setSalesman(listSalesman.first);
     }
+    // print("PRODUCT MAP");
+    // print(productMap);
   }
 
   TextEditingController amountTextEditingController = TextEditingController();
@@ -35,6 +38,43 @@ abstract class _AddSalesController with Store {
 
   List<Product> listProduct;
   List<Salesman> listSalesman;
+
+  List<Product> salesCartList = List<Product>();
+
+  @observable
+  int amountSalesCartList = 0;
+
+  void modifyProductMapQauntity(String amount) {
+    getProduct(_productController.productName).features[_productController.size]
+        [_productController.color]["amount"] = amount;
+  }
+
+  void addSalesCartList() {
+    Product finalProduct = getFinalProduct();
+
+    for (Product p in salesCartList) {
+      if (finalProduct.equals(p)) {
+        p.selectedAmount = (int.parse(p.selectedAmount) +
+                int.parse(finalProduct.selectedAmount))
+            .toString();
+        amountSalesCartList = amountSalesCartList;
+        resetFormFields();
+        _productController.setAmount((int.parse(_productController.amount) -
+                int.parse(finalProduct.selectedAmount))
+            .toString());
+        modifyProductMapQauntity(_productController.amount);
+        return;
+      }
+    }
+
+    salesCartList.add(finalProduct);
+    amountSalesCartList++;
+    _productController.setAmount((int.parse(_productController.amount) -
+            int.parse(finalProduct.selectedAmount))
+        .toString());
+    resetFormFields();
+    modifyProductMapQauntity(_productController.amount);
+  }
 
   Map<String, List<Product>> productMap;
 
@@ -48,7 +88,7 @@ abstract class _AddSalesController with Store {
   String get amount => _amount;
 
   @computed
-  bool get amountValidator => amount.isEmpty;
+  bool get amountValidator => amount == null || amount.isEmpty;
 
   @action
   void setAmount(String amount) {
@@ -87,10 +127,10 @@ abstract class _AddSalesController with Store {
   ProductController get product => _productController;
 
   void resetFormFields() {
-    if (!product.amountIsNotNull) {
-      clientNameTextEditingController.clear();
-      _clientName = "";
-    }
+    // if (!product.amountIsNotNull) {
+    //   clientNameTextEditingController.clear();
+    //   _clientName = "";
+    // }
     amountTextEditingController.clear();
     _amount = "";
   }
@@ -112,7 +152,7 @@ abstract class _AddSalesController with Store {
       }
     }
 
-    print(_productController.productName);
+    //print(_productController.productName);
     resetFormFields();
   }
 
@@ -148,18 +188,20 @@ abstract class _AddSalesController with Store {
   List<String> getListColors() {
     Product p = getProduct(_productController.productName);
 
-    if (p == null || _productController.color == null) return ["Vazio"];
-
+    if (p == null || _productController.color == null) {
+      return ["Vazio"];
+    }
     return p.features[_productController.size].keys.toList();
   }
 
   void setSelectedAmount(String text) {
-    setAmount(text);
+    //setAmount(text);
     if (int.parse(text) > int.parse(product.amount)) {
       amountTextEditingController.text = product.amount;
     } else if (int.parse(text) <= 0) {
       amountTextEditingController.text = "1";
     }
+    setAmount(amountTextEditingController.text);
 
     amountTextEditingController.selection = TextSelection.fromPosition(
         TextPosition(offset: amountTextEditingController.text.length));
@@ -193,10 +235,9 @@ abstract class _AddSalesController with Store {
   @computed
   bool get enableButton => !(clientNameValidator || amountValidator);
 
-<<<<<<< HEAD
+  @computed
+  bool get enableButtonAddList => !amountValidator;
 
-=======
->>>>>>> origin
   Product getFinalProduct() {
     Product product = Product();
 
@@ -210,23 +251,18 @@ abstract class _AddSalesController with Store {
     product.clientName = clientName;
 
     product.salesman = (Salesman(
-<<<<<<< HEAD
-        comission: _salesmanController.salesmanComission,
-        name: _salesmanController.salesmanName));
-=======
         comission: _salesmanController.salesmanComission ?? 0.0,
         name: _salesmanController.salesmanName ?? "Sem vendedor"));
->>>>>>> origin
 
-    print(product.categoryId);
-    print(product.categoryName);
-    print(product.name);
-    print(product.selectedSize);
-    print(product.selectedColor);
-    print(product.salesman.name);
-    print(product.salesman.comission);
-    print(product.clientName);
-    print(product.selectedAmount);
+    // print(product.categoryId);
+    // print(product.categoryName);
+    // print(product.name);
+    // print(product.selectedSize);
+    // print(product.selectedColor);
+    // print(product.salesman.name);
+    // print(product.salesman.comission);
+    // print(product.clientName);
+    // print(product.selectedAmount);
 
     return product;
   }

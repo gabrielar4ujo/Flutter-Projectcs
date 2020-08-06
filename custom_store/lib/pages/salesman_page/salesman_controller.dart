@@ -106,10 +106,6 @@ abstract class _SalesmanController with Store {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-<<<<<<< HEAD
-  SnackBar getSnackBar ({String message, SnackBarAction snackBarAction}){
-    return SnackBar(duration: Duration(seconds: 2),content: Text(message),action: snackBarAction ?? null ,backgroundColor: Colors.deepPurple,);
-=======
   SnackBar getSnackBar({String message, SnackBarAction snackBarAction}) {
     return SnackBar(
       duration: Duration(seconds: 2),
@@ -117,6 +113,5 @@ abstract class _SalesmanController with Store {
       action: snackBarAction ?? null,
       backgroundColor: Colors.deepPurple,
     );
->>>>>>> origin
   }
 }

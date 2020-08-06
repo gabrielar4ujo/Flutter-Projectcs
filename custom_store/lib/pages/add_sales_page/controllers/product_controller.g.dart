@@ -9,12 +9,13 @@ part of 'product_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ProductController on _ProductController, Store {
-  Computed<bool> _$amountIsNotNullComputed;
+  Computed<bool> _$amountIsNotNullAndNotEmptyComputed;
 
   @override
-  bool get amountIsNotNull =>
-      (_$amountIsNotNullComputed ??= Computed<bool>(() => super.amountIsNotNull,
-              name: '_ProductController.amountIsNotNull'))
+  bool get amountIsNotNullAndNotEmpty =>
+      (_$amountIsNotNullAndNotEmptyComputed ??= Computed<bool>(
+              () => super.amountIsNotNullAndNotEmpty,
+              name: '_ProductController.amountIsNotNullAndNotEmpty'))
           .value;
 
   final _$productNameAtom = Atom(name: '_ProductController.productName');
@@ -114,7 +115,7 @@ size: ${size},
 color: ${color},
 amount: ${amount},
 categoryName: ${categoryName},
-amountIsNotNull: ${amountIsNotNull}
+amountIsNotNullAndNotEmpty: ${amountIsNotNullAndNotEmpty}
     ''';
   }
 }

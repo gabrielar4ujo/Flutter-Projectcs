@@ -1,9 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
-<<<<<<< HEAD
-import 'package:cloud_firestore/cloud_firestore.dart';
-=======
 //import 'package:cloud_firestore/cloud_firestore.dart';
->>>>>>> origin
 import 'package:flutter/cupertino.dart';
 
 import 'product_sold.dart';
@@ -62,6 +58,12 @@ class Product extends ProductSold {
       });
     });
     print(amount);
+  }
+
+  bool equals(Product p) {
+    return this.categoryName == p.categoryName &&
+        this.name == p.name &&
+        this.selectedColor == p.selectedColor && this.selectedSize == p.selectedSize;
   }
 
   @override

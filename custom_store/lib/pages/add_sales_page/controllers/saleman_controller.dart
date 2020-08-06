@@ -7,13 +7,13 @@ class SalemanController = _SalemanController with _$SalemanController;
 
 abstract class _SalemanController with Store {
 
-  @observable
+  //@observable
   String salesmanName;
 
-  @observable
+  //@observable
   double salesmanComission;
 
-  @action
+  //@action
   void setSalesman(Salesman s){
     if(s != null){
       salesmanName = s.name;

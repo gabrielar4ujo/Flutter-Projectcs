@@ -119,14 +119,9 @@ class _LoginPageState extends State<LoginPage>
                           isLoading: controllerLoginPage.isLoading,
                           loginPressed: _widgetsController.loginPressed,
                           animationController: _animationController,
-<<<<<<< HEAD
-                      emailValid: _widgetsController.isFormEmailValid,
-                      screenHeight: MediaQuery.of(context).size.height + 200,
-=======
                           emailValid: _widgetsController.isFormEmailValid,
                           screenHeight:
                               MediaQuery.of(context).size.height + 200,
->>>>>>> origin
                         ))
               ],
             ),

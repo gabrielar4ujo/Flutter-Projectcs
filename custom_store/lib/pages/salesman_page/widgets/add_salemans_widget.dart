@@ -118,45 +118,47 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                   color: Colors.white,
                                 ),
                                 onPressed: widget.salesmanController.isEditing
-                                    ?  !widget.crudSalesmanController
+                                    ? !widget.crudSalesmanController
                                                 .isLoading &&
                                             (widget.salesmanController
-                                                .enableButton) ? () async {
-                                        print("Editing");
-                                        Salesman salesman = Salesman(
-                                            comission: double.parse(widget
-                                                .salesmanController
-                                                .comissionText),
-                                            name: widget
-                                                .salesmanController.nameText);
-                                        await widget.crudSalesmanController
-                                            .update(
-                                                salesman: salesman,
-                                                documentID: widget
+                                                .enableButton)
+                                        ? () async {
+                                            print("Editing");
+                                            Salesman salesman = Salesman(
+                                                comission: double.parse(widget
                                                     .salesmanController
-                                                    .editedDocumentId)
-                                            .then((value) {
-                                          widget.salesmanController
-                                              .resetFields();
-                                          widget.salesmanController.isEditing =
-                                              false;
+                                                    .comissionText),
+                                                name: widget.salesmanController
+                                                    .nameText);
+                                            await widget.crudSalesmanController
+                                                .update(
+                                                    salesman: salesman,
+                                                    documentID: widget
+                                                        .salesmanController
+                                                        .editedDocumentId)
+                                                .then((value) {
+                                              widget.salesmanController
+                                                  .resetFields();
+                                              widget.salesmanController
+                                                  .isEditing = false;
 
-                                          String message;
-                                          if (value) {
-                                            message =
-                                                "Vendedor ATUALIZADO com sucesso!";
-                                          } else
-                                            message =
-                                                "Problema de conexão! Vendedor ATUALIZADO localmente!";
+                                              String message;
+                                              if (value) {
+                                                message =
+                                                    "Vendedor ATUALIZADO com sucesso!";
+                                              } else
+                                                message =
+                                                    "Problema de conexão! Vendedor ATUALIZADO localmente!";
 
-                                          widget.salesmanController.scaffoldKey
-                                              .currentState
-                                              .showSnackBar(widget
-                                                  .salesmanController
-                                                  .getSnackBar(
-                                                      message: message));
-                                        });
-                                      } : null
+                                              widget.salesmanController
+                                                  .scaffoldKey.currentState
+                                                  .showSnackBar(widget
+                                                      .salesmanController
+                                                      .getSnackBar(
+                                                          message: message));
+                                            });
+                                          }
+                                        : null
                                     : !widget.crudSalesmanController
                                                 .isLoading &&
                                             (widget.salesmanController
@@ -191,7 +193,12 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                                           message: message));
                                             });
                                           }
-                                        : null,
+                                        : () {
+                                            widget.salesmanController
+                                                .changeName("");
+                                            widget.salesmanController
+                                                .changeComission("");
+                                          },
                               ),
                             ),
                           ),

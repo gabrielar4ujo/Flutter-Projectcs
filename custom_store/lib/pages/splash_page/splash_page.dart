@@ -11,21 +11,21 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   ReactionDisposer disposer;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
-    print("ue");
-    //controllerLoginPage.logout();
-    disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged){
-      if(isLogged){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
-      }
-      else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+
+    disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged) async {
+      await Future.delayed(Duration(milliseconds: 750));
+      if (isLogged) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()));
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginPage()));
       }
     });
   }
@@ -35,7 +35,11 @@ class _SplashPageState extends State<SplashPage> {
     return Container(
       color: Colors.white,
       alignment: Alignment.center,
-      child: Icon(Icons.store, size: 150, color: Colors.deepPurple,),
+      child: Icon(
+        Icons.store,
+        size: 150,
+        color: Colors.deepPurple,
+      ),
     );
   }
 
@@ -44,6 +48,4 @@ class _SplashPageState extends State<SplashPage> {
     disposer();
     super.dispose();
   }
-
-
 }

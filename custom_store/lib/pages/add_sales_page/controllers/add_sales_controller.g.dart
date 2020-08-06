@@ -58,6 +58,29 @@ mixin _$AddSalesController on _AddSalesController, Store {
       (_$enableButtonComputed ??= Computed<bool>(() => super.enableButton,
               name: '_AddSalesController.enableButton'))
           .value;
+  Computed<bool> _$enableButtonAddListComputed;
+
+  @override
+  bool get enableButtonAddList => (_$enableButtonAddListComputed ??=
+          Computed<bool>(() => super.enableButtonAddList,
+              name: '_AddSalesController.enableButtonAddList'))
+      .value;
+
+  final _$amountSalesCartListAtom =
+      Atom(name: '_AddSalesController.amountSalesCartList');
+
+  @override
+  int get amountSalesCartList {
+    _$amountSalesCartListAtom.reportRead();
+    return super.amountSalesCartList;
+  }
+
+  @override
+  set amountSalesCartList(int value) {
+    _$amountSalesCartListAtom.reportWrite(value, super.amountSalesCartList, () {
+      super.amountSalesCartList = value;
+    });
+  }
 
   final _$_clientNameAtom = Atom(name: '_AddSalesController._clientName');
 
@@ -193,13 +216,15 @@ mixin _$AddSalesController on _AddSalesController, Store {
   @override
   String toString() {
     return '''
+amountSalesCartList: ${amountSalesCartList},
 amount: ${amount},
 amountValidator: ${amountValidator},
 clientName: ${clientName},
 clientNameValidator: ${clientNameValidator},
 salesmanController: ${salesmanController},
 product: ${product},
-enableButton: ${enableButton}
+enableButton: ${enableButton},
+enableButtonAddList: ${enableButtonAddList}
     ''';
   }
 }

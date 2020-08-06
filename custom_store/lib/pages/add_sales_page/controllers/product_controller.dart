@@ -3,10 +3,11 @@ import 'package:mobx/mobx.dart';
 
 part 'product_controller.g.dart';
 
-class ProductController = _ProductController
-    with _$ProductController;
+class ProductController = _ProductController with _$ProductController;
 
 abstract class _ProductController with Store {
+  Map<String, dynamic> colorMap;
+
   @observable
   String productName;
 
@@ -20,7 +21,7 @@ abstract class _ProductController with Store {
   String amount;
 
   @computed
-  bool get amountIsNotNull => amount != null;
+  bool get amountIsNotNullAndNotEmpty => amount != null && amount != "0";
 
   @observable
   String categoryName;
@@ -29,10 +30,23 @@ abstract class _ProductController with Store {
   void changeProductSale(Product product) {
     categoryName = product.categoryName;
     productName = product.name;
-    size = product.name == null ? null : product.selectedSize;
 
-    setColorWithProduct(product);
-    setAmountWithProduct(product);
+    setColorMap(product.features);
+    setSize(colorMap.isNotEmpty ? colorMap.keys.first : null, product);
+    // setColorWithProduct(product);
+    // setAmountWithProduct(product);
+  }
+
+  void setColorMap(Map features) {
+    if (productName != null) {
+      colorMap = Map();
+
+      features.forEach((key, value) {
+        if (value.length > 0) {
+          colorMap[key] = value;
+        }
+      });
+    }
   }
 
   void setAmountWithProduct(Product p) {
@@ -40,8 +54,6 @@ abstract class _ProductController with Store {
       amount = p.features[size][color]["amount"];
     } else
       amount = null;
-
-    print("Amount: $amount");
   }
 
   void setColorWithProduct(Product p) {
@@ -49,8 +61,6 @@ abstract class _ProductController with Store {
       color = p.features[size].keys.first;
     } else
       color = null;
-
-    print("Color: $color");
   }
 
   void setSize(String size, Product p) {
@@ -64,6 +74,9 @@ abstract class _ProductController with Store {
     setAmountWithProduct(p);
   }
 
-  _ProductController(
-      {this.productName, this.size, this.color, this.amount});
+  void setAmount(String amount) {
+    this.amount = amount;
+  }
+
+  _ProductController({this.productName, this.size, this.color, this.amount});
 }

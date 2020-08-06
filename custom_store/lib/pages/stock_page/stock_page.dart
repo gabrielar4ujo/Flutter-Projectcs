@@ -144,13 +144,6 @@ class _StockPageState extends State<StockPage> {
                               categorySnapshot.data["categoryName"],
                               style: TextStyle(color: Colors.black),
                             ),
-                            trailing: Observer(
-                              builder: (context) => Icon(
-                                categoryController.isExpanded
-                                    ? Icons.expand_less
-                                    : Icons.expand_more,
-                              ),
-                            ),
                             children:
                                 categoryController.observableMap.map((product) {
                               return Container(

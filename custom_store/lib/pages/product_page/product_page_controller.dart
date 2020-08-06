@@ -30,13 +30,13 @@ abstract class _ProductPageController with Store {
     }
 
     for (String size in listSizes) {
+      observableFeatures[size] = {};
       if (product != null &&
           product.features != null &&
-          product.features.containsKey(size)) {
-        observableFeatures[size] = product.features[size];
-      } else {
-        observableFeatures[size] = {};
-      }
+          product.features.containsKey(size))
+        product.features[size].forEach((k, v) {
+          observableFeatures[size][k] = v;
+        });
     }
   }
 
@@ -92,9 +92,6 @@ abstract class _ProductPageController with Store {
   }
 
   String onErrorProductText() {
-    print("onErrorProductText");
-    print(nameValidator);
-    print(nameText);
     if (nameValidator) return "Campo obrigatório!";
     if (duplicatedName) return "Já existe um produto com esse nome!";
     return null;
@@ -104,8 +101,6 @@ abstract class _ProductPageController with Store {
     if (emptyPriceValidator)
       return "Campo obrigatório!";
     else if (invalidPriceValidator) return "Valor inválido!";
-
-    print(double.parse(priceText).toStringAsFixed(2));
 
     return null;
   }
@@ -133,7 +128,6 @@ abstract class _ProductPageController with Store {
 
   @computed
   bool get stateIcon {
-    print("ProductPageController: stateIcon");
     return !emptyPriceValidator &&
         !invalidPriceValidator &&
         !nameValidator &&
@@ -190,20 +184,16 @@ abstract class _ProductPageController with Store {
     _pictureList.forEach((element) {
       if (!(element is File)) {
         finalList.add(element);
-        print("addiconaei");
       }
     });
-    print("finalizePictures $finalList");
   }
 
   void removePictureFromList(var picture) {
     _pictureList.remove(picture);
     if (picture is File) {
-      print("Arquivo do celular");
       picture.delete();
     } else {
       removedPicturesUrl.add(picture);
-      print("Arquivo no Firebase");
     }
   }
 
@@ -237,8 +227,6 @@ abstract class _ProductPageController with Store {
     observableFeatures[size][colorName] = {"amount": amount};
     //else observableFeatures[size] = {colorName : {"amount" : amount}};
     observableFeatures = observableFeatures;
-    print("setListColorProductPage");
-    print(observableFeatures);
   }
 
   @action
@@ -258,8 +246,7 @@ abstract class _ProductPageController with Store {
     this.observableFeatures[size].forEach((key, value) {
       listColorProductPage.add([StringUtils.capitalize(key), value["amount"]]);
     });
-    print("GETLISTPRODUCTPAGE");
-    print(listColorProductPage);
+
     return listColorProductPage;
   }
 

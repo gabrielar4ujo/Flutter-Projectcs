@@ -8,10 +8,6 @@ class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
 abstract class _ControllerLoginPage with Store {
   void _loadData() {
-<<<<<<< HEAD
-
-=======
->>>>>>> origin
     print("ControllerLoginPage: Criando StockSnapshot");
 
     try {
@@ -59,18 +55,6 @@ abstract class _ControllerLoginPage with Store {
     _isLogged = user != null;
   }
 
-<<<<<<< HEAD
-  @action
-  Future<Null> setIsLogged () async{
-    if(user == null) {
-      print("Loading User");
-      user = await auth.currentUser();
-    }
-    _isLogged = user != null;
-  }
-
-=======
->>>>>>> origin
   Future<Null> loadCurrentUser() async {
     _isLoading = true;
 
@@ -121,11 +105,7 @@ abstract class _ControllerLoginPage with Store {
     _isLogged = false;
     dataMap = ObservableMap();
     salesMap = ObservableList();
-<<<<<<< HEAD
-   /* _categorySnapshot = null;
-=======
     /* _categorySnapshot = null;
->>>>>>> origin
     _salesmanListSnapshot = null;*/
   }
 

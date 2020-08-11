@@ -9,6 +9,20 @@ part of 'add_sales_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AddSalesController on _AddSalesController, Store {
+  Computed<double> _$valueSalesCartComputed;
+
+  @override
+  double get valueSalesCart =>
+      (_$valueSalesCartComputed ??= Computed<double>(() => super.valueSalesCart,
+              name: '_AddSalesController.valueSalesCart'))
+          .value;
+  Computed<String> _$discountComputed;
+
+  @override
+  String get discount =>
+      (_$discountComputed ??= Computed<String>(() => super.discount,
+              name: '_AddSalesController.discount'))
+          .value;
   Computed<String> _$amountComputed;
 
   @override
@@ -79,6 +93,21 @@ mixin _$AddSalesController on _AddSalesController, Store {
   set amountSalesCartList(int value) {
     _$amountSalesCartListAtom.reportWrite(value, super.amountSalesCartList, () {
       super.amountSalesCartList = value;
+    });
+  }
+
+  final _$_discountAtom = Atom(name: '_AddSalesController._discount');
+
+  @override
+  String get _discount {
+    _$_discountAtom.reportRead();
+    return super._discount;
+  }
+
+  @override
+  set _discount(String value) {
+    _$_discountAtom.reportWrite(value, super._discount, () {
+      super._discount = value;
     });
   }
 
@@ -217,6 +246,8 @@ mixin _$AddSalesController on _AddSalesController, Store {
   String toString() {
     return '''
 amountSalesCartList: ${amountSalesCartList},
+valueSalesCart: ${valueSalesCart},
+discount: ${discount},
 amount: ${amount},
 amountValidator: ${amountValidator},
 clientName: ${clientName},

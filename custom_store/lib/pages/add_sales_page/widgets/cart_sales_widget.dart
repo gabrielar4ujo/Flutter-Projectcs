@@ -5,8 +5,12 @@ import '../../../models/product.dart';
 class CartSalesWidget extends StatelessWidget {
   final List<Product> salesCart;
   final int amountCartSales;
+  final Function removeSalesCartList;
 
-  CartSalesWidget({@required this.salesCart, @required this.amountCartSales});
+  CartSalesWidget(
+      {@required this.salesCart,
+      @required this.amountCartSales,
+      @required this.removeSalesCartList});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class CartSalesWidget extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 color: Colors.red,
                 onPressed: () {
-                  print("OnTapButtonDelete");
+                  removeSalesCartList(product,index);
                 },
               ),
             ),

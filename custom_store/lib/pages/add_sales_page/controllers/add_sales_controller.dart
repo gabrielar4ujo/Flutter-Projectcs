@@ -36,6 +36,8 @@ abstract class _AddSalesController with Store {
   TextEditingController clientNameTextEditingController =
       TextEditingController();
 
+  TextEditingController discountTextEditingController = TextEditingController();
+
   List<Product> listProduct;
   List<Salesman> listSalesman;
 
@@ -44,9 +46,22 @@ abstract class _AddSalesController with Store {
   @observable
   int amountSalesCartList = 0;
 
-  void modifyProductMapQauntity(String amount) {
-    getProduct(_productController.productName).features[_productController.size]
-        [_productController.color]["amount"] = amount;
+  void modifyProductMapQuantity(Product product, String amount) {
+    getProduct(product.name).features[product.selectedSize]
+        [product.selectedColor]["amount"] = amount;
+    print("Modificado em: $amount");
+    print(productMap);
+  }
+
+  void removeSalesCartList(Product p, int index) {
+    String amount = (int.parse(p.selectedAmount) +
+            int.parse(getProduct(p.name, categoryName: p.categoryName)
+                .features[p.selectedSize][p.selectedColor]["amount"]))
+        .toString();
+    modifyProductMapQuantity(p, amount);
+    salesCartList.removeAt(index);
+    amountSalesCartList--;
+    if (getFinalProduct().equals(p)) _productController.setAmount(amount);
   }
 
   void addSalesCartList() {
@@ -62,7 +77,7 @@ abstract class _AddSalesController with Store {
         _productController.setAmount((int.parse(_productController.amount) -
                 int.parse(finalProduct.selectedAmount))
             .toString());
-        modifyProductMapQauntity(_productController.amount);
+        modifyProductMapQuantity(finalProduct, _productController.amount);
         return;
       }
     }
@@ -73,16 +88,79 @@ abstract class _AddSalesController with Store {
             int.parse(finalProduct.selectedAmount))
         .toString());
     resetFormFields();
-    modifyProductMapQauntity(_productController.amount);
+    modifyProductMapQuantity(finalProduct, _productController.amount);
+  }
+
+  @computed
+  double get valueSalesCart {
+    if (amountSalesCartList == 0) return 0.00;
+    double value = 0.00;
+    for (Product p in salesCartList) {
+      value += (getProduct(p.name, categoryName: p.categoryName).price *
+          int.parse(p.selectedAmount));
+    }
+    if (discount.contains("%")) {
+      value -= (value * (int.parse(discount.split("%")[0]) / 100));
+    } else {
+      value -= double.parse(discount);
+    }
+
+    return value < 0 ? 0 : value;
   }
 
   Map<String, List<Product>> productMap;
+
+  @observable
+  String _discount = "";
 
   @observable
   String _clientName = "";
 
   @observable
   String _amount = "";
+
+  @computed
+  String get discount {
+    if (_discount == "") return "0.00";
+    return _discount;
+  }
+
+  void setDiscountEditingController() {
+    discountTextEditingController.text = _discount;
+    discountTextEditingController.selection = TextSelection.collapsed(
+        offset: discountTextEditingController.text.length);
+  }
+
+  void setDiscount(String text) {
+    if (_discount.contains(".") && text.contains("%")) {
+      setDiscountEditingController();
+    } else if (_discount.contains("%") && text.contains(".")) {
+      setDiscountEditingController();
+    } else if (text.contains("%")) {
+      if (text.split("%")[0].length == 0 ||
+          text.split("%").length > 2 ||
+          text.split("%")[1].length > 0)
+        setDiscountEditingController();
+      else
+        _discount = text;
+    } else if (text.contains(".")) {
+      if (text.split(".")[0].length == 0 ||
+          text.split(".").length > 2 ||
+          text.split(".")[1].length > 2)
+        setDiscountEditingController();
+      else
+        _discount = text;
+    } else {
+      _discount = text;
+    }
+  }
+
+  @computed
+  String get discountFormated {
+    return !discount.toString().contains("%")
+        ? "R\$ ${double.parse(discount).toStringAsFixed(2)}"
+        : discount;
+  }
 
   @computed
   String get amount => _amount;
@@ -173,10 +251,11 @@ abstract class _AddSalesController with Store {
     resetFormFields();
   }
 
-  Product getProduct(String productName) {
+  Product getProduct(String productName, {String categoryName}) {
     Product prod;
 
-    for (Product p in productMap[_productController.categoryName]) {
+    for (Product p
+        in productMap[categoryName ?? _productController.categoryName]) {
       if (p.name == productName) {
         prod = p;
       }
@@ -199,12 +278,13 @@ abstract class _AddSalesController with Store {
     if (int.parse(text) > int.parse(product.amount)) {
       amountTextEditingController.text = product.amount;
     } else if (int.parse(text) <= 0) {
-      amountTextEditingController.text = "1";
+      amountTextEditingController.value = TextEditingValue(text: "1");
     }
     setAmount(amountTextEditingController.text);
 
-    amountTextEditingController.selection = TextSelection.fromPosition(
-        TextPosition(offset: amountTextEditingController.text.length));
+    print(amountTextEditingController.text);
+    amountTextEditingController.selection = TextSelection.collapsed(
+        offset: amountTextEditingController.text.length);
   }
 
   Salesman getSalesman(String text) {
@@ -265,5 +345,11 @@ abstract class _AddSalesController with Store {
     // print(product.selectedAmount);
 
     return product;
+  }
+
+  void disposeAll() {
+    amountTextEditingController.dispose();
+    clientNameTextEditingController.dispose();
+    discountTextEditingController.dispose();
   }
 }

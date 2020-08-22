@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobx/mobx.dart';
 
 part 'controller_login_page.g.dart';
@@ -7,7 +8,7 @@ part 'controller_login_page.g.dart';
 class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
 abstract class _ControllerLoginPage with Store {
-  void _loadData() {
+  void _loadDataCategory() {
     print("ControllerLoginPage: Criando StockSnapshot");
 
     try {
@@ -33,10 +34,34 @@ abstract class _ControllerLoginPage with Store {
     } catch (e) {}
   }
 
+  void _loadDataSales({@required String year, @required String month}) {
+    print("LoadDateSales");
+    print("Year: $year");
+    print("Month: $month");
+
+    try {
+      _salesSnapshot = Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("sales")
+          .orderBy("time", descending: true)
+          .snapshots();
+    } catch (e) {}
+  }
+
+  Stream<QuerySnapshot> getSalesSnapshot(
+      {@required String year,
+      @required String month,
+      bool changedDate = false}) {
+    if (_salesSnapshot == null || changedDate) {
+      _loadDataSales(year: year, month: month);
+    }
+    return _salesSnapshot;
+  }
+
   Stream<QuerySnapshot> getCategorySnapshot() {
     if (_categorySnapshot == null) {
-      print("LOadData");
-      _loadData();
+      _loadDataCategory();
     }
     return _categorySnapshot;
   }
@@ -137,6 +162,8 @@ abstract class _ControllerLoginPage with Store {
   Stream<QuerySnapshot> _categorySnapshot;
 
   Stream<QuerySnapshot> _salesmanListSnapshot;
+
+  Stream<QuerySnapshot> _salesSnapshot;
 
   _ControllerLoginPage() {
     setIsLogged();

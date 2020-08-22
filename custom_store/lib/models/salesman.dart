@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customstore/models/salesman_sold.dart';
 
-class Salesman{
+class Salesman extends SalesmanSold{
   String name;
   double comission;
 

@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage>
                     ),
                     CustomInkwell("Adicionar Venda", Icons.shopping_cart, () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SalePage()));
+                          MaterialPageRoute(builder: (context) => SalesPage()));
                     }),
                     CustomInkwell(
                       "Estoque",

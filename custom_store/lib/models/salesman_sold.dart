@@ -1,0 +1,3 @@
+class SalesmanSold {
+  String clientName;
+}

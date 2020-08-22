@@ -23,6 +23,13 @@ mixin _$AddSalesController on _AddSalesController, Store {
       (_$discountComputed ??= Computed<String>(() => super.discount,
               name: '_AddSalesController.discount'))
           .value;
+  Computed<String> _$discountFormatedComputed;
+
+  @override
+  String get discountFormated => (_$discountFormatedComputed ??=
+          Computed<String>(() => super.discountFormated,
+              name: '_AddSalesController.discountFormated'))
+      .value;
   Computed<String> _$amountComputed;
 
   @override
@@ -65,13 +72,13 @@ mixin _$AddSalesController on _AddSalesController, Store {
       (_$productComputed ??= Computed<ProductController>(() => super.product,
               name: '_AddSalesController.product'))
           .value;
-  Computed<bool> _$enableButtonComputed;
+  Computed<bool> _$enableCheckButtonComputed;
 
   @override
-  bool get enableButton =>
-      (_$enableButtonComputed ??= Computed<bool>(() => super.enableButton,
-              name: '_AddSalesController.enableButton'))
-          .value;
+  bool get enableCheckButton => (_$enableCheckButtonComputed ??= Computed<bool>(
+          () => super.enableCheckButton,
+          name: '_AddSalesController.enableCheckButton'))
+      .value;
   Computed<bool> _$enableButtonAddListComputed;
 
   @override
@@ -248,13 +255,14 @@ mixin _$AddSalesController on _AddSalesController, Store {
 amountSalesCartList: ${amountSalesCartList},
 valueSalesCart: ${valueSalesCart},
 discount: ${discount},
+discountFormated: ${discountFormated},
 amount: ${amount},
 amountValidator: ${amountValidator},
 clientName: ${clientName},
 clientNameValidator: ${clientNameValidator},
 salesmanController: ${salesmanController},
 product: ${product},
-enableButton: ${enableButton},
+enableCheckButton: ${enableCheckButton},
 enableButtonAddList: ${enableButtonAddList}
     ''';
   }

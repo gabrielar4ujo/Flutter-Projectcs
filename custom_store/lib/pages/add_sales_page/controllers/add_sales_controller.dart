@@ -110,6 +110,16 @@ abstract class _AddSalesController with Store {
 
   Map<String, List<Product>> productMap;
 
+  Salesman salesman;
+
+  Salesman getFinalSalesman() {
+    salesman = Salesman(
+        comission: _salesmanController.salesmanComission ?? 0.0,
+        name: _salesmanController.salesmanName ?? "Sem vendedor");
+    salesman.clientName = clientName;
+    return salesman;
+  }
+
   @observable
   String _discount = "";
 
@@ -313,7 +323,8 @@ abstract class _AddSalesController with Store {
         product.categoryName.isEmpty);*/
 
   @computed
-  bool get enableButton => !(clientNameValidator || amountValidator);
+  bool get enableCheckButton =>
+      !(clientNameValidator || amountSalesCartList == 0);
 
   @computed
   bool get enableButtonAddList => !amountValidator;
@@ -328,11 +339,13 @@ abstract class _AddSalesController with Store {
     product.selectedSize = _productController.size;
     product.selectedColor = _productController.color;
     product.selectedAmount = amountTextEditingController.text;
-    product.clientName = clientName;
+    // product.clientName = clientName;
+    product.price = getProduct(_productController.productName).price;
 
-    product.salesman = (Salesman(
-        comission: _salesmanController.salesmanComission ?? 0.0,
-        name: _salesmanController.salesmanName ?? "Sem vendedor"));
+    // product.salesman = (Salesman(
+    //     comission: _salesmanController.salesmanComission ?? 0.0,
+    //     name: _salesmanController.salesmanName ?? "Sem vendedor"));
+    // product.salesman.clientName = clientName;
 
     // print(product.categoryId);
     // print(product.categoryName);
@@ -345,6 +358,15 @@ abstract class _AddSalesController with Store {
     // print(product.selectedAmount);
 
     return product;
+  }
+
+  List getFinalSalesCartList() {
+    List<Map> list = List();
+    for (Product p in salesCartList) {
+      list.add(p.soldToJson());
+    }
+
+    return list;
   }
 
   void disposeAll() {

@@ -63,8 +63,21 @@ class Product extends ProductSold {
   bool equals(Product p) {
     return this.categoryName == p.categoryName &&
         this.name == p.name &&
-        this.selectedColor == p.selectedColor && this.selectedSize == p.selectedSize;
+        this.selectedColor == p.selectedColor &&
+        this.selectedSize == p.selectedSize;
   }
+
+  Map<String, dynamic> soldToJson() {
+    return {
+      "categoryID": this.categoryId,
+      "categoryName": this.categoryName,
+      "productName": this.name,
+      "selectedAmount": super.selectedAmount,
+      "selectedColor": super.selectedColor,
+      "selectedSize": super.selectedSize,
+    };
+  }
+
 
   @override
   String toString() {

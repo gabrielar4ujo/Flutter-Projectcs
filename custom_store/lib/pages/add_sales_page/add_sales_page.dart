@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_sales_controller.dart';
 import 'package:customstore/models/product.dart';
@@ -17,8 +19,9 @@ class AddSalesPage extends StatefulWidget {
   final ControllerLoginPage _controllerLoginPage;
   final AddSalesController _addSalesController;
   final CrudSalesController _salesHelper;
+  final List listSales;
 
-  AddSalesPage()
+  AddSalesPage({@required this.listSales})
       : _controllerLoginPage = GetIt.I.get<ControllerLoginPage>(),
         _addSalesController = AddSalesController(),
         _salesHelper = CrudSalesController();
@@ -84,6 +87,9 @@ class _AddSalesPageState extends State<AddSalesPage> {
               onPressed: !widget._addSalesController.amountValidator &&
                       !widget._salesHelper.isLoading
                   ? () {
+                      print(widget.listSales.isEmpty
+                          ? "Lista Vazia"
+                          : "Lista com item");
                       widget._addSalesController.addSalesCartList();
                       FocusScope.of(context).unfocus();
                     }
@@ -95,13 +101,25 @@ class _AddSalesPageState extends State<AddSalesPage> {
               icon: Icon(Icons.check),
               iconSize: 30,
               disabledColor: Colors.grey[700],
-              onPressed: widget._addSalesController.enableButton &&
+              onPressed: widget._addSalesController.enableCheckButton &&
                       !widget._salesHelper.isLoading
                   ? () async {
-                      Product p = widget._addSalesController.getFinalProduct();
+                      //Product p = widget._addSalesController.getFinalProduct();
+                      Salesman salesman =
+                          widget._addSalesController.getFinalSalesman();
+                      log(salesman.name);
+                      log(salesman.comission.toString());
+                      log(salesman.clientName.toString());
                       await widget._salesHelper
-                          .insert(categoryName: p.categoryId, productData: p)
+                          .insert(
+                              categoryID: null,
+                              productList: widget._addSalesController
+                                  .getFinalSalesCartList(),
+                              salesman:
+                                  widget._addSalesController.getFinalSalesman(),
+                              discount: widget._addSalesController.discount)
                           .then((value) {
+                        log("Value: $value");
                         Navigator.of(context).pop(value);
                       });
                     }
@@ -180,9 +198,10 @@ class _AddSalesPageState extends State<AddSalesPage> {
                       product.categoryName = element["categoryName"];
 
                       if (salesmanList.length > 0) {
-                        product.salesman = salesmanList.first;
+                        widget._addSalesController.salesman =
+                            salesmanList.first;
                       } else {
-                        product.salesman = Salesman();
+                        widget._addSalesController.salesman = Salesman();
                       }
 
                       if (!productMap.containsKey(product.categoryName))

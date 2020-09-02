@@ -16,6 +16,32 @@ abstract class _AddSalesController with Store {
     if (productMap != null || listSalesman != null) {
       initAddSalesController(productMap, listSalesman);
     }
+
+    amountTextEditingController = TextEditingController()
+      ..addListener(() {
+        final text = amountFilter(amountTextEditingController.text ?? null);
+        amountTextEditingController.value =
+            amountTextEditingController.value.copyWith(
+          text: text,
+          selection:
+              TextSelection(baseOffset: text.length, extentOffset: text.length),
+          composing: TextRange.empty,
+        );
+        setAmount(text);
+      });
+
+    discountTextEditingController = TextEditingController()
+      ..addListener(() {
+        final text = discountFilter(discountTextEditingController.text ?? null);
+        discountTextEditingController.value =
+            discountTextEditingController.value.copyWith(
+          text: text,
+          selection:
+              TextSelection(baseOffset: text.length, extentOffset: text.length),
+          composing: TextRange.empty,
+        );
+        _discount = text;
+      });
   }
 
   void initAddSalesController(
@@ -31,12 +57,14 @@ abstract class _AddSalesController with Store {
     // print(productMap);
   }
 
-  TextEditingController amountTextEditingController = TextEditingController();
+  TextEditingController
+      amountTextEditingController; // = TextEditingController();
 
   TextEditingController clientNameTextEditingController =
       TextEditingController();
 
-  TextEditingController discountTextEditingController = TextEditingController();
+  TextEditingController
+      discountTextEditingController; // = TextEditingController();
 
   List<Product> listProduct;
   List<Salesman> listSalesman;
@@ -135,35 +163,58 @@ abstract class _AddSalesController with Store {
     return _discount;
   }
 
-  void setDiscountEditingController() {
-    discountTextEditingController.text = _discount;
-    discountTextEditingController.selection = TextSelection.collapsed(
-        offset: discountTextEditingController.text.length);
-  }
+  // void setDiscountEditingController() {
+  //   discountTextEditingController.text = _discount;
+  //   discountTextEditingController.selection = TextSelection.collapsed(
+  //       offset: discountTextEditingController.text.length);
+  // }
 
-  void setDiscount(String text) {
+  String discountFilter(String text) {
     if (_discount.contains(".") && text.contains("%")) {
-      setDiscountEditingController();
+      return _discount;
     } else if (_discount.contains("%") && text.contains(".")) {
-      setDiscountEditingController();
+      return _discount;
     } else if (text.contains("%")) {
       if (text.split("%")[0].length == 0 ||
           text.split("%").length > 2 ||
           text.split("%")[1].length > 0)
-        setDiscountEditingController();
+        return _discount;
       else
-        _discount = text;
+        return text;
     } else if (text.contains(".")) {
       if (text.split(".")[0].length == 0 ||
           text.split(".").length > 2 ||
           text.split(".")[1].length > 2)
-        setDiscountEditingController();
+        return _discount;
       else
-        _discount = text;
-    } else {
-      _discount = text;
+        return text;
     }
+    return text;
   }
+
+  // void setDiscount(String text) {
+  //   if (_discount.contains(".") && text.contains("%")) {
+  //     setDiscountEditingController();
+  //   } else if (_discount.contains("%") && text.contains(".")) {
+  //     setDiscountEditingController();
+  //   } else if (text.contains("%")) {
+  //     if (text.split("%")[0].length == 0 ||
+  //         text.split("%").length > 2 ||
+  //         text.split("%")[1].length > 0)
+  //       setDiscountEditingController();
+  //     else
+  //       _discount = text;
+  //   } else if (text.contains(".")) {
+  //     if (text.split(".")[0].length == 0 ||
+  //         text.split(".").length > 2 ||
+  //         text.split(".")[1].length > 2)
+  //       setDiscountEditingController();
+  //     else
+  //       _discount = text;
+  //   } else {
+  //     _discount = text;
+  //   }
+  // }
 
   @computed
   String get discountFormated {
@@ -283,7 +334,7 @@ abstract class _AddSalesController with Store {
     return p.features[_productController.size].keys.toList();
   }
 
-  void setSelectedAmount(String text) {
+  void elderSetSelectedAmount(String text) {
     //setAmount(text);
     if (int.parse(text) > int.parse(product.amount)) {
       amountTextEditingController.text = product.amount;
@@ -295,6 +346,23 @@ abstract class _AddSalesController with Store {
     print(amountTextEditingController.text);
     amountTextEditingController.selection = TextSelection.collapsed(
         offset: amountTextEditingController.text.length);
+  }
+
+  String amountFilter(String text) {
+    //setAmount(text);
+    if (text == null || text.length == 0) return "";
+    if (int.parse(text) > int.parse(product.amount)) {
+      return product.amount;
+    } else if (int.parse(text) <= 0) {
+      return "1";
+    }
+
+    return text;
+    //setAmount(amountTextEditingController.text);
+
+    // print(amountTextEditingController.text);
+    // amountTextEditingController.selection = TextSelection.collapsed(
+    //     offset: amountTextEditingController.text.length);
   }
 
   Salesman getSalesman(String text) {

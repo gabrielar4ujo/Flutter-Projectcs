@@ -79,6 +79,13 @@ class _AddSalesPageState extends State<AddSalesPage> {
         title: Text("Adicionar Venda"),
         centerTitle: false,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.tablet),
+            onPressed: () {
+              widget._addSalesController.amountTextEditingController.text =
+                  "15";
+            },
+          ),
           Observer(
             builder: (context) => IconButton(
               icon: Icon(Icons.add),
@@ -458,11 +465,11 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                       controller: widget._addSalesController
                                           .discountTextEditingController,
                                       inputFormatters: [
-                                        WhitelistingTextInputFormatter(
+                                        FilteringTextInputFormatter.allow(
                                             RegExp("[0-9.%]")),
                                       ],
-                                      onChanged: widget
-                                          ._addSalesController.setDiscount,
+                                      // onChanged: widget
+                                      //     ._addSalesController.setDiscount,
                                       enabled: !widget._salesHelper.isLoading,
                                       decoration: InputDecoration(
                                         helperText: "",
@@ -491,8 +498,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                       ],
                                       controller: widget._addSalesController
                                           .amountTextEditingController,
-                                      onChanged: widget._addSalesController
-                                          .setSelectedAmount,
                                       decoration: InputDecoration(
                                         helperText: "",
                                         errorText: widget._addSalesController

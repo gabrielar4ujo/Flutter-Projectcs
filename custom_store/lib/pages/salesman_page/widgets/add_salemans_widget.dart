@@ -51,10 +51,10 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                   builder: (context) => TextFormField(
                     inputFormatters: widget.salesmanController.nameText.isEmpty
                         ? [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z]")),
+                            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                           ]
                         : [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z ]")),
+                            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
                           ],
                     enabled: !(widget.salesmanController.isLoading ||
                         widget.crudSalesmanController.isLoading),

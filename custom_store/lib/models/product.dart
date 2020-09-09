@@ -45,8 +45,7 @@ class Product extends ProductSold {
     this.features[size].forEach((key, value) {
       listColorProductPage.add([StringUtils.capitalize(key), value["amount"]]);
     });
-    print("GETLISTPRODUCTPAGE");
-    print(listColorProductPage);
+  
     return listColorProductPage;
   }
 
@@ -57,7 +56,7 @@ class Product extends ProductSold {
         this.amount += int.parse(amount["amount"]);
       });
     });
-    print(amount);
+   
   }
 
   bool equals(Product p) {

@@ -14,7 +14,7 @@ abstract class _HomePageController with Store {
 
   @action
   void yearChanged (String year){
-    print(year);
+   
     _year = year;
   }
 

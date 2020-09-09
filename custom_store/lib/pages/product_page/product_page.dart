@@ -50,9 +50,6 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     String title = widget.product != null ? "Editar Produto" : "Criar Produto";
 
-    /*  print("PRODUCT");
-    print(product.features["GG"]);*/
-
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -175,7 +172,6 @@ class _ProductPageState extends State<ProductPage> {
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
-                                        print("Remove Image Clicked");
                                         _productPageController
                                             .removePictureFromList(e);
                                       },

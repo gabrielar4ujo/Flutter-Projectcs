@@ -12,7 +12,7 @@ abstract class _ImageController with Store {
   bool get imageClick => _imageClick;
 
   void imageCliked() {
-    print("imageCliked");
+  
     _imageClick = !_imageClick;
   }
 }

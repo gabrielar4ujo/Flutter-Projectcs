@@ -34,7 +34,7 @@ class _BottomTextFieldWidgetState extends State<BottomTextFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("lastName: $lastName");
+  
 
     final edit = lastName != null;
     final title = edit ? "Digite um novo nome" : "Digite o nome da categoria";
@@ -101,7 +101,7 @@ class _BottomTextFieldWidgetState extends State<BottomTextFieldWidget> {
                                 result = value;
                               });
                             } else {
-                              print("UPDATE");
+                            
                               type = "UPDATE";
                               await crudController
                                   .update(documentID: documentID, categoryName: stockPageController.productText)
@@ -109,7 +109,7 @@ class _BottomTextFieldWidgetState extends State<BottomTextFieldWidget> {
                                 result = value;
                               });
                             }
-                            print("Value : $result");
+                           
                             Navigator.pop(context, [result,type]);
                             //Navigator.pop(context);
                           },

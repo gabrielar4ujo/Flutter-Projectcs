@@ -29,7 +29,6 @@ class _StockPageState extends State<StockPage> {
   }
 
   void showSnackbar({bool result, String type}) async {
-    print("Type: $type");
     await Future.delayed(Duration(milliseconds: 500));
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       duration: Duration(seconds: result ? 1 : 3),
@@ -66,7 +65,6 @@ class _StockPageState extends State<StockPage> {
                     return BottomTextFieldWidget();
                   });
               bottomSheetController.then((listValue) {
-                print("bottomSHeet: $listValue");
                 if (listValue != null)
                   showSnackbar(result: listValue[0], type: listValue[1]);
               });
@@ -99,21 +97,16 @@ class _StockPageState extends State<StockPage> {
                   CategoryController categoryController = CategoryController(
                       category: categorySnapshot.documentID,
                       uidUser: controllerLoginPage.user.uid);
-                  print("Ver dados: ${categoryController.observableMap}");
+
                   Map<String, dynamic> allProductsList =
                       categorySnapshot.data["listProducts"] ?? Map();
 
                   return Observer(
                     builder: (context) {
-                      print("isloading ${categoryController.isLoading}");
                       if (categoryController.isLoading) return Container();
-
-                      print(
-                          "lenght ${categoryController.observableMap.length}");
 
                       return GestureDetector(
                         onLongPress: () {
-                          print("onLongPress expasion tile");
                           var bottomSheetController = showModalBottomSheet(
                             isScrollControlled: true,
                             context: context,
@@ -148,6 +141,8 @@ class _StockPageState extends State<StockPage> {
                                 categoryController.observableMap.map((product) {
                               return Container(
                                   child: CategoryContentWidget(
+                                categoryName:
+                                    categorySnapshot.data["categoryName"],
                                 userUID: controllerLoginPage.user.uid,
                                 documentID: categorySnapshot.documentID,
                                 allProductsName: allProductsList,
@@ -159,6 +154,8 @@ class _StockPageState extends State<StockPage> {
                                     allProductsName: allProductsList,
                                     userUID: controllerLoginPage.user.uid,
                                     documentID: categorySnapshot.documentID,
+                                    categoryName:
+                                        categorySnapshot.data["categoryName"],
                                   ))),
                           ),
                         ),

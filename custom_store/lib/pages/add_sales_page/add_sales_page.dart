@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_sales_controller.dart';
@@ -18,13 +18,14 @@ import '../../models/salesman.dart';
 class AddSalesPage extends StatefulWidget {
   final ControllerLoginPage _controllerLoginPage;
   final AddSalesController _addSalesController;
-  final CrudSalesController _salesHelper;
+  final CrudSalesController _crudSalesController;
   final List listSales;
+  final String documentID;
 
-  AddSalesPage({@required this.listSales})
+  AddSalesPage({@required this.listSales, @required this.documentID})
       : _controllerLoginPage = GetIt.I.get<ControllerLoginPage>(),
         _addSalesController = AddSalesController(),
-        _salesHelper = CrudSalesController();
+        _crudSalesController = CrudSalesController();
 
   @override
   _AddSalesPageState createState() => _AddSalesPageState();
@@ -36,6 +37,7 @@ class _AddSalesPageState extends State<AddSalesPage> {
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       bottomSheet: Container(
         alignment: Alignment.center,
@@ -79,24 +81,15 @@ class _AddSalesPageState extends State<AddSalesPage> {
         title: Text("Adicionar Venda"),
         centerTitle: false,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.tablet),
-            onPressed: () {
-              widget._addSalesController.amountTextEditingController.text =
-                  "15";
-            },
-          ),
           Observer(
             builder: (context) => IconButton(
               icon: Icon(Icons.add),
               iconSize: 30,
               disabledColor: Colors.grey[700],
               onPressed: !widget._addSalesController.amountValidator &&
-                      !widget._salesHelper.isLoading
+                      !widget._crudSalesController.isLoading
                   ? () {
-                      print(widget.listSales.isEmpty
-                          ? "Lista Vazia"
-                          : "Lista com item");
+                    
                       widget._addSalesController.addSalesCartList();
                       FocusScope.of(context).unfocus();
                     }
@@ -109,26 +102,45 @@ class _AddSalesPageState extends State<AddSalesPage> {
               iconSize: 30,
               disabledColor: Colors.grey[700],
               onPressed: widget._addSalesController.enableCheckButton &&
-                      !widget._salesHelper.isLoading
+                      !widget._crudSalesController.isLoading
                   ? () async {
-                      //Product p = widget._addSalesController.getFinalProduct();
                       Salesman salesman =
                           widget._addSalesController.getFinalSalesman();
-                      log(salesman.name);
-                      log(salesman.comission.toString());
-                      log(salesman.clientName.toString());
-                      await widget._salesHelper
-                          .insert(
-                              categoryID: null,
-                              productList: widget._addSalesController
-                                  .getFinalSalesCartList(),
-                              salesman:
-                                  widget._addSalesController.getFinalSalesman(),
-                              discount: widget._addSalesController.discount)
-                          .then((value) {
-                        log("Value: $value");
-                        Navigator.of(context).pop(value);
-                      });
+
+                      if (widget.documentID != null) {
+                       
+                        widget.listSales.add({
+                          "time": Timestamp.now(),
+                          "discount": widget._addSalesController.discount,
+                          "productList": widget._addSalesController
+                              .getFinalSalesCartList(),
+                          "salesmanName": salesman.name,
+                          "salesmanComission": salesman.comission.toString(),
+                          "clientName": salesman.clientName,
+                        });
+                        await widget._crudSalesController
+                            .update(
+                                documentID: widget.documentID,
+                                listSales: widget.listSales,
+                                index: widget.listSales.length - 1)
+                            .then((value) {
+                          Navigator.of(context).pop(value);
+                        });
+                      } else {
+                    
+                        await widget._crudSalesController
+                            .insert(
+                          documentID: widget.documentID,
+                          productList: widget._addSalesController
+                              .getFinalSalesCartList(),
+                          salesman: salesman,
+                          discount: widget._addSalesController.discount,
+                        )
+                            .then((value) {
+                        
+                          Navigator.of(context).pop(value);
+                        });
+                      }
                     }
                   : null,
             ),
@@ -253,7 +265,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                         ),
                                         value: widget._addSalesController
                                             .product.categoryName,
-                                        items: widget._salesHelper.isLoading
+                                        items: widget
+                                                ._crudSalesController.isLoading
                                             ? null
                                             : widget._addSalesController
                                                 .productMap.keys
@@ -289,7 +302,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                         value: widget._addSalesController
                                                 .product.productName ??
                                             "Vazio",
-                                        items: widget._salesHelper.isLoading
+                                        items: widget
+                                                ._crudSalesController.isLoading
                                             ? null
                                             : (widget
                                                             ._addSalesController
@@ -337,7 +351,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                         value: widget._addSalesController
                                                 .product.size ??
                                             "Vazio",
-                                        items: widget._salesHelper.isLoading
+                                        items: widget
+                                                ._crudSalesController.isLoading
                                             ? null
                                             : (widget._addSalesController
                                                             .product.size ==
@@ -378,7 +393,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                         value: widget._addSalesController
                                                 .product.color ??
                                             "Vazio",
-                                        items: widget._salesHelper.isLoading
+                                        items: widget
+                                                ._crudSalesController.isLoading
                                             ? null
                                             : (widget._addSalesController
                                                         .getListColors() ??
@@ -420,7 +436,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                                 .salesmanController
                                                 .salesmanName ??
                                             "Vazio",
-                                        items: widget._salesHelper.isLoading
+                                        items: widget
+                                                ._crudSalesController.isLoading
                                             ? null
                                             : widget._addSalesController
                                                 .listSalesman
@@ -448,7 +465,7 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                     .clientNameTextEditingController,
                                 onChanged:
                                     widget._addSalesController.setClientName,
-                                enabled: !widget._salesHelper.isLoading,
+                                enabled: !widget._crudSalesController.isLoading,
                                 decoration: InputDecoration(
                                     labelText: "Nome do Cliente*",
                                     hintText: "Ex: Maria",
@@ -470,7 +487,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                       ],
                                       // onChanged: widget
                                       //     ._addSalesController.setDiscount,
-                                      enabled: !widget._salesHelper.isLoading,
+                                      enabled: !widget
+                                          ._crudSalesController.isLoading,
                                       decoration: InputDecoration(
                                         helperText: "",
                                         labelText: "Desconto",
@@ -488,7 +506,8 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                               ._addSalesController
                                               .product
                                               .amountIsNotNullAndNotEmpty &&
-                                          !widget._salesHelper.isLoading,
+                                          !widget
+                                              ._crudSalesController.isLoading,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
                                               decimal: false),

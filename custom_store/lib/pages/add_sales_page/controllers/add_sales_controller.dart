@@ -53,8 +53,7 @@ abstract class _AddSalesController with Store {
       _productController.changeProductSale(productMap[firstProduct].first);
       _salesmanController.setSalesman(listSalesman.first);
     }
-    // print("PRODUCT MAP");
-    // print(productMap);
+   
   }
 
   TextEditingController
@@ -77,8 +76,7 @@ abstract class _AddSalesController with Store {
   void modifyProductMapQuantity(Product product, String amount) {
     getProduct(product.name).features[product.selectedSize]
         [product.selectedColor]["amount"] = amount;
-    print("Modificado em: $amount");
-    print(productMap);
+  
   }
 
   void removeSalesCartList(Product p, int index) {
@@ -291,7 +289,7 @@ abstract class _AddSalesController with Store {
       }
     }
 
-    //print(_productController.productName);
+
     resetFormFields();
   }
 
@@ -343,7 +341,7 @@ abstract class _AddSalesController with Store {
     }
     setAmount(amountTextEditingController.text);
 
-    print(amountTextEditingController.text);
+   
     amountTextEditingController.selection = TextSelection.collapsed(
         offset: amountTextEditingController.text.length);
   }
@@ -358,11 +356,7 @@ abstract class _AddSalesController with Store {
     }
 
     return text;
-    //setAmount(amountTextEditingController.text);
-
-    // print(amountTextEditingController.text);
-    // amountTextEditingController.selection = TextSelection.collapsed(
-    //     offset: amountTextEditingController.text.length);
+  
   }
 
   Salesman getSalesman(String text) {
@@ -407,24 +401,10 @@ abstract class _AddSalesController with Store {
     product.selectedSize = _productController.size;
     product.selectedColor = _productController.color;
     product.selectedAmount = amountTextEditingController.text;
-    // product.clientName = clientName;
+   
     product.price = getProduct(_productController.productName).price;
 
-    // product.salesman = (Salesman(
-    //     comission: _salesmanController.salesmanComission ?? 0.0,
-    //     name: _salesmanController.salesmanName ?? "Sem vendedor"));
-    // product.salesman.clientName = clientName;
-
-    // print(product.categoryId);
-    // print(product.categoryName);
-    // print(product.name);
-    // print(product.selectedSize);
-    // print(product.selectedColor);
-    // print(product.salesman.name);
-    // print(product.salesman.comission);
-    // print(product.clientName);
-    // print(product.selectedAmount);
-
+  
     return product;
   }
 

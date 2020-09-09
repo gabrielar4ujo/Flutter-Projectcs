@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -9,8 +11,6 @@ class ControllerLoginPage = _ControllerLoginPage with _$ControllerLoginPage;
 
 abstract class _ControllerLoginPage with Store {
   void _loadDataCategory() {
-    print("ControllerLoginPage: Criando StockSnapshot");
-
     try {
       _categorySnapshot = Firestore.instance
           .collection("stores")
@@ -21,9 +21,32 @@ abstract class _ControllerLoginPage with Store {
     } catch (e) {}
   }
 
-  void _loadDataSalesman() {
-    print("ControllerLoginPage: Criando SalesmanSnapshot");
+  void categorySnapshotListen({@required String categoryID}) {
+    streamSubscription = _categorySnapshot.listen((event) {
+      //print("Event: ${event.documents.first.data["listProducts"].length}");
+      hasCategory = false;
+      event.documents.forEach((element) {
+        if (element.documentID == categoryID) {
+          categoryEvent = element.data["listProducts"];
+          print("Encontrado");
+          print(categoryEvent);
+          hasCategory = true;
+          return;
+        }
+      });
+      print("Pos Event");
+      print("HAS CATEGORY: $hasCategory");
+    });
+  }
 
+  void categorySnapshotCancel() async {
+    await streamSubscription.cancel();
+    categoryEvent = Map();
+    hasCategory = null;
+    print("Cancelado");
+  }
+
+  void _loadDataSalesman() {
     try {
       _salesmanListSnapshot = Firestore.instance
           .collection("stores")
@@ -35,10 +58,6 @@ abstract class _ControllerLoginPage with Store {
   }
 
   void _loadDataSales({@required String year, @required String month}) {
-    print("LoadDateSales");
-    print("Year: $year");
-    print("Month: $month");
-
     try {
       _salesSnapshot = Firestore.instance
           .collection("stores")
@@ -74,7 +93,6 @@ abstract class _ControllerLoginPage with Store {
   @action
   Future<Null> setIsLogged() async {
     if (user == null) {
-      print("Loading User");
       user = await auth.currentUser();
     }
     _isLogged = user != null;
@@ -96,13 +114,10 @@ abstract class _ControllerLoginPage with Store {
             .document(user.uid)
             .get()
             .then((value) => userName = value.data["name"]);
-        print("user!=null");
 
         docUser.documents.forEach((element) {
-          print(" Element ${element.documentID}");
           this.salesMap.add(element.data);
         });
-        print(this.salesMap);
       }
     }
     _isLoading = false;
@@ -160,6 +175,12 @@ abstract class _ControllerLoginPage with Store {
   bool get isLogged => _isLogged;
 
   Stream<QuerySnapshot> _categorySnapshot;
+
+  Map categoryEvent;
+
+  bool hasCategory;
+
+  StreamSubscription streamSubscription;
 
   Stream<QuerySnapshot> _salesmanListSnapshot;
 

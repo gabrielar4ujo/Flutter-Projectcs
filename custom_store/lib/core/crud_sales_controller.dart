@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_product_controller.dart';
@@ -25,7 +25,7 @@ abstract class _CrudSalesController with Store {
         _crudProductController = CrudProductController();
 
   Future<bool> removeFromStock({@required List productList}) async {
-    log("Início");
+    
     isLoading = true;
     bool sucess;
     for (Map productSoldMap in productList) {
@@ -38,22 +38,7 @@ abstract class _CrudSalesController with Store {
             .get()
             .then((value) async {
           Map map = value["listProducts"];
-          print(productSoldMap["productName"]);
-          print(map[productSoldMap["productName"]]["features"]
-                  [productSoldMap["selectedSize"]]
-              [productSoldMap["selectedColor"]]["amount"]);
-          map[productSoldMap["productName"]]["features"]
-                  [productSoldMap["selectedSize"]]
-              [productSoldMap["selectedColor"]]["amount"] = (int.parse(
-                      map[productSoldMap["productName"]]["features"]
-                              [productSoldMap["selectedSize"]]
-                          [productSoldMap["selectedColor"]]["amount"]) -
-                  int.parse(productSoldMap["selectedAmount"]))
-              .toString();
-          print(map[productSoldMap["productName"]]["features"]
-                  [productSoldMap["selectedSize"]]
-              [productSoldMap["selectedColor"]]["amount"]);
-
+         
           await _crudProductController
               .update(
                   documentID: productSoldMap["categoryID"], productData: map)
@@ -63,21 +48,41 @@ abstract class _CrudSalesController with Store {
         sucess = false;
       }
     }
-    log("Fim");
+ 
+    return sucess;
+  }
+
+  Future<bool> update(
+      {@required String documentID,
+      @required List listSales,
+      @required int index,
+      String discount}) async {
+   
+    bool sucess;
+    removeFromStock(productList: listSales[index]["productList"])
+        .then((value) async {
+      if (value) {
+        _salesHelper.update(documentID, listSales).then((value) {
+          sucess = value;
+        });
+      } else
+        sucess = value;
+    });
+    isLoading = false;
     return sucess;
   }
 
   Future<bool> insert(
-      {@required String categoryID,
+      {@required String documentID,
       @required List productList,
       @required Salesman salesman,
       String discount}) async {
     bool success;
     removeFromStock(productList: productList).then((value) async {
-      log("Value: $value");
+   
       if (value) {
         await _salesHelper
-            .insert(categoryID,
+            .insert(documentID,
                 productList: productList,
                 salesman: salesman,
                 discount: discount)

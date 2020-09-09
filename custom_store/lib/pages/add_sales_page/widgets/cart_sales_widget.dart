@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:customstore/pages/add_sales_page/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class CartSalesWidget extends StatelessWidget {
               ),
               dense: true,
               onTap: () {
-                log("Show Sale Content");
+              
                 showDialog(
                     context: context,
                     builder: (context) => CustomDialogWidget(

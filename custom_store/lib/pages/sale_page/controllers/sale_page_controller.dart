@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 part 'sale_page_controller.g.dart';
 
@@ -22,7 +23,7 @@ abstract class _SalesPageControllerBase with Store {
   void setObservableList(List l) {
     _observableList = ObservableList();
     if (l != null) _observableList.addAll(l);
-    print(_observableList);
+   
   }
 
   @action
@@ -50,5 +51,16 @@ abstract class _SalesPageControllerBase with Store {
   @action
   void setMonth({String month}) {
     _month = month ?? DateTime.now().month.toString();
+  }
+
+  DocumentSnapshot getListToAddSalesPage() {
+    for (DocumentSnapshot d in _observableList) {
+      Timestamp t = d.data["time"];
+      if (year == t.toDate().year.toString()) {
+        return d;
+      }
+    }
+
+    return null;
   }
 }

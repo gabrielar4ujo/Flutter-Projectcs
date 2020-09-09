@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/pages/add_sales_page/add_sales_page.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -36,12 +37,16 @@ class _SalesPageState extends State<SalesPage> {
           onPressed: !_salesPageController.enabledFloatingActionButton
               ? null
               : () {
+                  DocumentSnapshot d =
+                      _salesPageController.getListToAddSalesPage();
+                 
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AddSalesPage(
-                            listSales: [
-                                  _salesPageController.observableList.first.data
-                                ] ??
-                                [],
+                          
+                            listSales: d == null
+                                ? []
+                                : d.data[_salesPageController.month] ?? [],
+                            documentID: d == null ? null : d.documentID,
                           )));
                 },
           child: Icon(Icons.add),
@@ -72,9 +77,7 @@ class _SalesPageState extends State<SalesPage> {
             ));
           } else {
             _salesPageController.setObservableList(snapshot.data.documents);
-            print(snapshot.data.documents[0].data);
-            print(snapshot.data.documents.length);
-            print(snapshot.data.documents is List);
+         
             return CustomListViewWidget(
               salesList: _salesPageController.observableList,
             );

@@ -34,7 +34,7 @@ class ProductHelper implements CategoryHelperI {
           success = false;
         })
         .timeout(Duration(seconds:  GetIt.I.get<ControllerLoginPage>().timeOut), onTimeout: () {
-          print("PRODUCT TIMEOUT");
+        
         });
 
     return success;
@@ -55,13 +55,13 @@ class ProductHelper implements CategoryHelperI {
 
     StorageTaskSnapshot taskSnapshot =
         await task.onComplete.timeout(Duration(seconds: 10), onTimeout: () {
-      print("Foto timeout");
+     
       task.cancel();
       return null;
     });
     if (taskSnapshot != null) url = await taskSnapshot.ref.getDownloadURL();
 
-    print("URL $url");
+  
 
     return url;
   }

@@ -19,7 +19,7 @@ abstract class _StockPageController with Store {
   void textFormFieldClear() {
     textEditingController.clear();
     _productText = "";
-    print("clear");
+  
   }
 
   /* @observable
@@ -56,48 +56,5 @@ abstract class _StockPageController with Store {
     return null;
   }
 
-  /* void confirmed() async {
-
-    bool categoryExist = false;
-    String categoryName = _productText;
-
-    await Firestore.instance
-        .collection("stores")
-        .document(controllerLoginPage.user.uid)
-        .collection("stock").getDocuments().then((value) async {
-      value.documents.forEach((element) {
-        if (element.data["categoryName"] == categoryName) {
-          print("has exist");
-          categoryExist = true;
-          return;
-        }
-      });
-
-      if (!categoryExist) {
-        print("dont exist");
-        //insert(categoryName);
-      }
-    });
-  }
-
-  Future<bool> update( String documentID) async{
-    bool sucess;
-    isLoading = true;
-    await categoryHelper.update(documentID, _productText).then((value){
-      sucess = value;
-      isLoading = false;
-    });
-    return sucess;
-  }
-
-  Future<bool> insert () async{
-    bool success;
-    isLoading = true;
-    await categoryHelper.insert(_productText).then((value){
-      success = value;
-      isLoading = false;
-    });
-    return success;
-  }*/
 
 }

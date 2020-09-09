@@ -44,16 +44,14 @@ class _SalesmanContentWidgetState extends State<SalesmanContentWidget> {
               ),
             ),
           );
-        print("Salesman Adicionado");
-
+       
         return ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              DocumentSnapshot salesmanSnapshot =
-                  snapshot.data.documents[index];
-              print(salesmanSnapshot.data["name"]);
+             
+             
               return SalesmanContentTile(crudSalesmanController: widget.crudSalesmanController,salesmanController: widget.salesmanController,
                   salesmanSnapshot: snapshot.data.documents[index]);
             });

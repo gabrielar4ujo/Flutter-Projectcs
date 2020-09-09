@@ -25,8 +25,7 @@ class SalesHelper implements CategoryHelperI {
       String discount}) async {
     bool success = false;
 
-    print("TimeOutTEst");
-    print(GetIt.I.get<ControllerLoginPage>().timeOut);
+  
 
     Firestore.instance
         .collection("stores")
@@ -52,40 +51,34 @@ class SalesHelper implements CategoryHelperI {
         })
         .timeout(Duration(seconds: GetIt.I.get<ControllerLoginPage>().timeOut),
             onTimeout: () {
-          print("PRODUCT TIMEOUT");
+        
         });
-
-    // ref
-    //     .collection(DateTime.now().month.toString())
-    //     .document()
-    //     .setData({
-    //       // "categoryID": productData.categoryId,
-    //       // "categoryName": productData.categoryName,
-    //       // "productName": productData.name,
-    //       // "selectedSize": productData.selectedSize,
-    //       // "selectedColor": productData.selectedColor,
-    //       // "selectedAmount": productData.selectedAmount,
-    //       "time": Timestamp.now(),
-    //       "discount": discount,
-    //       "productList": productList,
-    //       "salesmanName": salesman.name,
-    //       "salesmanComission": salesman.comission.toString(),
-    //       "clientName": salesman.clientName,
-    //     })
-    // .whenComplete(() => success = true)
-    // .catchError((exception) {
-    //   success = false;
-    // })
-    // .timeout(Duration(seconds: GetIt.I.get<ControllerLoginPage>().timeOut),
-    //     onTimeout: () {
-    //   print("PRODUCT TIMEOUT");
-    // });
 
     return success;
   }
 
   @override
-  Future<bool> update(String documentID, data) {
-    throw UnimplementedError();
+  Future<bool> update(String documentID, listSales) async{
+    bool success = false;
+
+    Firestore.instance
+        .collection("stores")
+        .document(userUID)
+        .collection("sales")
+        .document(documentID)
+        .updateData({
+         
+          DateTime.now().month.toString(): listSales
+        })
+        .whenComplete(() => success = true)
+        .catchError((exception) {
+          success = false;
+        })
+        .timeout(Duration(seconds: GetIt.I.get<ControllerLoginPage>().timeOut),
+            onTimeout: () {
+         
+        });
+
+    return success;
   }
 }

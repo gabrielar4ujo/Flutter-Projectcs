@@ -34,7 +34,7 @@ class SalesmanHelper implements CategoryHelperI {
   Future<bool> insert(String name, {String comission}) async {
     bool success = false;
 
-    print('insert');
+
     await Firestore.instance
         .collection("stores")
         .document(userUID)

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:customstore/pages/home_page/home_page.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:customstore/pages/login_page/login_page.dart';
@@ -22,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
 
     disposer = reaction((_) => controllerLoginPage.isLogged, (isLogged) async {
       await Future.delayed(Duration(milliseconds: 750));
-      log("IsLogged: $isLogged");
+
       if (isLogged) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage()));

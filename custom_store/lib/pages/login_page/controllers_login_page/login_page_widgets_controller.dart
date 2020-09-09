@@ -52,10 +52,6 @@ abstract class _LoginPageWidgetsController with Store {
   @computed
   bool get obscure => _obscure;
 
-  // Function eyesClick() {
-  //   changeObscure();
-  // }
-
   @action
   void changeObscure() => _obscure = !_obscure;
 
@@ -70,15 +66,14 @@ abstract class _LoginPageWidgetsController with Store {
               r = value is bool;
               if (!(r)) showSnackBar(value.code);
             });
-            print("DEU CERTO O LOGIN: $r");
+           
             return r;
           }
         : null;
   }
 
   void showSnackBar(String error) {
-    print("LOGIN PAGE , SHOW SNACKBAR");
-    print(error);
+   
     String errorMessage;
     switch (error) {
       case "ERROR_INVALID_EMAIL":
@@ -106,7 +101,7 @@ abstract class _LoginPageWidgetsController with Store {
       default:
         errorMessage = "Ocorreu um erro indefinido!";
     }
-    print(errorMessage);
+  
 
     scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(

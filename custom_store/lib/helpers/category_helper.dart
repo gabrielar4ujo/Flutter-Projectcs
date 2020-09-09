@@ -29,14 +29,14 @@ class CategoryHelper implements CategoryHelperI {
   }
 
   @override
-  Future<bool> insert(String categoryName) async {
+  Future<bool> insert(String categoryName, {String documentID}) async {
     bool success = false;
 
     await Firestore.instance
         .collection("stores")
         .document(userUID)
         .collection("stock")
-        .document()
+        .document(documentID)
         .setData({
           "categoryName": categoryName,
           "time": FieldValue.serverTimestamp(),

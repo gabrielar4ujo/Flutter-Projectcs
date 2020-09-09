@@ -28,12 +28,12 @@ class _LoginPageState extends State<LoginPage>
     super.initState();
     controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     _widgetsController = LoginPageWidgetsController();
-    print(controllerLoginPage.salesMap);
+   
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        print("Animação Concluída");
+  
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage()));
       }
@@ -44,10 +44,10 @@ class _LoginPageState extends State<LoginPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    disposer = reaction((_) => controllerLoginPage.isLogged, (loggedIn) {
-      if (loggedIn) print("LOGGED");
-      /* Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));*/
-    });
+    // disposer = reaction((_) => controllerLoginPage.isLogged, (loggedIn) {
+    //   if (loggedIn) print("LOGGED");
+    //   /* Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));*/
+    // });
   }
 
   @override

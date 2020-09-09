@@ -79,7 +79,7 @@ abstract class _SalesmanController with Store {
 
   @action
   void setFields({String name, String comission, String documentID}) {
-    print("SET FIELDS");
+  
     changeName(name);
     changeComission(comission);
     nameTextEditingController.text = nameText;

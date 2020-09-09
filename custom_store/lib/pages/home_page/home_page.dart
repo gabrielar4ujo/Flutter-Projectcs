@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage>
       bool hasConnection = ConnectivityResult.mobile == result ||
           ConnectivityResult.wifi == result;
 
-      print(result);
+
 
       String message = hasConnection
           ? "Você está conectado a uma rede!"
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>
         statusConnection = true;
         globalScaffold.showSnackBar(SnackBar(
           content: Text(message),
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.black,
         ));
       }
     });
@@ -270,9 +270,9 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-    //_disposer();
+   
     subscription.cancel();
     _animationController.dispose();
-    //GetIt.I.resetLazySingleton(instance: controllerLoginPage, instanceName: "controllerLoginPage");
+   
   }
 }

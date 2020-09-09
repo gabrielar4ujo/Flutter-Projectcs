@@ -123,7 +123,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                             (widget.salesmanController
                                                 .enableButton)
                                         ? () async {
-                                            print("Editing");
+                                           
                                             Salesman salesman = Salesman(
                                                 comission: double.parse(widget
                                                     .salesmanController
@@ -164,7 +164,7 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                             (widget.salesmanController
                                                 .enableButton)
                                         ? () async {
-                                            print("Adding");
+
                                             await widget.crudSalesmanController
                                                 .insert(
                                                     categoryName: widget

@@ -42,7 +42,7 @@ class _CustomExpasionTileState extends State<CustomExpasionTile> {
 
   @override
   Widget build(BuildContext context) {
-    print("FEATURES");
+  
 
     return Container(
       margin: EdgeInsets.only(bottom: 7),
@@ -103,13 +103,12 @@ class _CustomExpasionTileState extends State<CustomExpasionTile> {
 
   List getListColorProductPage() {
     List listColorProductPage = List();
-    print("FEATUIRESMAP: $featuresMap");
+  
     if (featuresMap[size] == {}) return listColorProductPage;
     this.featuresMap.forEach((key, value) {
       listColorProductPage.add([key, value["amount"]]);
     });
-    print("GETLISTPRODUCTPAGE");
-    print(listColorProductPage);
+  
     return listColorProductPage;
   }
 }

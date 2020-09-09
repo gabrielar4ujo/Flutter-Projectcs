@@ -24,10 +24,10 @@ abstract class _CrudCategoryController with Store {
     return success;
   }
 
-  Future<bool> insert({String categoryName}) async {
+  Future<bool> insert({String categoryName, String documentID}) async {
     bool success;
     isLoading = true;
-    await _categoryHelper.insert(categoryName).then((value) {
+    await _categoryHelper.insert(categoryName, documentID: documentID).then((value) {
       success = value;
       isLoading = false;
     });

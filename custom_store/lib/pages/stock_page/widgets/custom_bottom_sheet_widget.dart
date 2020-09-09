@@ -57,7 +57,7 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
                   children: <Widget>[
                     FlatButton(
                       onPressed: () async {
-                        print("Mudar Nome");
+                      
 
                         var bottomSheetController = showModalBottomSheet(
                             isScrollControlled: true,
@@ -84,12 +84,12 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
                     ),
                     FlatButton(
                       onPressed: () {
-                        print("Apagar Categoria");
+                       
                         setState(() {
                           isLoading = true;
                         });
 
-                        print(allProductsList);
+                  
                         allProductsList.forEach((key, value) async {
                           await value['pictures'].forEach(
                               (url) => _productController.deletePictures(url));

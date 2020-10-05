@@ -31,7 +31,7 @@ class CustomTextFieldWidget extends StatelessWidget {
             ? null
             : dislowSpace
                 ? [
-                    FilteringTextInputFormatter.allow(RegExp("[ ]")),
+                    FilteringTextInputFormatter.deny(RegExp("[ ]")), //Para bloquear usar .deny
                   ]
                 : null,
         textCapitalization: color != null

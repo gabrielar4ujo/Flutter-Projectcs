@@ -28,12 +28,11 @@ class _LoginPageState extends State<LoginPage>
     super.initState();
     controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     _widgetsController = LoginPageWidgetsController();
-   
+
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-  
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage()));
       }

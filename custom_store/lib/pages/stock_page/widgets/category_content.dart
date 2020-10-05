@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:customstore/core/crud_category_controller.dart';
 import 'package:customstore/core/crud_product_controller.dart';
@@ -50,10 +50,7 @@ class CategoryContentWidget extends StatelessWidget {
               !GetIt.I.get<ControllerLoginPage>().hasCategory) {
             CrudCategoryController crudCategoryController =
                 CrudCategoryController();
-            log("######################################################");
-            log(categoryName);
-            log(documentID);
-            log("######################################################");
+        
             await crudCategoryController.insert(
                 categoryName: categoryName, documentID: documentID);
           }
@@ -74,8 +71,7 @@ class CategoryContentWidget extends StatelessWidget {
               try {
                 allProductsMapWithAlteration.remove(product.name);
               } catch (e) {
-                log("Exception");
-                log(e.toString());
+            
               }
             }
             if (productEdited.name != null) {

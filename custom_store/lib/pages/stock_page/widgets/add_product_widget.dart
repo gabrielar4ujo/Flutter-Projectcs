@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:customstore/core/crud_category_controller.dart';
 import 'package:customstore/core/crud_product_controller.dart';
@@ -47,10 +47,7 @@ class AddProductWidget extends StatelessWidget {
           if ( GetIt.I.get<ControllerLoginPage>().hasCategory != null && !GetIt.I.get<ControllerLoginPage>().hasCategory) {
             CrudCategoryController crudCategoryController =
                 CrudCategoryController();
-            log("######################################################");
-            log(categoryName);
-            log(documentID);
-            log("######################################################");
+          
             await crudCategoryController.insert(
                 categoryName: categoryName, documentID: documentID);
             print("Esperei NO ADDPRODUCT");

@@ -69,8 +69,6 @@ class _HomePageState extends State<HomePage>
       bool hasConnection = ConnectivityResult.mobile == result ||
           ConnectivityResult.wifi == result;
 
-
-
       String message = hasConnection
           ? "Você está conectado a uma rede!"
           : "Você não está conectado!";
@@ -270,9 +268,8 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-   
+
     subscription.cancel();
     _animationController.dispose();
-   
   }
 }

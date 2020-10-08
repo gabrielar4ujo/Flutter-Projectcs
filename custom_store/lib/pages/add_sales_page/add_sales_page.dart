@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_sales_controller.dart';
 import 'package:customstore/models/product.dart';
@@ -37,7 +35,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       bottomSheet: Container(
         alignment: Alignment.center,
@@ -89,7 +86,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
               onPressed: !widget._addSalesController.amountValidator &&
                       !widget._crudSalesController.isLoading
                   ? () {
-                    
                       widget._addSalesController.addSalesCartList();
                       FocusScope.of(context).unfocus();
                     }
@@ -108,7 +104,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
                           widget._addSalesController.getFinalSalesman();
 
                       if (widget.documentID != null) {
-                       
                         widget.listSales.add({
                           "time": Timestamp.now(),
                           "discount": widget._addSalesController.discount,
@@ -127,7 +122,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
                           Navigator.of(context).pop(value);
                         });
                       } else {
-                    
                         await widget._crudSalesController
                             .insert(
                           documentID: widget.documentID,
@@ -137,7 +131,6 @@ class _AddSalesPageState extends State<AddSalesPage> {
                           discount: widget._addSalesController.discount,
                         )
                             .then((value) {
-                        
                           Navigator.of(context).pop(value);
                         });
                       }
@@ -512,8 +505,7 @@ class _AddSalesPageState extends State<AddSalesPage> {
                                           TextInputType.numberWithOptions(
                                               decimal: false),
                                       inputFormatters: [
-                                        WhitelistingTextInputFormatter
-                                            .digitsOnly
+                                        FilteringTextInputFormatter.digitsOnly
                                       ],
                                       controller: widget._addSalesController
                                           .amountTextEditingController,

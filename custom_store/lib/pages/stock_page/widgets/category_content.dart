@@ -1,5 +1,3 @@
-
-
 import 'package:customstore/core/crud_category_controller.dart';
 import 'package:customstore/core/crud_product_controller.dart';
 import 'package:customstore/models/product.dart';
@@ -50,7 +48,7 @@ class CategoryContentWidget extends StatelessWidget {
               !GetIt.I.get<ControllerLoginPage>().hasCategory) {
             CrudCategoryController crudCategoryController =
                 CrudCategoryController();
-        
+
             await crudCategoryController.insert(
                 categoryName: categoryName, documentID: documentID);
           }
@@ -70,9 +68,7 @@ class CategoryContentWidget extends StatelessWidget {
             if (productEdited.name != product.name) {
               try {
                 allProductsMapWithAlteration.remove(product.name);
-              } catch (e) {
-            
-              }
+              } catch (e) {}
             }
             if (productEdited.name != null) {
               allProductsMapWithAlteration[productEdited.name] =
@@ -86,6 +82,8 @@ class CategoryContentWidget extends StatelessWidget {
                       .categorySnapshotCancel());
             }
           }
+        } else {
+          GetIt.I.get<ControllerLoginPage>().categorySnapshotCancel();
         }
       },
       child: Container(

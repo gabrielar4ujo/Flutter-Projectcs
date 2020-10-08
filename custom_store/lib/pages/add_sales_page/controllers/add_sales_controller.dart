@@ -53,7 +53,6 @@ abstract class _AddSalesController with Store {
       _productController.changeProductSale(productMap[firstProduct].first);
       _salesmanController.setSalesman(listSalesman.first);
     }
-   
   }
 
   TextEditingController
@@ -76,7 +75,6 @@ abstract class _AddSalesController with Store {
   void modifyProductMapQuantity(Product product, String amount) {
     getProduct(product.name).features[product.selectedSize]
         [product.selectedColor]["amount"] = amount;
-  
   }
 
   void removeSalesCartList(Product p, int index) {
@@ -289,7 +287,6 @@ abstract class _AddSalesController with Store {
       }
     }
 
-
     resetFormFields();
   }
 
@@ -341,7 +338,6 @@ abstract class _AddSalesController with Store {
     }
     setAmount(amountTextEditingController.text);
 
-   
     amountTextEditingController.selection = TextSelection.collapsed(
         offset: amountTextEditingController.text.length);
   }
@@ -356,7 +352,6 @@ abstract class _AddSalesController with Store {
     }
 
     return text;
-  
   }
 
   Salesman getSalesman(String text) {
@@ -401,10 +396,9 @@ abstract class _AddSalesController with Store {
     product.selectedSize = _productController.size;
     product.selectedColor = _productController.color;
     product.selectedAmount = amountTextEditingController.text;
-   
+
     product.price = getProduct(_productController.productName).price;
 
-  
     return product;
   }
 

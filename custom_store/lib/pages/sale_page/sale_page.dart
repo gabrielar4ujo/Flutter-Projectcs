@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/pages/add_sales_page/add_sales_page.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -39,10 +38,9 @@ class _SalesPageState extends State<SalesPage> {
               : () {
                   DocumentSnapshot d =
                       _salesPageController.getListToAddSalesPage();
-                 
+
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AddSalesPage(
-                          
                             listSales: d == null
                                 ? []
                                 : d.data[_salesPageController.month] ?? [],
@@ -77,7 +75,7 @@ class _SalesPageState extends State<SalesPage> {
             ));
           } else {
             _salesPageController.setObservableList(snapshot.data.documents);
-         
+
             return CustomListViewWidget(
               salesList: _salesPageController.observableList,
             );

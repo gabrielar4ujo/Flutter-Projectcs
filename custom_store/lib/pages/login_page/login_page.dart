@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class _LoginPageState extends State<LoginPage>
   ControllerLoginPage controllerLoginPage;
   LoginPageWidgetsController _widgetsController;
 
-  ReactionDisposer disposer;
+  // disposer;
 
   AnimationController _animationController;
 
@@ -131,7 +130,7 @@ class _LoginPageState extends State<LoginPage>
   @override
   void dispose() {
     super.dispose();
-    disposer();
+    //disposer();
     _animationController.dispose();
   }
 }

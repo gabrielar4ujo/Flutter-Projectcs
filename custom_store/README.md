@@ -1,16 +1,5 @@
-# customstore
+Uma aplicação Flutter.
 
-A new Flutter application.
+Está aplicação tem como fim apenas aprender e aguçar técnicas de desenvolvimento mobile afim de proporcionar o desenvolvedor a adquirir habilidades que trará, ou ajudará, a ter a capacidade de então atuar em uma empresa real.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+O aplicativo em questão proporciona ao usuário gerenciar sua loja, ao ter uma conta cadastrada no App o usuário terá opções como: poder adicionar categorias e dentro das categorias produtos, tal como, também remove-los e edita-los, e o mesmo com as vendas, é possível resgatar as vendas de um período específico como também ao todo. As categorias, vendas e produtos são armazenados no Firebase, ou seja, quando há uma adição ou remoção quaisque, o valor é alterado para todos os usuários instantaneamente (considerando que aja conexão e funcionamento correta da internet).

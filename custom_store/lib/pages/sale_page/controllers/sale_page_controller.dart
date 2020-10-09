@@ -23,7 +23,6 @@ abstract class _SalesPageControllerBase with Store {
   void setObservableList(List l) {
     _observableList = ObservableList();
     if (l != null) _observableList.addAll(l);
-   
   }
 
   @action

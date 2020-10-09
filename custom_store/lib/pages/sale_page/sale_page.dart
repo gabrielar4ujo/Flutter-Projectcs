@@ -77,7 +77,7 @@ class _SalesPageState extends State<SalesPage> {
             _salesPageController.setObservableList(snapshot.data.documents);
 
             return CustomListViewWidget(
-              salesList: _salesPageController.observableList,
+              salesList: _salesPageController.getListToAddSalesPage(),
             );
           }
         },

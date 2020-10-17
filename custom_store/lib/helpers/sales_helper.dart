@@ -25,8 +25,6 @@ class SalesHelper implements CategoryHelperI {
       String discount}) async {
     bool success = false;
 
-  
-
     Firestore.instance
         .collection("stores")
         .document(userUID)
@@ -50,15 +48,13 @@ class SalesHelper implements CategoryHelperI {
           success = false;
         })
         .timeout(Duration(seconds: GetIt.I.get<ControllerLoginPage>().timeOut),
-            onTimeout: () {
-        
-        });
+            onTimeout: () {});
 
     return success;
   }
 
   @override
-  Future<bool> update(String documentID, listSales) async{
+  Future<bool> update(String documentID, listSales) async {
     bool success = false;
 
     Firestore.instance
@@ -66,18 +62,13 @@ class SalesHelper implements CategoryHelperI {
         .document(userUID)
         .collection("sales")
         .document(documentID)
-        .updateData({
-         
-          DateTime.now().month.toString(): listSales
-        })
+        .updateData({DateTime.now().month.toString(): listSales})
         .whenComplete(() => success = true)
         .catchError((exception) {
           success = false;
         })
         .timeout(Duration(seconds: GetIt.I.get<ControllerLoginPage>().timeOut),
-            onTimeout: () {
-         
-        });
+            onTimeout: () {});
 
     return success;
   }

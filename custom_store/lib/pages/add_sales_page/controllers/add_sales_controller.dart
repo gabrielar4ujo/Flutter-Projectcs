@@ -90,6 +90,7 @@ abstract class _AddSalesController with Store {
 
   void addSalesCartList() {
     Product finalProduct = getFinalProduct();
+    print("vou adiciconar");
 
     for (Product p in salesCartList) {
       if (finalProduct.equals(p)) {
@@ -113,6 +114,7 @@ abstract class _AddSalesController with Store {
         .toString());
     resetFormFields();
     modifyProductMapQuantity(finalProduct, _productController.amount);
+    print(finalProduct);
   }
 
   @computed
@@ -396,8 +398,9 @@ abstract class _AddSalesController with Store {
     product.selectedSize = _productController.size;
     product.selectedColor = _productController.color;
     product.selectedAmount = amountTextEditingController.text;
-
-    product.price = getProduct(_productController.productName).price;
+    Product p = getProduct(_productController.productName);
+    product.price = p.price;
+    product.spent = p.spent;
 
     return product;
   }

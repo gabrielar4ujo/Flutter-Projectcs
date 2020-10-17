@@ -203,6 +203,7 @@ class _AddSalesPageState extends State<AddSalesPage> {
                     }
                     element["listProducts"]?.forEach((k, v) {
                       Product product = Product(
+                          spent: double.parse(v["spent"] ?? 0.00),
                           name: k,
                           features: v["features"],
                           price: double.parse(v["price"]),

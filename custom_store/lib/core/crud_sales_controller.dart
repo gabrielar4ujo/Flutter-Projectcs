@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_product_controller.dart';
 import 'package:customstore/helpers/sales_helper.dart';
@@ -25,7 +23,6 @@ abstract class _CrudSalesController with Store {
         _crudProductController = CrudProductController();
 
   Future<bool> removeFromStock({@required List productList}) async {
-    
     isLoading = true;
     bool sucess;
     for (Map productSoldMap in productList) {
@@ -37,18 +34,28 @@ abstract class _CrudSalesController with Store {
             .document(productSoldMap["categoryID"])
             .get()
             .then((value) async {
-          Map map = value["listProducts"];
-         
+          Map allSalesMap = value.data["listProducts"];
+          int amount = int.parse(allSalesMap[productSoldMap["productName"]]
+                  ["features"][productSoldMap["selectedSize"]]
+              [productSoldMap["selectedColor"]]["amount"]);
+
+          allSalesMap[productSoldMap["productName"]]["features"]
+                      [productSoldMap["selectedSize"]]
+                  [productSoldMap["selectedColor"]]["amount"] =
+              (amount - (int.parse(productSoldMap["selectedAmount"])))
+                  .toString();
+
           await _crudProductController
               .update(
-                  documentID: productSoldMap["categoryID"], productData: map)
+                  documentID: productSoldMap["categoryID"],
+                  productData: allSalesMap)
               .then((value) => sucess = value);
         });
       } catch (e) {
         sucess = false;
       }
     }
- 
+
     return sucess;
   }
 
@@ -57,16 +64,20 @@ abstract class _CrudSalesController with Store {
       @required List listSales,
       @required int index,
       String discount}) async {
-   
+    //print("-----------\nUPDATE\n------------");
     bool sucess;
+    //print(listSales[index]["productList"]);
     removeFromStock(productList: listSales[index]["productList"])
         .then((value) async {
       if (value) {
+        print("Consegui remover do stock");
         _salesHelper.update(documentID, listSales).then((value) {
           sucess = value;
         });
-      } else
+      } else {
+        print("Não consegui remover do stock");
         sucess = value;
+      }
     });
     isLoading = false;
     return sucess;
@@ -77,9 +88,9 @@ abstract class _CrudSalesController with Store {
       @required List productList,
       @required Salesman salesman,
       String discount}) async {
+    print("-----------\nINSERT\n------------");
     bool success;
     removeFromStock(productList: productList).then((value) async {
-   
       if (value) {
         await _salesHelper
             .insert(documentID,

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/pages/add_sales_page/add_sales_page.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
 import 'package:customstore/pages/sale_page/controllers/sale_page_controller.dart';
-import 'package:customstore/pages/sale_page/widgets/custom_list_view_widget.dart';
+import 'package:customstore/pages/sale_page/widgets/custom_page_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -13,6 +13,7 @@ class SalesPage extends StatefulWidget {
 }
 
 class _SalesPageState extends State<SalesPage> {
+  int counter;
   ControllerLoginPage _controllerLoginPage;
   SalesPageController _salesPageController;
 
@@ -22,6 +23,14 @@ class _SalesPageState extends State<SalesPage> {
     _controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     _salesPageController = SalesPageController();
   }
+
+  // Future<int> initCounter() async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   counter = preferences.getInt("counter") ?? 2;
+  //   await preferences.setInt("counter", counter - 1);
+  //   print(counter);
+  //   return counter;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +60,7 @@ class _SalesPageState extends State<SalesPage> {
         );
       }),
       body: StreamBuilder(
-        stream: _controllerLoginPage.getSalesSnapshot(
-            year: _salesPageController.year, month: _salesPageController.month),
+        stream: _controllerLoginPage.getSalesSnapshot(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             //Esse método faz com que a função passa como parâmetro só seja executada após a construção do widget
@@ -76,8 +84,8 @@ class _SalesPageState extends State<SalesPage> {
           } else {
             _salesPageController.setObservableList(snapshot.data.documents);
 
-            return CustomListViewWidget(
-              salesList: _salesPageController.getListToAddSalesPage(),
+            return CustomPageViewWidget(
+              salesList: _salesPageController.observableList,
             );
           }
         },

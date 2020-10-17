@@ -1,59 +1,60 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:customstore/core/calendary.dart';
+import 'package:customstore/pages/sale_page/widgets/custom_list_tile_widget.dart';
 import 'package:flutter/material.dart';
 
 class CustomListViewWidget extends StatelessWidget {
   final Map salesMap;
 
-  CustomListViewWidget({DocumentSnapshot salesList})
-      : salesMap = salesList == null || salesList.data.isEmpty
-            ? Map()
-            : salesList.data;
+  CustomListViewWidget({this.salesMap});
 
   @override
   Widget build(BuildContext context) {
-    // log(salesList[0].data.toString());
-    // log(salesMap.length.toString());
-    // log(salesMap["time"].toString());
     salesMap.remove("time");
-    // log("removed");
-    // log(salesMap.length.toString());
-    // log(salesList[0].data.remove("time").toString());
-    // log(salesList[0].data.length.toString());
+    // print("---------------");
+    // print(salesMap);
+    // print("---------------");
     int index = -1;
     return ListView(
-      children: salesMap.keys.map((e) {
-        print(index);
-        index++;
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: salesMap.keys.map((salesMonth) {
+        List productsInSaleMonth = salesMap[salesMonth];
+
         return Card(
           margin: EdgeInsets.only(
               top: index == 0 ? 20 : 6,
               left: 12,
               right: 12,
-              bottom: index == salesMap.length - 1 ? 20 : 6),
-          child: ExpansionTile(
-            title: Text(Calendary().getMonth(e)),
+              bottom: index == salesMap.length - 1 ? 92 : 6),
+          child: ConfigurableExpansionTile(
+            animatedWidgetFollowingHeader: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: const Icon(
+                Icons.expand_more,
+                color: const Color(0xFF707070),
+              ),
+            ),
+            header: Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 17),
+                child: Text(
+                  Calendary().getMonth(salesMonth),
+                  style: TextStyle(color: Colors.black, fontSize: 15),
+                ),
+              ),
+            ),
+            children: productsInSaleMonth.map((saleData) {
+              DateTime dateTime =
+                  DateTime.parse(saleData["time"].toDate().toString());
+              return CustomListTileWidget(
+                dateTime: dateTime,
+                saleData: saleData,
+              );
+            }).toList(),
           ),
         );
       }).toList(),
-    )
-        // ListView.builder(
-        //   shrinkWrap: true,
-        //   itemCount: salesMap.length,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     //log(salesList.data[index].toString());
-        //     return Card(
-        //       margin: EdgeInsets.only(
-        //           top: index == 0 ? 16 : 5,
-        //           left: 12,
-        //           right: 12,
-        //           bottom: index == salesMap.length - 1 ? 16 : 5),
-        //       child: ListTile(
-        //         title: Text("oi"),
-        //       ),
-        //     );
-        //   },
-        // )
-        ;
+    );
   }
 }

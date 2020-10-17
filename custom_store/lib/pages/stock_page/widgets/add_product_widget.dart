@@ -36,10 +36,8 @@ class AddProductWidget extends StatelessWidget {
                   allProductsName: allProductsName.keys.toList(),
                 )));
 
-        print("Map atualizado?");
         Map allProductsMapWithAlteration =
             GetIt.I.get<ControllerLoginPage>().categoryEvent;
-        print(GetIt.I.get<ControllerLoginPage>().categoryEvent);
 
         if (product != null) {
           if (GetIt.I.get<ControllerLoginPage>().hasCategory != null &&
@@ -49,10 +47,9 @@ class AddProductWidget extends StatelessWidget {
 
             await crudCategoryController.insert(
                 categoryName: categoryName, documentID: documentID);
-            print("Esperei NO ADDPRODUCT");
           }
           if (allProductsMapWithAlteration == null) {
-            print("First");
+            print("Não ouve alteração");
             allProductsName[product.name] = product.toJson();
 
             _crudProductController
@@ -61,7 +58,7 @@ class AddProductWidget extends StatelessWidget {
                     .get<ControllerLoginPage>()
                     .categorySnapshotCancel());
           } else {
-            print("Second");
+            print("Ouve alteração");
             allProductsMapWithAlteration[product.name] = product.toJson();
             _crudProductController
                 .insert(

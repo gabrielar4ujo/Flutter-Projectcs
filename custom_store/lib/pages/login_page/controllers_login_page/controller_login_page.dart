@@ -24,6 +24,7 @@ abstract class _ControllerLoginPage with Store {
   void categorySnapshotListen({@required String categoryID}) {
     streamSubscription = _categorySnapshot.listen((event) {
       //print("Event: ${event.documents.first.data["listProducts"].length}");
+      print("teve evento?");
       hasCategory = false;
       event.documents.forEach((element) {
         if (element.documentID == categoryID) {
@@ -41,7 +42,7 @@ abstract class _ControllerLoginPage with Store {
 
   void categorySnapshotCancel() async {
     await streamSubscription.cancel();
-    categoryEvent = Map();
+    categoryEvent = null;
     hasCategory = null;
     print("Cancelado");
   }
@@ -57,7 +58,7 @@ abstract class _ControllerLoginPage with Store {
     } catch (e) {}
   }
 
-  void _loadDataSales({@required String year, @required String month}) {
+  void _loadDataSales() {
     try {
       _salesSnapshot = Firestore.instance
           .collection("stores")
@@ -68,12 +69,23 @@ abstract class _ControllerLoginPage with Store {
     } catch (e) {}
   }
 
-  Stream<QuerySnapshot> getSalesSnapshot(
-      {@required String year,
-      @required String month,
-      bool changedDate = false}) {
-    if (_salesSnapshot == null || changedDate) {
-      _loadDataSales(year: year, month: month);
+  Future<QuerySnapshot> getFutureCategorySnapshot() async {
+    try {
+      return await Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("stock")
+          .orderBy("time")
+          .getDocuments();
+    } catch (e) {
+      print("entrei no ccatch");
+      return null;
+    }
+  }
+
+  Stream<QuerySnapshot> getSalesSnapshot() {
+    if (_salesSnapshot == null) {
+      _loadDataSales();
     }
     return _salesSnapshot;
   }

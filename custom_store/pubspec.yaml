@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  configurable_expansion_tile: ^1.0.0
+  list_tile_more_customizable: ^1.3.3
   mobx: ^1.2.1+1
   flutter_mobx: ^1.1.0+1
   infinity_page_view: ^1.0.0
@@ -35,7 +37,9 @@ dependencies:
   image_picker: ^0.6.7+2
   connectivity: ^0.4.9
   basic_utils: ^1.2.0
+  flutter_image: ^3.0.0
   shimmer: ^1.1.1
+  #shared_preferences: ^0.5.12
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,6 +70,7 @@ flutter:
     - assets/cabide.png
     - assets/loading.gif
     - assets/swipe_right.png
+    - assets/roupa.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

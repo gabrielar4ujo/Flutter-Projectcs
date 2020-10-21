@@ -110,7 +110,7 @@ abstract class _ControllerLoginPage with Store {
     _isLogged = user != null;
   }
 
-  Future<Null> loadCurrentUser() async {
+  Future<bool> loadCurrentUser() async {
     _isLoading = true;
 
     if (isLogged) {
@@ -121,18 +121,22 @@ abstract class _ControllerLoginPage with Store {
             .collection("vendas")
             .getDocuments();
 
-        await Firestore.instance
-            .collection("users")
-            .document(user.uid)
-            .get()
-            .then((value) => userName = value.data["name"]);
-
+        try {
+          await Firestore.instance
+              .collection("users")
+              .document(user.uid)
+              .get()
+              .then((value) => userName = value.data["name"]);
+        } catch (e) {
+          return false;
+        }
         docUser.documents.forEach((element) {
           this.salesMap.add(element.data);
         });
       }
     }
     _isLoading = false;
+    return true;
   }
 
   @action

@@ -66,40 +66,43 @@ class ContentListViewWidget extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 width: MediaQuery.of(context).size.width,
                 height: 145,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Cliente: ${salesman.clientName}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Vendedor: ${salesman.name}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Categoria: ${product.categoryName}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Produto: ${product.name}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Quantidade: ${product.selectedAmount}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Cor: ${product.selectedColor}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                    Text(
-                      "Tamanho: ${product.selectedSize}",
-                      style: TextStyle(fontSize: fontSize),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Categoria: ${product.categoryName}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Produto: ${product.name}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Preço: R\$ ${product.price.toStringAsFixed(2)}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Custo: R\$ ${product.spent.toStringAsFixed(2)}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Quantidade: ${product.selectedAmount}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Tamanho: ${product.selectedSize}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                      Text(
+                        "Cor: ${product.selectedColor}",
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                    ],
+                  ),
                 ),
               )),
         ],

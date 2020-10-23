@@ -14,8 +14,28 @@ class SalesHelper implements CategoryHelperI {
   }
 
   @override
-  Future<bool> delete(String documentID) {
-    throw UnimplementedError();
+  Future<bool> delete(
+    String documentID, {
+    @required String month,
+    @required int index,
+  }) async {
+    bool success = false;
+    Firestore.instance
+        .collection("stores")
+        .document(userUID)
+        .collection("sales")
+        .document(documentID)
+        .get()
+        .then((value) async {
+      print(value.documentID);
+      if (value != null) {
+        List productList = value.data[month];
+        productList.removeAt(index);
+        await update(documentID, productList);
+      }
+    });
+
+    return success;
   }
 
   @override

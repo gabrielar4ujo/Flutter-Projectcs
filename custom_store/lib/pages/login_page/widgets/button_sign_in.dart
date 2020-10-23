@@ -4,6 +4,7 @@ class ButtonSignIn extends StatelessWidget {
   final Function loginPressed;
   final bool isLoading;
   final AnimationController animationController;
+  final AnimationController containerAnimationController;
   final double screenHeight;
   final bool emailValid;
 
@@ -13,6 +14,7 @@ class ButtonSignIn extends StatelessWidget {
   ButtonSignIn(
       {this.loginPressed,
       this.isLoading,
+      this.containerAnimationController,
       this.animationController,
       this.screenHeight,
       this.emailValid})
@@ -20,8 +22,8 @@ class ButtonSignIn extends StatelessWidget {
             parent: animationController, curve: Interval(0.0, 0.150))),
         buttomZoomOut = Tween(begin: 50.0, end: screenHeight).animate(
             CurvedAnimation(
-                parent: animationController,
-                curve: Interval(0.5, 1, curve: Curves.bounceOut)));
+                parent: containerAnimationController,
+                curve: Interval(0.0, 0.70, curve: Curves.bounceOut)));
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     bool isActivity = loginPressed == null;
@@ -31,14 +33,22 @@ class ButtonSignIn extends StatelessWidget {
         padding: EdgeInsets.only(
             top: buttomZoomOut.value > (screenHeight / 3)
                 ? 0
-                : emailValid ? 350 : 372),
+                : emailValid
+                    ? 350
+                    : 372),
         child: GestureDetector(
             onTap: !isActivity || !isLoading
                 ? () {
                     animationController.forward();
+                    //animationController.stop();
                     loginPressed().then((value) {
-                      if (!value) animationController.reverse();
+                      animationController.reverse();
                       loginCompleted = value;
+                      if (loginCompleted)
+                        containerAnimationController.forward();
+                      else {
+                        animationController.reverse();
+                      }
                     });
                   }
                 : null,

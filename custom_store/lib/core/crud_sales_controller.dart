@@ -83,6 +83,63 @@ abstract class _CrudSalesController with Store {
     return sucess;
   }
 
+  Future<bool> putBackInStock({@required List productList}) async {
+    isLoading = true;
+    bool sucess;
+    for (Map productSoldMap in productList) {
+      try {
+        await Firestore.instance
+            .collection("stores")
+            .document(GetIt.I.get<ControllerLoginPage>().user.uid)
+            .collection("stock")
+            .document(productSoldMap["categoryID"])
+            .get()
+            .then((value) async {
+          Map allSalesMap = value.data["listProducts"];
+          int amount = int.parse(allSalesMap[productSoldMap["productName"]]
+                  ["features"][productSoldMap["selectedSize"]]
+              [productSoldMap["selectedColor"]]["amount"]);
+
+          allSalesMap[productSoldMap["productName"]]["features"]
+                      [productSoldMap["selectedSize"]]
+                  [productSoldMap["selectedColor"]]["amount"] =
+              (amount + (int.parse(productSoldMap["selectedAmount"])))
+                  .toString();
+
+          await _crudProductController
+              .update(
+                  documentID: productSoldMap["categoryID"],
+                  productData: allSalesMap)
+              .then((value) => sucess = value);
+        });
+      } catch (e) {
+        sucess = false;
+      }
+    }
+
+    return sucess;
+  }
+
+  Future<bool> delete({
+    @required List productList,
+    @required String documentID,
+    @required String month,
+    @required int index,
+  }) async {
+    bool sucess = false;
+    // print(documentID);
+    // print(month);
+    // print(index);
+    await putBackInStock(productList: productList).then((value) async {
+      await _salesHelper
+          .delete(documentID, month: month, index: index)
+          .then((value) => sucess = value);
+    });
+    isLoading = false;
+
+    return sucess;
+  }
+
   Future<bool> insert(
       {@required String documentID,
       @required List productList,

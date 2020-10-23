@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
+
 part 'sale_page_controller.g.dart';
 
 class SalesPageController = _SalesPageControllerBase with _$SalesPageController;

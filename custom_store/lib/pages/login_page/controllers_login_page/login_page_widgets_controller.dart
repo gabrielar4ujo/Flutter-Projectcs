@@ -64,16 +64,15 @@ abstract class _LoginPageWidgetsController with Store {
                 .login(email: emailText, pass: passText)
                 .then((value) {
               r = value is bool;
-              if (!(r)) showSnackBar(value.code);
+              if (!(r)) showSnackBar(value);
             });
-           
+
             return r;
           }
         : null;
   }
 
   void showSnackBar(String error) {
-   
     String errorMessage;
     switch (error) {
       case "ERROR_INVALID_EMAIL":
@@ -101,7 +100,6 @@ abstract class _LoginPageWidgetsController with Store {
       default:
         errorMessage = "Ocorreu um erro indefinido!";
     }
-  
 
     scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(

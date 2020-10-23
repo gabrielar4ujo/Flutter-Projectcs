@@ -1,4 +1,8 @@
 import 'package:customstore/core/calendary.dart';
+import 'package:customstore/core/crud_sales_controller.dart';
+
+import 'package:customstore/pages/sale_page/controllers/sale_page_controller.dart';
+import 'package:customstore/pages/sale_page/widgets/custom_alert_dialog_widget.dart';
 import 'package:customstore/pages/sale_page/widgets/custom_sale_page_animeted_wigdet.dart';
 import 'package:flutter/material.dart';
 import 'package:list_tile_more_customizable/list_tile_more_customizable.dart';
@@ -6,8 +10,18 @@ import 'package:list_tile_more_customizable/list_tile_more_customizable.dart';
 class CustomListTileWidget extends StatelessWidget {
   final Map saleData;
   final DateTime dateTime;
+  final SalesPageController salesPageController;
+  final String salesMonth;
+  final String documentID;
+  final int index;
 
-  CustomListTileWidget({this.saleData, this.dateTime});
+  CustomListTileWidget(
+      {this.saleData,
+      this.dateTime,
+      @required this.salesPageController,
+      @required this.salesMonth,
+      @required this.documentID,
+      @required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +42,37 @@ class CustomListTileWidget extends StatelessWidget {
             color: Colors.redAccent,
           ),
         ),
-        onTap: () {},
+        onTap: () async {
+          CrudSalesController _crudSalesController = CrudSalesController();
+          print(saleData);
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => CustomAlertDialogWidget(
+                    crudSalesController: _crudSalesController,
+                    clientName: saleData["clientName"],
+                    dateTime: saleData["time"].toDate(),
+                    function: () async {
+                      await _crudSalesController
+                          .delete(
+                              productList: saleData["productList"],
+                              documentID: documentID,
+                              month: salesMonth,
+                              index: index)
+                          .then((value) {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                  ));
+          //print(saleData);
+          // await CrudSalesController()
+          //     .delete(
+          //         productList: saleData["productList"],
+          //         documentID: documentID,
+          //         month: salesMonth,
+          //         index: index)
+          //     .then((value) => print("Value: $value"));
+        },
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 18),
       horizontalTitleGap: 0.0,

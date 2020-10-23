@@ -86,7 +86,6 @@ class AlertDialogWidget extends StatelessWidget {
                         ),
                         onPressed: _alertDialogController.enabledButton
                             ? () {
-                              
                                 function(
                                     size: size,
                                     colorName: _alertDialogController.colorName,

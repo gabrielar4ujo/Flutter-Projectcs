@@ -13,14 +13,14 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   ControllerLoginPage controllerLoginPage;
   LoginPageWidgetsController _widgetsController;
 
   // disposer;
 
   AnimationController _animationController;
+  AnimationController _containerAnimationController;
 
   @override
   void initState() {
@@ -30,7 +30,10 @@ class _LoginPageState extends State<LoginPage>
 
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _animationController.addStatusListener((status) {
+    _containerAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+
+    _containerAnimationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage()));
@@ -118,6 +121,8 @@ class _LoginPageState extends State<LoginPage>
                           loginPressed: _widgetsController.loginPressed,
                           animationController: _animationController,
                           emailValid: _widgetsController.isFormEmailValid,
+                          containerAnimationController:
+                              _containerAnimationController,
                           screenHeight:
                               MediaQuery.of(context).size.height + 200,
                         ))

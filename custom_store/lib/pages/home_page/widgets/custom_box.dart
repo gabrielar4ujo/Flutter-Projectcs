@@ -125,7 +125,7 @@ class CustomBox extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: textSize),
                       ),
-                      trailing: !obscure
+                      trailing: obscure
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),

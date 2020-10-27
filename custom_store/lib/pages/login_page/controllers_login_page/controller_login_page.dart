@@ -205,8 +205,6 @@ abstract class _ControllerLoginPage with Store {
 
   _ControllerLoginPage() {
     setIsLogged();
-    //_loadCurrentUser();
-    //_loadDataSalesman();
   }
 
   int timeOut = 5;

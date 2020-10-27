@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/core/crud_product_controller.dart';
+import 'package:customstore/core/crud_sales_counter_controller.dart';
 import 'package:customstore/helpers/sales_helper.dart';
 import 'package:customstore/models/salesman.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -14,13 +15,15 @@ class CrudSalesController = _CrudSalesController with _$CrudSalesController;
 abstract class _CrudSalesController with Store {
   final SalesHelper _salesHelper;
   final CrudProductController _crudProductController;
+  final CrudSalesCounterController _crudSalesCounterController;
 
   @observable
   bool isLoading = false;
 
   _CrudSalesController()
       : _salesHelper = SalesHelper(),
-        _crudProductController = CrudProductController();
+        _crudProductController = CrudProductController(),
+        _crudSalesCounterController = CrudSalesCounterController();
 
   Future<bool> removeFromStock({@required List productList}) async {
     isLoading = true;
@@ -50,6 +53,17 @@ abstract class _CrudSalesController with Store {
                   documentID: productSoldMap["categoryID"],
                   productData: allSalesMap)
               .then((value) => sucess = value);
+
+          await _crudSalesCounterController.insert(productSoldMap["categoryID"],
+              productName: productSoldMap["productName"],
+              categoryName: productSoldMap["categoryName"],
+              price: productSoldMap["price"],
+              amount: productSoldMap["selectedAmount"],
+              urlPhoto: allSalesMap[productSoldMap["productName"]]["pictures"]
+                          .length >
+                      0
+                  ? allSalesMap[productSoldMap["productName"]]["pictures"].first
+                  : null);
         });
       } catch (e) {
         sucess = false;
@@ -111,6 +125,11 @@ abstract class _CrudSalesController with Store {
                   documentID: productSoldMap["categoryID"],
                   productData: allSalesMap)
               .then((value) => sucess = value);
+
+          await _crudSalesCounterController.delete(
+              amount: productSoldMap["selectedAmount"],
+              documentID: productSoldMap["categoryID"],
+              productName: productSoldMap["productName"]);
         });
       } catch (e) {
         sucess = false;
@@ -127,9 +146,6 @@ abstract class _CrudSalesController with Store {
     @required int index,
   }) async {
     bool sucess = false;
-    // print(documentID);
-    // print(month);
-    // print(index);
     await putBackInStock(productList: productList).then((value) async {
       await _salesHelper
           .delete(documentID, month: month, index: index)

@@ -90,6 +90,8 @@ class _StockPageState extends State<StockPage> {
             return Container(
               margin: EdgeInsets.all(12),
               child: ListView.builder(
+                //reverse: true,
+
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
                   DocumentSnapshot categorySnapshot =
@@ -132,7 +134,6 @@ class _StockPageState extends State<StockPage> {
                               borderRadius: BorderRadius.circular(5)),
                           margin: EdgeInsets.only(bottom: 12),
                           child: ExpansionTile(
-                            onExpansionChanged: categoryController.onExpanded,
                             title: Text(
                               categorySnapshot.data["categoryName"],
                               style: TextStyle(color: Colors.black),

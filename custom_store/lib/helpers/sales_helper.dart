@@ -20,7 +20,7 @@ class SalesHelper implements CategoryHelperI {
     @required int index,
   }) async {
     bool success = false;
-    Firestore.instance
+    await Firestore.instance
         .collection("stores")
         .document(userUID)
         .collection("sales")
@@ -45,7 +45,7 @@ class SalesHelper implements CategoryHelperI {
       String discount}) async {
     bool success = false;
 
-    Firestore.instance
+    await Firestore.instance
         .collection("stores")
         .document(userUID)
         .collection("sales")
@@ -77,7 +77,7 @@ class SalesHelper implements CategoryHelperI {
   Future<bool> update(String documentID, listSales) async {
     bool success = false;
 
-    Firestore.instance
+    await Firestore.instance
         .collection("stores")
         .document(userUID)
         .collection("sales")

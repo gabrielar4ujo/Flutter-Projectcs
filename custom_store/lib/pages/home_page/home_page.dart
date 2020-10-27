@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage>
 
   GlobalScaffold globalScaffold;
 
+  bool animationFinish = false;
   String year = (DateTime.now().year).toString();
   ControllerLoginPage controllerLoginPage;
   bool statusConnection = false;
@@ -59,9 +60,10 @@ class _HomePageState extends State<HomePage>
             curve: Interval(0.40, 1.0, curve: Curves.elasticOut),
             parent: _animationController));
 
-    _animationController
-        .forward()
-        .whenCompleteOrCancel(() => controllerLoginPage.loadCurrentUser());
+    _animationController.forward().whenCompleteOrCancel(() {
+      animationFinish = true;
+      controllerLoginPage.loadCurrentUser();
+    });
 
     conectivity = Connectivity();
     subscription =
@@ -121,17 +123,23 @@ class _HomePageState extends State<HomePage>
           child: Padding(
               padding:
                   EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
-              child: IconButton(
-                color: Colors.white,
-                iconSize: 25,
-                padding: EdgeInsets.only(right: 10),
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () {
-                  controllerLoginPage.logout();
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                },
-              )),
+              child: Observer(builder: (_) {
+                return IconButton(
+                  disabledColor: Colors.white,
+                  color: Colors.white,
+                  iconSize: 25,
+                  padding: EdgeInsets.only(right: 10),
+                  icon: Icon(Icons.exit_to_app),
+                  onPressed: controllerLoginPage.isLoading || !animationFinish
+                      ? null
+                      : () {
+                          controllerLoginPage.logout();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                        },
+                );
+              })),
         ),
         Container(
           margin: EdgeInsets.only(top: 50 + MediaQuery.of(context).padding.top),
@@ -165,6 +173,7 @@ class _HomePageState extends State<HomePage>
               child: Container(
                 height: _screenWidth * .285,
                 child: ListView(
+                  physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
                     CustomInkwell(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:customstore/pages/best_selling_product_page/best_selling_product_page.dart';
 import 'package:customstore/pages/home_page/home_page_controller.dart';
 import 'package:customstore/pages/home_page/widgets/custom_box.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -200,7 +201,10 @@ class _HomePageState extends State<HomePage>
                     CustomInkwell(
                       "Produto mais vendido",
                       Icons.star,
-                      () {},
+                      () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BestSellingProductPage()));
+                      },
                     ),
                   ],
                 ),

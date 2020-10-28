@@ -21,6 +21,17 @@ abstract class _ControllerLoginPage with Store {
     } catch (e) {}
   }
 
+  void _loadBestSellingProduct() {
+    try {
+      _bestSellingProductSnapshot = Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("salesCounter")
+          .orderBy("counter", descending: true)
+          .snapshots();
+    } catch (e) {}
+  }
+
   void categorySnapshotListen({@required String categoryID}) {
     streamSubscription = _categorySnapshot.listen((event) {
       //print("Event: ${event.documents.first.data["listProducts"].length}");
@@ -95,6 +106,13 @@ abstract class _ControllerLoginPage with Store {
       _loadDataCategory();
     }
     return _categorySnapshot;
+  }
+
+  Stream<QuerySnapshot> getBestSellingProductSnapshot() {
+    if (_bestSellingProductSnapshot == null) {
+      _loadBestSellingProduct();
+    }
+    return _bestSellingProductSnapshot;
   }
 
   Stream<QuerySnapshot> getSalesmanListSnapshot() {
@@ -202,6 +220,8 @@ abstract class _ControllerLoginPage with Store {
   Stream<QuerySnapshot> _salesmanListSnapshot;
 
   Stream<QuerySnapshot> _salesSnapshot;
+
+  Stream<QuerySnapshot> _bestSellingProductSnapshot;
 
   _ControllerLoginPage() {
     setIsLogged();

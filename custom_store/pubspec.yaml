@@ -40,6 +40,8 @@ dependencies:
   flutter_image: ^3.0.0
   shimmer: ^1.1.1
   scrollable_positioned_list: ^0.1.8
+  intl: ^0.16.1
+  flutter_svg: ^0.19.1
   #shared_preferences: ^0.5.12
 
   # The following adds the Cupertino Icons font to your application.
@@ -72,6 +74,10 @@ flutter:
     - assets/loading.gif
     - assets/swipe_right.png
     - assets/roupa.jpg
+    - assets/star.png
+    - assets/gold_medal.svg
+    - assets/silver_medal.svg
+    - assets/bronze_medal.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

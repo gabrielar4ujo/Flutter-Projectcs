@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:customstore/pages/best_selling_product_page/best_selling_product_page.dart';
+import 'package:customstore/pages/finance_page/finance_page.dart';
 import 'package:customstore/pages/home_page/home_page_controller.dart';
 import 'package:customstore/pages/home_page/widgets/custom_box.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -180,7 +181,10 @@ class _HomePageState extends State<HomePage>
                     CustomInkwell(
                       "Financeiro",
                       Icons.attach_money,
-                      () {},
+                      () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FinancePage()));
+                      },
                     ),
                     CustomInkwell("Adicionar Venda", Icons.shopping_cart, () {
                       Navigator.of(context).push(

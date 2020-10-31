@@ -93,7 +93,16 @@ class _FinancePageState extends State<FinancePage> {
                   Container(
                     height: 160,
                     child: _controllerFinancePage.allYears.isEmpty
-                        ? Center(child: CircularProgressIndicator())
+                        ? Card(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Center(
+                                child: Text(
+                              "Não há vendas",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            )),
+                          )
                         : InfinityPageView(
                             itemCount: _controllerFinancePage.allYears.length,
                             controller: _infinityPageController,

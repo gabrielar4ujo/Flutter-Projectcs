@@ -18,6 +18,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:infinity_page_view/infinity_page_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'widgets/custom_inkwell.dart';
 import 'widgets/fade_container.dart';
@@ -100,13 +101,36 @@ class _HomePageState extends State<HomePage>
           child: Padding(
             padding:
                 EdgeInsets.only(top: MediaQuery.of(context).padding.top + 7),
-            child: Text(
-              "Moda BA",
-              style: GoogleFonts.openSansCondensed(
-                color: Colors.white,
-                fontSize: 30,
-              ),
-            ),
+            child: FutureBuilder(
+                future: controllerLoginPage.getStoreName(),
+                builder: (context, snapshot) {
+                  if (snapshot != null &&
+                      !snapshot.hasError &&
+                      snapshot.hasData) {
+                    return Text(
+                      snapshot.data["storeName"],
+                      style: GoogleFonts.openSansCondensed(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[100],
+                      highlightColor: Colors.grey[700],
+                      period: Duration(seconds: 2),
+                      direction: ShimmerDirection.ltr,
+                      child: Container(
+                        color: Colors.black,
+                        width: 100,
+                        height: 20,
+                      ),
+                    ),
+                  );
+                }),
           ),
         ),
         Align(

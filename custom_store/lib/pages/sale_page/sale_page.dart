@@ -70,8 +70,7 @@ class _SalesPageState extends State<SalesPage> {
           } else if (snapshot.data != null && snapshot.data.documents.isEmpty) {
             _salesPageController.setObservableList(null);
             return (Center(
-              child: Text(
-                  "Não há nenhuma venda nessa data 20/${_salesPageController.month}/${_salesPageController.year}"),
+              child: Text("Não há vendas. Faça uma!"),
             ));
           } else {
             _salesPageController.setObservableList(snapshot.data.documents);

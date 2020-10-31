@@ -94,7 +94,14 @@ abstract class _ControllerLoginPage with Store {
     return _salesSnapshot;
   }
 
-  Future<QuerySnapshot> getFuture() {
+  Future<DocumentSnapshot> getStoreName() {
+    try {
+      return Firestore.instance.collection("stores").document(user.uid).get();
+    } catch (e) {}
+    return Future.value();
+  }
+
+  Future<QuerySnapshot> getSalesFuture() {
     try {
       return Firestore.instance
           .collection("stores")

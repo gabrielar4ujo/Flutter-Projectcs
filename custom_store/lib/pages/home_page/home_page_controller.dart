@@ -107,7 +107,7 @@ abstract class _HomePageController with Store {
 
     if (!dectectedEvent)
       _controllerLoginPage
-          .getFuture()
+          .getSalesFuture()
           .then((value) => createMapWithSales(value.documents));
   }
 

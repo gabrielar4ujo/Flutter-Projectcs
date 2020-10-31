@@ -51,10 +51,12 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                   builder: (context) => TextFormField(
                     inputFormatters: widget.salesmanController.nameText.isEmpty
                         ? [
-                            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z]")),
                           ]
                         : [
-                            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z ]")),
                           ],
                     enabled: !(widget.salesmanController.isLoading ||
                         widget.crudSalesmanController.isLoading),
@@ -123,7 +125,6 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                             (widget.salesmanController
                                                 .enableButton)
                                         ? () async {
-                                           
                                             Salesman salesman = Salesman(
                                                 comission: double.parse(widget
                                                     .salesmanController
@@ -164,7 +165,6 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                             (widget.salesmanController
                                                 .enableButton)
                                         ? () async {
-
                                             await widget.crudSalesmanController
                                                 .insert(
                                                     categoryName: widget
@@ -195,9 +195,17 @@ class _AddSalesmanWidgetState extends State<AddSalesmanWidget> {
                                           }
                                         : () {
                                             widget.salesmanController
-                                                .changeName("");
+                                                .changeName(widget
+                                                        .salesmanController
+                                                        .nameTextEditingController
+                                                        .text ??
+                                                    "");
                                             widget.salesmanController
-                                                .changeComission("");
+                                                .changeComission(widget
+                                                        .salesmanController
+                                                        .comissionTextEditingController
+                                                        .text ??
+                                                    "");
                                           },
                               ),
                             ),

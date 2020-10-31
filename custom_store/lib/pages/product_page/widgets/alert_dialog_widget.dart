@@ -21,10 +21,6 @@ class AlertDialogWidget extends StatelessWidget {
       : _alertDialogController = AlertDialogController(
             amount: amount ?? "", colorName: colorName ?? "");
 
-  // {
-  //   _alertDialogController = AlertDialogController(amount: amount ?? "", colorName: colorName ?? "");
-  // }
-
   @override
   Widget build(BuildContext context) {
     final bool editing = !(removeFunction == null);
@@ -91,7 +87,9 @@ class AlertDialogWidget extends StatelessWidget {
                                     colorName: _alertDialogController.colorName,
                                     amount: _alertDialogController.amount,
                                     lastColorName: colorName);
+
                                 Navigator.of(context).pop();
+                                FocusScope.of(context).unfocus();
                               }
                             : null,
                       )),

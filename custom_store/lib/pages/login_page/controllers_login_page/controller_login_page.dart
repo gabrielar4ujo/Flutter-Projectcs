@@ -34,20 +34,15 @@ abstract class _ControllerLoginPage with Store {
 
   void categorySnapshotListen({@required String categoryID}) {
     streamSubscription = _categorySnapshot.listen((event) {
-      //print("Event: ${event.documents.first.data["listProducts"].length}");
-      print("teve evento?");
       hasCategory = false;
       event.documents.forEach((element) {
         if (element.documentID == categoryID) {
           categoryEvent = element.data["listProducts"];
-          print("Encontrado");
-          print(categoryEvent);
+
           hasCategory = true;
           return;
         }
       });
-      print("Pos Event");
-      print("HAS CATEGORY: $hasCategory");
     });
   }
 
@@ -55,7 +50,6 @@ abstract class _ControllerLoginPage with Store {
     await streamSubscription.cancel();
     categoryEvent = null;
     hasCategory = null;
-    print("Cancelado");
   }
 
   void _loadDataSalesman() {
@@ -89,7 +83,6 @@ abstract class _ControllerLoginPage with Store {
           .orderBy("time")
           .getDocuments();
     } catch (e) {
-      print("entrei no ccatch");
       return null;
     }
   }
@@ -99,6 +92,18 @@ abstract class _ControllerLoginPage with Store {
       _loadDataSales();
     }
     return _salesSnapshot;
+  }
+
+  Future<QuerySnapshot> getFuture() {
+    try {
+      return Firestore.instance
+          .collection("stores")
+          .document(user.uid)
+          .collection("sales")
+          .orderBy("time", descending: true)
+          .getDocuments();
+    } catch (e) {}
+    return Future.value();
   }
 
   Stream<QuerySnapshot> getCategorySnapshot() {
@@ -164,7 +169,7 @@ abstract class _ControllerLoginPage with Store {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pass);
-      print("SignInComplete");
+
       await setIsLogged();
     } catch (e) {
       success = e.code;

@@ -25,7 +25,6 @@ class CustomListTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print(saleData);
     return ListTileMoreCustomizable(
       title: Text(
         saleData["clientName"],
@@ -44,7 +43,7 @@ class CustomListTileWidget extends StatelessWidget {
         ),
         onTap: () async {
           CrudSalesController _crudSalesController = CrudSalesController();
-          print(saleData);
+
           showDialog(
               context: context,
               barrierDismissible: false,
@@ -64,14 +63,6 @@ class CustomListTileWidget extends StatelessWidget {
                       });
                     },
                   ));
-          //print(saleData);
-          // await CrudSalesController()
-          //     .delete(
-          //         productList: saleData["productList"],
-          //         documentID: documentID,
-          //         month: salesMonth,
-          //         index: index)
-          //     .then((value) => print("Value: $value"));
         },
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 18),

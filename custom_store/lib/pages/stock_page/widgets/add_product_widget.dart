@@ -26,7 +26,6 @@ class AddProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        //print(allProductsName.keys.toList());
         GetIt.I
             .get<ControllerLoginPage>()
             .categorySnapshotListen(categoryID: documentID);
@@ -49,7 +48,6 @@ class AddProductWidget extends StatelessWidget {
                 categoryName: categoryName, documentID: documentID);
           }
           if (allProductsMapWithAlteration == null) {
-            print("Não ouve alteração");
             allProductsName[product.name] = product.toJson();
 
             _crudProductController
@@ -58,7 +56,6 @@ class AddProductWidget extends StatelessWidget {
                     .get<ControllerLoginPage>()
                     .categorySnapshotCancel());
           } else {
-            print("Ouve alteração");
             allProductsMapWithAlteration[product.name] = product.toJson();
             _crudProductController
                 .insert(

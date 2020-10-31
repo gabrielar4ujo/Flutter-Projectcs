@@ -78,18 +78,15 @@ abstract class _CrudSalesController with Store {
       @required List listSales,
       @required int index,
       String discount}) async {
-    //print("-----------\nUPDATE\n------------");
     bool sucess;
-    //print(listSales[index]["productList"]);
+
     removeFromStock(productList: listSales[index]["productList"])
         .then((value) async {
       if (value) {
-        print("Consegui remover do stock");
         _salesHelper.update(documentID, listSales).then((value) {
           sucess = value;
         });
       } else {
-        print("Não consegui remover do stock");
         sucess = value;
       }
     });
@@ -161,7 +158,6 @@ abstract class _CrudSalesController with Store {
       @required List productList,
       @required Salesman salesman,
       String discount}) async {
-    print("-----------\nINSERT\n------------");
     bool success;
     removeFromStock(productList: productList).then((value) async {
       if (value) {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customstore/helpers/category_helper_interface.dart';
 import 'package:customstore/pages/login_page/controllers_login_page/controller_login_page.dart';
@@ -29,7 +27,6 @@ class SalesCounterHelper implements CategoryHelperI {
       DocumentSnapshot snapShot = await documentReference.get();
       if (snapShot != null && int.parse(snapShot.data["counter"]) <= 0) {
         await documentReference.delete();
-        log("deletei");
       }
     } catch (e) {
       success = false;
@@ -142,11 +139,11 @@ class SalesCounterHelper implements CategoryHelperI {
         .catchError((exception) {
       has = -1;
     });
-    print(snapShot.documentID);
+
     if (snapShot != null && snapShot.exists) {
       has = int.parse(snapShot.data["counter"]);
     }
-    log(has.toString());
+
     return has;
   }
 }

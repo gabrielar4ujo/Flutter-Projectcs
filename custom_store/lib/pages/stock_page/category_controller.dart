@@ -45,7 +45,6 @@ abstract class _CategoryController with Store {
     int amount = 0;
     features.forEach((key, value) {
       if (features[key].isNotEmpty) {
-        print(features[key].values);
         for (Map m in features[key].values) {
           amount += int.parse(m["amount"]);
         }

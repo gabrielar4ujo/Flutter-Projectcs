@@ -44,11 +44,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // disposer = reaction((_) => controllerLoginPage.isLogged, (loggedIn) {
-    //   if (loggedIn) print("LOGGED");
-    //   /* Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));*/
-    // });
   }
 
   @override

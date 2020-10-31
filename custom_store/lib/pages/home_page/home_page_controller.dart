@@ -57,8 +57,7 @@ abstract class _HomePageController with Store {
       salesMap[date] = [];
       m.forEach((key, value) {
         Map productMap = value.last;
-        //Map productMap = value.last["productList"].last;
-        print("producctMao $productMap");
+
         salesMap[date].add(OrdinalSales(
             Calendary().getMonth(key), calcule(value),
             lastProductPurchase: Product(
@@ -68,44 +67,20 @@ abstract class _HomePageController with Store {
               ..selectedAmount = productMap["selectedAmount"]
               ..clientName = productMap["clientName"]
               ..categoryId = productMap["salesmanName"]));
-        // print("value: $value");
-        // print(value[0]);
       });
     }
-    print("salesMap $salesMap");
-    // salesMap["2019"] = [];
-    // salesMap["2019"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2019"].add(OrdinalSales("MAR", 200));
-    // salesMap["2019"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2018"] = [];
-    // salesMap["2018"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2018"].add(OrdinalSales("MAR", 200));
-    // salesMap["2018"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2017"] = [];
-    // salesMap["2017"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2017"].add(OrdinalSales("MAR", 200));
-    // salesMap["2017"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2016"] = [];
-    // salesMap["2016"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2016"].add(OrdinalSales("MAR", 200));
-    // salesMap["2016"].add(OrdinalSales("JUN", 6000));
 
     allYears = salesMap.keys.toList();
     allYears.sort();
-    print(salesMap);
   }
 
   double calcule(List sales) {
     double value = 0;
-    print("sales ${sales.last}");
+
     for (Map m in sales) {
       m["productList"].forEach((e) {
         value += (double.parse(e["price"]) * int.parse(e["selectedAmount"]));
       });
-      //print("last ${m["productList"].last}");
     }
 
     return value;
@@ -121,11 +96,19 @@ abstract class _HomePageController with Store {
     return finalValue;
   }
 
-  void initStreamSubscription() {
-    streamSubscription =
-        _controllerLoginPage.getSalesSnapshot().listen((event) {
-      createMapWithSales(event.documents);
-    });
+  Future<void> initStreamSubscription() async {
+    bool dectectedEvent = false;
+    streamSubscription = _controllerLoginPage.getSalesSnapshot().listen(
+      (event) {
+        dectectedEvent = true;
+        createMapWithSales(event.documents);
+      },
+    );
+
+    if (!dectectedEvent)
+      _controllerLoginPage
+          .getFuture()
+          .then((value) => createMapWithSales(value.documents));
   }
 
   void cancelStreamSubscription() {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:customstore/helpers/sales_counter_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -25,7 +23,7 @@ abstract class _CrudSalesCounterControllerBase with Store {
       @required String amount,
       @required String productName}) async {
     isLoading = true;
-    log("Deletando o produto mais vendido");
+
     bool success;
     try {
       int has = await _saleCounter.hasProduct(
@@ -56,7 +54,7 @@ abstract class _CrudSalesCounterControllerBase with Store {
     try {
       int has = await _saleCounter.hasProduct(
           documentID: documentID, productName: productName);
-      print(has);
+
       if (has != -1) {
         await _saleCounter
             .update(documentID, (int.parse(amount) + has).toString(),

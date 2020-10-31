@@ -65,25 +65,6 @@ abstract class _ControllerFinancePageBase with Store {
             calcule(value)));
       });
     }
-    // salesMap["2019"] = [];
-    // salesMap["2019"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2019"].add(OrdinalSales("MAR", 200));
-    // salesMap["2019"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2018"] = [];
-    // salesMap["2018"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2018"].add(OrdinalSales("MAR", 200));
-    // salesMap["2018"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2017"] = [];
-    // salesMap["2017"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2017"].add(OrdinalSales("MAR", 200));
-    // salesMap["2017"].add(OrdinalSales("JUN", 6000));
-
-    // salesMap["2016"] = [];
-    // salesMap["2016"].add(OrdinalSales("JAN", 10000));
-    // salesMap["2016"].add(OrdinalSales("MAR", 200));
-    // salesMap["2016"].add(OrdinalSales("JUN", 6000));
 
     allYears = salesMap.keys.toList();
     allYears.sort();

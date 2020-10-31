@@ -14,5 +14,20 @@ class Calendary {
     "12": "Dezembro",
   };
 
+  List<String> calendaryList = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+  ];
+
   String getMonth(String month) => calendary[month];
 }

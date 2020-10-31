@@ -35,8 +35,6 @@ abstract class _ProductController with Store {
     setSize(
         colorMap != null && colorMap.isNotEmpty ? colorMap.keys.first : null,
         product);
-    // setColorWithProduct(product);
-    // setAmountWithProduct(product);
   }
 
   void setColorMap(Map features) {

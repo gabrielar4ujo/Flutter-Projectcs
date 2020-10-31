@@ -135,4 +135,9 @@ class _FinancePageState extends State<FinancePage> {
           }),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

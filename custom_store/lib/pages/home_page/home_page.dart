@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:customstore/core/calendary.dart';
 import 'package:customstore/models/ordinal_sales.dart';
 import 'package:customstore/pages/best_selling_product_page/best_selling_product_page.dart';
 import 'package:customstore/pages/finance_page/finance_page.dart';
@@ -33,10 +34,10 @@ class _HomePageState extends State<HomePage>
   GlobalScaffold globalScaffold;
 
   bool animationFinish = false;
-  String year = (DateTime.now().year).toString();
+
   ControllerLoginPage controllerLoginPage;
   bool statusConnection = false;
-  String connetionStatus = "Unknown";
+
   Connectivity conectivity;
   StreamSubscription<ConnectivityResult> subscription;
 
@@ -90,20 +91,6 @@ class _HomePageState extends State<HomePage>
   }
 
   List<Widget> pages = List();
-  List<String> list = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro"
-  ];
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     return Stack(
@@ -160,7 +147,7 @@ class _HomePageState extends State<HomePage>
 
               return InfinityPageView(
                   controller: infinityPageController,
-                  itemCount: list.length,
+                  itemCount: Calendary().calendaryList.length,
                   itemBuilder: (context, index) {
                     return pages[index];
                   });
@@ -193,10 +180,14 @@ class _HomePageState extends State<HomePage>
                                 homePageController.initStreamSubscription());
                       },
                     ),
-                    CustomInkwell("Adicionar Venda", Icons.shopping_cart, () {
+                    CustomInkwell("Adicionar Venda", Icons.shopping_cart,
+                        () async {
                       homePageController.cancelStreamSubscription();
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SalesPage()));
+                      await Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => SalesPage()))
+                          .whenComplete(() =>
+                              homePageController.initStreamSubscription());
                     }),
                     CustomInkwell(
                       "Estoque",
@@ -261,9 +252,7 @@ class _HomePageState extends State<HomePage>
   }
 
   List<Widget> createWidgets(final listMap) {
-    //print(salesMap["2020"].contains(OrdinalSales("Outubro", null)));
-    return list.map((month) {
-      //final String index = (list.indexOf(month) + 1).toString();
+    return Calendary().calendaryList.map((month) {
       int indexMonth = -1;
       String saldo = "0.00";
       String lastPurchaseSalde = "0.00";
@@ -277,7 +266,7 @@ class _HomePageState extends State<HomePage>
             ? listMap[indexMonth].lastProductPurchase.price.toStringAsFixed(2)
             : "0.00";
       }
-      print("lastrPurchase $lastPurchaseSalde");
+
       return Observer(
           builder: (context) => CustomBox(
                 year: homePageController.year,
@@ -311,7 +300,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-    print("dispose");
+
     subscription.cancel();
     _animationController.dispose();
   }

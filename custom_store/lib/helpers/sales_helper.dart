@@ -27,7 +27,6 @@ class SalesHelper implements CategoryHelperI {
         .document(documentID)
         .get()
         .then((value) async {
-      print(value.documentID);
       if (value != null) {
         List productList = value.data[month];
         productList.removeAt(index);

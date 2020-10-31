@@ -28,7 +28,6 @@ class ContentListViewWidget extends StatelessWidget {
                       .getFutureCategorySnapshot()
                       .then((value) {
                     for (DocumentSnapshot documentSnapshot in value.documents) {
-                      //print(documentSnapshot.documentID);
                       Map m = documentSnapshot.data["listProducts"];
                       if (m.containsKey(product.name))
                         return m[product.name]["pictures"];
@@ -38,7 +37,6 @@ class ContentListViewWidget extends StatelessWidget {
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (!snapshot.hasData || snapshot.hasError) {
-                      print("TInha nada");
                       return Image.asset(
                         "assets/loading.gif",
                         fit: BoxFit.cover,

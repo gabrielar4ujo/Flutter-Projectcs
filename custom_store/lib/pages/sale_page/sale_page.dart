@@ -24,14 +24,6 @@ class _SalesPageState extends State<SalesPage> {
     _salesPageController = SalesPageController();
   }
 
-  // Future<int> initCounter() async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   counter = preferences.getInt("counter") ?? 2;
-  //   await preferences.setInt("counter", counter - 1);
-  //   print(counter);
-  //   return counter;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

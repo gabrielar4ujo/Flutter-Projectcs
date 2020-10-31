@@ -12,7 +12,10 @@ class AddColorTile extends StatelessWidget {
       height: 60,
       width: 50,
       child: Center(
-        child: Icon(Icons.add, color: Colors.white,),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

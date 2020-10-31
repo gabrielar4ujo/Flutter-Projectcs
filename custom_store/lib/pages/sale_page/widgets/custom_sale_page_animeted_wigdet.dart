@@ -139,7 +139,6 @@ class CustomSalePageAnimetedWidget extends StatelessWidget {
   double getTotalValue() {
     double totalValue = 0.0;
     for (Product product in productList) {
-      print(product);
       totalValue += (product.price * int.parse(product.selectedAmount));
     }
     return totalValue;

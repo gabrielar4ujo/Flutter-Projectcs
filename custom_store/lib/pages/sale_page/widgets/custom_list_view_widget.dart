@@ -18,19 +18,14 @@ class CustomListViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     int productIndex = -1;
     int index = -1;
-    //print(documentID);
+
     salesMap.remove("time");
-    // print("---------------");
-    // print(salesMap);
-    // print("---------------");
 
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: salesMap.keys.map((salesMonth) {
-        print(salesMonth);
         List productsInSaleMonth = salesMap[salesMonth];
-        print(productsInSaleMonth);
 
         index++;
         return Card(

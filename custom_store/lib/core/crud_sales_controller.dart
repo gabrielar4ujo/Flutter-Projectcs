@@ -48,12 +48,6 @@ abstract class _CrudSalesController with Store {
               (amount - (int.parse(productSoldMap["selectedAmount"])))
                   .toString();
 
-          await _crudProductController
-              .update(
-                  documentID: productSoldMap["categoryID"],
-                  productData: allSalesMap)
-              .then((value) => sucess = value);
-
           await _crudSalesCounterController.insert(productSoldMap["categoryID"],
               productName: productSoldMap["productName"],
               categoryName: productSoldMap["categoryName"],
@@ -64,6 +58,12 @@ abstract class _CrudSalesController with Store {
                       0
                   ? allSalesMap[productSoldMap["productName"]]["pictures"].first
                   : null);
+
+          await _crudProductController
+              .update(
+                  documentID: productSoldMap["categoryID"],
+                  productData: allSalesMap)
+              .then((value) => sucess = value);
         });
       } catch (e) {
         sucess = false;
@@ -102,6 +102,11 @@ abstract class _CrudSalesController with Store {
     bool sucess;
     for (Map productSoldMap in productList) {
       try {
+        await _crudSalesCounterController.delete(
+            amount: productSoldMap["selectedAmount"],
+            documentID: productSoldMap["categoryID"],
+            productName: productSoldMap["productName"]);
+
         await Firestore.instance
             .collection("stores")
             .document(GetIt.I.get<ControllerLoginPage>().user.uid)
@@ -125,11 +130,6 @@ abstract class _CrudSalesController with Store {
                   documentID: productSoldMap["categoryID"],
                   productData: allSalesMap)
               .then((value) => sucess = value);
-
-          await _crudSalesCounterController.delete(
-              amount: productSoldMap["selectedAmount"],
-              documentID: productSoldMap["categoryID"],
-              productName: productSoldMap["productName"]);
         });
       } catch (e) {
         sucess = false;

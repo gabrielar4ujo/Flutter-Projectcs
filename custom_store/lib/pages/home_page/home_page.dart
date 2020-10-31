@@ -155,8 +155,8 @@ class _HomePageState extends State<HomePage>
                   !(_animationController.status == AnimationStatus.completed))
                 return CustomBox();
 
-              pages = createWidgets(homePageController.salesMap);
-              print("recontrstruido");
+              pages = createWidgets(
+                  homePageController.salesMap[homePageController.year]);
 
               return InfinityPageView(
                   controller: infinityPageController,
@@ -202,6 +202,7 @@ class _HomePageState extends State<HomePage>
                       "Estoque",
                       Icons.shop,
                       () {
+                        homePageController.cancelStreamSubscription();
                         Navigator.of(context)
                             .push(MaterialPageRoute(
                                 builder: (context) => StockPage()))
@@ -259,39 +260,41 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
-  List<Widget> createWidgets(final salesMap) {
-    print(salesMap["2020"].contains(OrdinalSales("Outubro", null)));
+  List<Widget> createWidgets(final listMap) {
+    //print(salesMap["2020"].contains(OrdinalSales("Outubro", null)));
     return list.map((month) {
       //final String index = (list.indexOf(month) + 1).toString();
-      int indexMonth = salesMap[year].indexOf(OrdinalSales(month, null));
+      int indexMonth = -1;
+      String saldo = "0.00";
+      String lastPurchaseSalde = "0.00";
+      if (listMap != null) {
+        indexMonth = listMap.indexOf(OrdinalSales(month, null));
 
-      String saldo = indexMonth != -1
-          ? salesMap[year][indexMonth].sales.toStringAsFixed(2)
-          : "0.00";
-      String lastPurchaseSalde = indexMonth != -1
-          ? salesMap[year][indexMonth]
-              .lastProductPurchase
-              .price
-              .toStringAsFixed(2)
-          : "0.00";
+        saldo = indexMonth != -1
+            ? listMap[indexMonth].sales.toStringAsFixed(2)
+            : "0.00";
+        lastPurchaseSalde = indexMonth != -1
+            ? listMap[indexMonth].lastProductPurchase.price.toStringAsFixed(2)
+            : "0.00";
+      }
       print("lastrPurchase $lastPurchaseSalde");
       return Observer(
           builder: (context) => CustomBox(
                 year: homePageController.year,
                 clientName: indexMonth != -1
-                    ? salesMap[year][indexMonth].lastProductPurchase.clientName
+                    ? listMap[indexMonth].lastProductPurchase.clientName
                     : "Não há",
                 productName: indexMonth != -1
-                    ? salesMap[year][indexMonth].lastProductPurchase.name
+                    ? listMap[indexMonth].lastProductPurchase.name
                     : "Não há",
                 productValue: indexMonth != -1
-                    ? salesMap[year][indexMonth]
+                    ? listMap[indexMonth]
                         .lastProductPurchase
                         .spent
                         .toStringAsFixed(2)
                     : "Não há",
                 salesmanName: indexMonth != -1
-                    ? salesMap[year][indexMonth].lastProductPurchase.categoryId
+                    ? listMap[indexMonth].lastProductPurchase.categoryId
                     : "Não há",
                 month: month,
                 obscure: homePageController.obscureSale,
@@ -300,6 +303,7 @@ class _HomePageState extends State<HomePage>
                 sale: saldo,
                 isExpasion: homePageController.isExpasion,
                 changeYear: homePageController.yearChanged,
+                allYears: homePageController.allYears,
               ));
     }).toList();
   }
@@ -307,7 +311,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-
+    print("dispose");
     subscription.cancel();
     _animationController.dispose();
   }

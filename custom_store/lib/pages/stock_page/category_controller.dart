@@ -30,7 +30,7 @@ abstract class _CategoryController with Store {
           return observableMap.add(Product(
               name: k,
               price: double.parse(v["price"]),
-              amount: int.parse(v["amount"]),
+              amount: getAmountFromProduct(v["features"]),
               categoryId: event.documentID,
               listPictures: v["pictures"],
               spent: double.parse(v["spent"]),
@@ -39,6 +39,19 @@ abstract class _CategoryController with Store {
       }
     });
     isLoading = false;
+  }
+
+  int getAmountFromProduct(Map features) {
+    int amount = 0;
+    features.forEach((key, value) {
+      if (features[key].isNotEmpty) {
+        print(features[key].values);
+        for (Map m in features[key].values) {
+          amount += int.parse(m["amount"]);
+        }
+      }
+    });
+    return amount;
   }
 
   _CategoryController({this.uidUser, this.category}) {

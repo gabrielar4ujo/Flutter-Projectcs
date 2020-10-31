@@ -72,6 +72,7 @@ abstract class _HomePageController with Store {
         // print(value[0]);
       });
     }
+    print("salesMap $salesMap");
     // salesMap["2019"] = [];
     // salesMap["2019"].add(OrdinalSales("JAN", 10000));
     // salesMap["2019"].add(OrdinalSales("MAR", 200));

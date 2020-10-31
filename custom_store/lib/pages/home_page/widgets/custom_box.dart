@@ -14,6 +14,7 @@ class CustomBox extends StatelessWidget {
   final String lastPurchase;
   final bool isExpasion;
   final Function changeYear;
+  final List allYears;
 
   const CustomBox(
       {Key key,
@@ -28,7 +29,8 @@ class CustomBox extends StatelessWidget {
       this.productName,
       this.salesmanName,
       this.productValue,
-      this.clientName})
+      this.clientName,
+      this.allYears})
       : super(key: key);
 
   @override
@@ -111,7 +113,9 @@ class CustomBox extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       trailing: DropdownButton(
                         value: year,
-                        items: ["2019", "2020"]
+                        items: (allYears == null || allYears.isEmpty
+                                ? [DateTime.now().year.toString()]
+                                : allYears)
                             .map((e) => DropdownMenuItem<String>(
                                   value: e,
                                   child: Text(

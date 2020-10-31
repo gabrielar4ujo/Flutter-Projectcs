@@ -32,7 +32,9 @@ abstract class _ProductController with Store {
     productName = product.name;
 
     setColorMap(product.features);
-    setSize(colorMap.isNotEmpty ? colorMap.keys.first : null, product);
+    setSize(
+        colorMap != null && colorMap.isNotEmpty ? colorMap.keys.first : null,
+        product);
     // setColorWithProduct(product);
     // setAmountWithProduct(product);
   }

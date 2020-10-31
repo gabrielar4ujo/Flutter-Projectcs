@@ -75,6 +75,21 @@ mixin _$HomePageController on _HomePageController, Store {
     });
   }
 
+  final _$salesMapAtom = Atom(name: '_HomePageController.salesMap');
+
+  @override
+  ObservableMap<String, List<OrdinalSales>> get salesMap {
+    _$salesMapAtom.reportRead();
+    return super.salesMap;
+  }
+
+  @override
+  set salesMap(ObservableMap<String, List<OrdinalSales>> value) {
+    _$salesMapAtom.reportWrite(value, super.salesMap, () {
+      super.salesMap = value;
+    });
+  }
+
   final _$_HomePageControllerActionController =
       ActionController(name: '_HomePageController');
 
@@ -103,6 +118,7 @@ mixin _$HomePageController on _HomePageController, Store {
   @override
   String toString() {
     return '''
+salesMap: ${salesMap},
 year: ${year},
 isExpasion: ${isExpasion},
 obscureSale: ${obscureSale}

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:customstore/models/ordinal_sales.dart';
 import 'package:customstore/pages/best_selling_product_page/best_selling_product_page.dart';
 import 'package:customstore/pages/finance_page/finance_page.dart';
 import 'package:customstore/pages/home_page/home_page_controller.dart';
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     controllerLoginPage = GetIt.I.get<ControllerLoginPage>();
     globalScaffold = GetIt.I.get<GlobalScaffold>();
-    homePageController = HomePageController();
+    homePageController = HomePageController(controllerLoginPage);
 
     _animationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 3500));
@@ -65,6 +66,7 @@ class _HomePageState extends State<HomePage>
     _animationController.forward().whenCompleteOrCancel(() {
       animationFinish = true;
       controllerLoginPage.loadCurrentUser();
+      homePageController.initStreamSubscription();
     });
 
     conectivity = Connectivity();
@@ -153,7 +155,8 @@ class _HomePageState extends State<HomePage>
                   !(_animationController.status == AnimationStatus.completed))
                 return CustomBox();
 
-              pages = createWidgets();
+              pages = createWidgets(homePageController.salesMap);
+              print("recontrstruido");
 
               return InfinityPageView(
                   controller: infinityPageController,
@@ -182,11 +185,16 @@ class _HomePageState extends State<HomePage>
                       "Financeiro",
                       Icons.attach_money,
                       () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => FinancePage()));
+                        homePageController.cancelStreamSubscription();
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => FinancePage()))
+                            .whenComplete(() =>
+                                homePageController.initStreamSubscription());
                       },
                     ),
                     CustomInkwell("Adicionar Venda", Icons.shopping_cart, () {
+                      homePageController.cancelStreamSubscription();
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => SalesPage()));
                     }),
@@ -194,8 +202,11 @@ class _HomePageState extends State<HomePage>
                       "Estoque",
                       Icons.shop,
                       () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => StockPage()));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => StockPage()))
+                            .whenComplete(() =>
+                                homePageController.initStreamSubscription());
                       },
                     ),
                     CustomInkwell("Adicionar Vendedor", Icons.person, () {
@@ -237,9 +248,6 @@ class _HomePageState extends State<HomePage>
     _screenHeight = MediaQuery.of(context).size.height;
     _screenWidth = MediaQuery.of(context).size.width;
 
-    infinityPageController =
-        InfinityPageController(initialPage: DateTime.now().month - 1);
-
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.deepPurple[500],
@@ -251,26 +259,40 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
-  List<Widget> createWidgets() {
+  List<Widget> createWidgets(final salesMap) {
+    print(salesMap["2020"].contains(OrdinalSales("Outubro", null)));
     return list.map((month) {
       //final String index = (list.indexOf(month) + 1).toString();
-      String saldo = "0.00";
-      String lastPurchaseSalde = "0.00";
+      int indexMonth = salesMap[year].indexOf(OrdinalSales(month, null));
 
-      /*if (model.dataMap.containsKey(year)) {
-        saldo = model.dataMap[year][index] == null
-            ? "0.00"
-            : double.parse(model.dataMap[year][index].toString())
-            .toStringAsFixed(2);
-        lastPurchaseSalde = model.lastPurchaseMap[year][index] == null
-            ? "0.00"
-            : model.lastPurchaseMap[year][index].price.toStringAsFixed(2);
-      }
-*/
-
+      String saldo = indexMonth != -1
+          ? salesMap[year][indexMonth].sales.toStringAsFixed(2)
+          : "0.00";
+      String lastPurchaseSalde = indexMonth != -1
+          ? salesMap[year][indexMonth]
+              .lastProductPurchase
+              .price
+              .toStringAsFixed(2)
+          : "0.00";
+      print("lastrPurchase $lastPurchaseSalde");
       return Observer(
           builder: (context) => CustomBox(
                 year: homePageController.year,
+                clientName: indexMonth != -1
+                    ? salesMap[year][indexMonth].lastProductPurchase.clientName
+                    : "Não há",
+                productName: indexMonth != -1
+                    ? salesMap[year][indexMonth].lastProductPurchase.name
+                    : "Não há",
+                productValue: indexMonth != -1
+                    ? salesMap[year][indexMonth]
+                        .lastProductPurchase
+                        .spent
+                        .toStringAsFixed(2)
+                    : "Não há",
+                salesmanName: indexMonth != -1
+                    ? salesMap[year][indexMonth].lastProductPurchase.categoryId
+                    : "Não há",
                 month: month,
                 obscure: homePageController.obscureSale,
                 onTap: homePageController.changeObscureSaleState,

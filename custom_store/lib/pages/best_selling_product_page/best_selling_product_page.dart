@@ -101,7 +101,7 @@ class BestSellingProductPage extends StatelessWidget {
                                     height: sizeWidth / 1.615,
                                     width: sizeWidth / 1.615,
                                     alignment: Alignment.center,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.cover,
                                     image: p.listPictures.first == null
                                         ? AssetImage(
                                             "assets/star.png",

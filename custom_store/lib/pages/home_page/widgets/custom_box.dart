@@ -4,6 +4,10 @@ import 'package:shimmer/shimmer.dart';
 class CustomBox extends StatelessWidget {
   final String month;
   final String year;
+  final String productName;
+  final String salesmanName;
+  final String productValue;
+  final String clientName;
   final Function onTap;
   final bool obscure;
   final String sale;
@@ -20,7 +24,11 @@ class CustomBox extends StatelessWidget {
       this.sale,
       this.lastPurchase,
       this.isExpasion,
-      this.changeYear})
+      this.changeYear,
+      this.productName,
+      this.salesmanName,
+      this.productValue,
+      this.clientName})
       : super(key: key);
 
   @override
@@ -168,7 +176,7 @@ class CustomBox extends StatelessWidget {
                   initiallyExpanded: isExpasion,
                   title: Text(
                     "Ultima venda feita no valor de R\$ $lastPurchase",
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 16),
                   ),
@@ -180,19 +188,28 @@ class CustomBox extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 15),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          Text(
+                            "Ultimo produto vendido",
+                            style: TextStyle(
+                                fontSize: 15.5, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Flexible(
                                 child: Text(
-                                  "Produto: Calcinha de renda",
+                                  "Produto: $productName",
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Flexible(
                                 child: Text(
-                                  "Valor: R\$ 150.55",
+                                  "Valor: R\$ $productValue",
                                   maxLines: 1,
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
@@ -208,13 +225,13 @@ class CustomBox extends StatelessWidget {
                             children: <Widget>[
                               Flexible(
                                 child: Text(
-                                  "Vendedor: Airla",
+                                  "Vendedor: $salesmanName",
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Flexible(
                                 child: Text(
-                                  "Cliente: Zefinha",
+                                  "Cliente: $clientName",
                                   maxLines: 1,
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,

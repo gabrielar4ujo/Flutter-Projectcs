@@ -1,7 +1,10 @@
+import 'package:customstore/models/product.dart';
+
 /// Sample ordinal data type.
 class OrdinalSales implements Comparable {
   final String month;
   final double sales;
+  final Product lastProductPurchase;
   final Map monthsMap = {
     "JAN": 1,
     "FEV": 2,
@@ -17,7 +20,7 @@ class OrdinalSales implements Comparable {
     "DEZ": 12,
   };
 
-  OrdinalSales(this.month, this.sales);
+  OrdinalSales(this.month, this.sales, {this.lastProductPurchase});
 
   @override
   String toString() {
